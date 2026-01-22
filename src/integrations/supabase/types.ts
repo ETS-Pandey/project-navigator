@@ -534,6 +534,343 @@ export type Database = {
           },
         ]
       }
+      loan_collaterals: {
+        Row: {
+          created_at: string
+          gross_weight: number
+          id: string
+          image_url: string | null
+          is_released: boolean
+          item_description: string
+          item_value: number
+          loan_id: string
+          metal_type: Database["public"]["Enums"]["metal_type"]
+          net_weight: number
+          packet_number: string | null
+          purity: string
+          rate_per_gram: number
+          released_at: string | null
+          released_by: string | null
+          stone_weight: number | null
+          storage_location: string | null
+        }
+        Insert: {
+          created_at?: string
+          gross_weight: number
+          id?: string
+          image_url?: string | null
+          is_released?: boolean
+          item_description: string
+          item_value: number
+          loan_id: string
+          metal_type?: Database["public"]["Enums"]["metal_type"]
+          net_weight: number
+          packet_number?: string | null
+          purity: string
+          rate_per_gram: number
+          released_at?: string | null
+          released_by?: string | null
+          stone_weight?: number | null
+          storage_location?: string | null
+        }
+        Update: {
+          created_at?: string
+          gross_weight?: number
+          id?: string
+          image_url?: string | null
+          is_released?: boolean
+          item_description?: string
+          item_value?: number
+          loan_id?: string
+          metal_type?: Database["public"]["Enums"]["metal_type"]
+          net_weight?: number
+          packet_number?: string | null
+          purity?: string
+          rate_per_gram?: number
+          released_at?: string | null
+          released_by?: string | null
+          stone_weight?: number | null
+          storage_location?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_collaterals_loan_id_fkey"
+            columns: ["loan_id"]
+            isOneToOne: false
+            referencedRelation: "loans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loan_interest_accruals: {
+        Row: {
+          accrual_date: string
+          created_at: string
+          cumulative_interest: number
+          days_count: number
+          id: string
+          interest_amount: number
+          interest_rate: number
+          is_paid: boolean
+          loan_id: string
+          paid_in_payment_id: string | null
+          principal_balance: number
+        }
+        Insert: {
+          accrual_date: string
+          created_at?: string
+          cumulative_interest: number
+          days_count?: number
+          id?: string
+          interest_amount: number
+          interest_rate: number
+          is_paid?: boolean
+          loan_id: string
+          paid_in_payment_id?: string | null
+          principal_balance: number
+        }
+        Update: {
+          accrual_date?: string
+          created_at?: string
+          cumulative_interest?: number
+          days_count?: number
+          id?: string
+          interest_amount?: number
+          interest_rate?: number
+          is_paid?: boolean
+          loan_id?: string
+          paid_in_payment_id?: string | null
+          principal_balance?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_interest_accruals_loan_id_fkey"
+            columns: ["loan_id"]
+            isOneToOne: false
+            referencedRelation: "loans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loan_interest_accruals_paid_in_payment_id_fkey"
+            columns: ["paid_in_payment_id"]
+            isOneToOne: false
+            referencedRelation: "loan_payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loan_payments: {
+        Row: {
+          amount: number
+          bank_name: string | null
+          branch_id: string
+          cheque_date: string | null
+          cheque_number: string | null
+          collateral_ids: string[] | null
+          created_at: string
+          created_by: string | null
+          id: string
+          interest_amount: number
+          loan_id: string
+          notes: string | null
+          payment_date: string
+          payment_mode: Database["public"]["Enums"]["payment_mode"]
+          payment_number: string
+          payment_type: Database["public"]["Enums"]["loan_payment_type"]
+          penalty_amount: number | null
+          principal_amount: number
+          receipt_printed: boolean
+          reference_number: string | null
+          upi_id: string | null
+        }
+        Insert: {
+          amount: number
+          bank_name?: string | null
+          branch_id: string
+          cheque_date?: string | null
+          cheque_number?: string | null
+          collateral_ids?: string[] | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          interest_amount?: number
+          loan_id: string
+          notes?: string | null
+          payment_date?: string
+          payment_mode: Database["public"]["Enums"]["payment_mode"]
+          payment_number: string
+          payment_type: Database["public"]["Enums"]["loan_payment_type"]
+          penalty_amount?: number | null
+          principal_amount?: number
+          receipt_printed?: boolean
+          reference_number?: string | null
+          upi_id?: string | null
+        }
+        Update: {
+          amount?: number
+          bank_name?: string | null
+          branch_id?: string
+          cheque_date?: string | null
+          cheque_number?: string | null
+          collateral_ids?: string[] | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          interest_amount?: number
+          loan_id?: string
+          notes?: string | null
+          payment_date?: string
+          payment_mode?: Database["public"]["Enums"]["payment_mode"]
+          payment_number?: string
+          payment_type?: Database["public"]["Enums"]["loan_payment_type"]
+          penalty_amount?: number | null
+          principal_amount?: number
+          receipt_printed?: boolean
+          reference_number?: string | null
+          upi_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_payments_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loan_payments_loan_id_fkey"
+            columns: ["loan_id"]
+            isOneToOne: false
+            referencedRelation: "loans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loans: {
+        Row: {
+          branch_id: string
+          closed_by: string | null
+          closed_date: string | null
+          collateral_value: number
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          due_date: string
+          id: string
+          interest_accrued: number
+          interest_paid: number
+          interest_rate: number
+          interest_type: string
+          loan_amount: number
+          loan_date: string
+          loan_number: string
+          ltv_percent: number
+          notes: string | null
+          outstanding_interest: number
+          outstanding_principal: number
+          outstanding_total: number
+          principal_paid: number
+          renewed_from_loan_id: string | null
+          renewed_to_loan_id: string | null
+          status: Database["public"]["Enums"]["loan_status"]
+          tenure_months: number
+          terms_conditions: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          branch_id: string
+          closed_by?: string | null
+          closed_date?: string | null
+          collateral_value: number
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          due_date: string
+          id?: string
+          interest_accrued?: number
+          interest_paid?: number
+          interest_rate: number
+          interest_type?: string
+          loan_amount: number
+          loan_date?: string
+          loan_number: string
+          ltv_percent: number
+          notes?: string | null
+          outstanding_interest?: number
+          outstanding_principal: number
+          outstanding_total: number
+          principal_paid?: number
+          renewed_from_loan_id?: string | null
+          renewed_to_loan_id?: string | null
+          status?: Database["public"]["Enums"]["loan_status"]
+          tenure_months?: number
+          terms_conditions?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          branch_id?: string
+          closed_by?: string | null
+          closed_date?: string | null
+          collateral_value?: number
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          due_date?: string
+          id?: string
+          interest_accrued?: number
+          interest_paid?: number
+          interest_rate?: number
+          interest_type?: string
+          loan_amount?: number
+          loan_date?: string
+          loan_number?: string
+          ltv_percent?: number
+          notes?: string | null
+          outstanding_interest?: number
+          outstanding_principal?: number
+          outstanding_total?: number
+          principal_paid?: number
+          renewed_from_loan_id?: string | null
+          renewed_to_loan_id?: string | null
+          status?: Database["public"]["Enums"]["loan_status"]
+          tenure_months?: number
+          terms_conditions?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loans_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loans_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loans_renewed_from_loan_id_fkey"
+            columns: ["renewed_from_loan_id"]
+            isOneToOne: false
+            referencedRelation: "loans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loans_renewed_to_loan_id_fkey"
+            columns: ["renewed_to_loan_id"]
+            isOneToOne: false
+            referencedRelation: "loans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       old_gold_purchases: {
         Row: {
           approved_at: string | null
@@ -1449,6 +1786,19 @@ export type Database = {
         | "partially_paid"
         | "cancelled"
         | "returned"
+      loan_payment_type:
+        | "interest"
+        | "principal"
+        | "part_release"
+        | "full_redemption"
+        | "renewal_fee"
+      loan_status:
+        | "pending"
+        | "active"
+        | "closed"
+        | "defaulted"
+        | "auctioned"
+        | "renewed"
       making_charge_type: "per_gram" | "percentage" | "flat"
       metal_color: "yellow" | "white" | "rose" | "two_tone" | "tri_tone"
       metal_type: "gold" | "silver" | "platinum" | "palladium"
@@ -1625,6 +1975,21 @@ export const Constants = {
         "partially_paid",
         "cancelled",
         "returned",
+      ],
+      loan_payment_type: [
+        "interest",
+        "principal",
+        "part_release",
+        "full_redemption",
+        "renewal_fee",
+      ],
+      loan_status: [
+        "pending",
+        "active",
+        "closed",
+        "defaulted",
+        "auctioned",
+        "renewed",
       ],
       making_charge_type: ["per_gram", "percentage", "flat"],
       metal_color: ["yellow", "white", "rose", "two_tone", "tri_tone"],
