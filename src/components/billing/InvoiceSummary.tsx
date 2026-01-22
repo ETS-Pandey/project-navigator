@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/lib/formatters";
@@ -47,9 +48,13 @@ export function InvoiceSummary({
   const preRoundTotal = gst.grandTotal - oldGoldAmount;
   const { rounded, adjustment } = roundForInvoice(preRoundTotal);
   
-  // Notify parent of totals
-  if (onTotalsChange) {
-    onTotalsChange({
+  // Use ref to track previous values and avoid infinite loops
+  const prevTotalsRef = useRef<string>("");
+  
+  useEffect(() => {
+    if (!onTotalsChange) return;
+    
+    const newTotals = {
       grossAmount,
       discountAmount: overallDiscount,
       taxableAmount,
@@ -59,8 +64,14 @@ export function InvoiceSummary({
       totalGst: gst.totalGst,
       roundOff: adjustment,
       grandTotal: rounded,
-    });
-  }
+    };
+    
+    const totalsKey = JSON.stringify(newTotals);
+    if (totalsKey !== prevTotalsRef.current) {
+      prevTotalsRef.current = totalsKey;
+      onTotalsChange(newTotals);
+    }
+  }, [grossAmount, overallDiscount, taxableAmount, gst, adjustment, rounded, onTotalsChange]);
   
   return (
     <Card>
