@@ -1,4 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
+import { useReactToPrint } from "react-to-print";
 import { format, parseISO, isAfter } from "date-fns";
 import { ArrowLeft, Printer, CreditCard, Package, History, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLoan, useLoanPayments, getDaysOverdue } from "@/hooks/useLoans";
 import { formatCurrency, formatWeight } from "@/lib/formatters";
 import { LoanPaymentDialog } from "@/components/loans/LoanPaymentDialog";
-import { useState } from "react";
+import { LoanAgreementPrintTemplate } from "@/components/loans/LoanAgreementPrintTemplate";
 
 const statusColors: Record<string, string> = {
   pending: "bg-yellow-100 text-yellow-800",
@@ -21,9 +23,15 @@ const statusColors: Record<string, string> = {
 export default function LoanDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const printRef = useRef<HTMLDivElement>(null);
   const { data: loan, isLoading } = useLoan(id);
   const { data: payments = [] } = useLoanPayments(id);
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: `LoanAgreement-${loan?.loan_number || ""}`,
+  });
 
   if (isLoading) {
     return (
@@ -74,9 +82,9 @@ export default function LoanDetail() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => handlePrint()}>
             <Printer className="mr-2 h-4 w-4" />
-            Print
+            Print Agreement
           </Button>
           {loan.status === 'active' && (
             <Button onClick={() => setPaymentDialogOpen(true)}>
@@ -240,11 +248,18 @@ export default function LoanDetail() {
       </div>
 
       {loan && (
-        <LoanPaymentDialog
-          open={paymentDialogOpen}
-          onOpenChange={setPaymentDialogOpen}
-          loan={loan}
-        />
+        <>
+          <LoanPaymentDialog
+            open={paymentDialogOpen}
+            onOpenChange={setPaymentDialogOpen}
+            loan={loan}
+          />
+          
+          {/* Hidden Print Template */}
+          <div className="hidden">
+            <LoanAgreementPrintTemplate ref={printRef} loan={loan} />
+          </div>
+        </>
       )}
     </div>
   );
