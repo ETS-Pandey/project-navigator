@@ -17,6 +17,7 @@ import { useStaff, getAssignableRoles } from "@/hooks/useStaff";
 import { useBranch } from "@/contexts/BranchContext";
 import { ROLE_LABELS, type AppRole } from "@/types/staff";
 import { StaffEditDialog } from "@/components/staff/StaffEditDialog";
+import { StaffInviteDialog } from "@/components/staff/StaffInviteDialog";
 import type { StaffMember } from "@/types/staff";
 
 const roleColors: Record<AppRole, string> = {
@@ -38,7 +39,8 @@ export default function StaffList() {
   const [roleFilter, setRoleFilter] = useState<AppRole | "all">("all");
   const [branchFilter, setBranchFilter] = useState<string>("all");
   const [selectedStaff, setSelectedStaff] = useState<StaffMember | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
 
   const { branches } = useBranch();
   const { data: staff = [], isLoading } = useStaff({
@@ -51,7 +53,7 @@ export default function StaffList() {
 
   const handleEditStaff = (member: StaffMember) => {
     setSelectedStaff(member);
-    setDialogOpen(true);
+    setEditDialogOpen(true);
   };
 
   const getInitials = (name: string) => {
@@ -73,9 +75,9 @@ export default function StaffList() {
             Manage user accounts, roles, and branch access
           </p>
         </div>
-        <Button disabled>
+        <Button onClick={() => setInviteDialogOpen(true)}>
           <UserPlus className="mr-2 h-4 w-4" />
-          Invite Staff
+          Add Staff
         </Button>
       </div>
 
@@ -271,9 +273,15 @@ export default function StaffList() {
 
       {/* Edit Dialog */}
       <StaffEditDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
         staff={selectedStaff}
+      />
+
+      {/* Invite Dialog */}
+      <StaffInviteDialog
+        open={inviteDialogOpen}
+        onOpenChange={setInviteDialogOpen}
       />
     </div>
   );
