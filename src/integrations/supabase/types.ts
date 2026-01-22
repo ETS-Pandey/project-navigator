@@ -1577,6 +1577,306 @@ export type Database = {
           },
         ]
       }
+      scheme_enrollments: {
+        Row: {
+          bonus_amount: number | null
+          bonus_earned: boolean | null
+          branch_id: string
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          enrollment_date: string
+          enrollment_number: string
+          gold_weight_earned: number | null
+          id: string
+          installments_paid: number
+          installments_remaining: number
+          locked_gold_rate: number | null
+          matured_at: string | null
+          maturity_date: string
+          monthly_amount: number
+          notes: string | null
+          payout_amount: number | null
+          payout_date: string | null
+          payout_mode: string | null
+          payout_reference: string | null
+          scheme_id: string
+          start_date: string
+          status: Database["public"]["Enums"]["enrollment_status"]
+          total_due: number
+          total_paid: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          bonus_amount?: number | null
+          bonus_earned?: boolean | null
+          branch_id: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          enrollment_date?: string
+          enrollment_number: string
+          gold_weight_earned?: number | null
+          id?: string
+          installments_paid?: number
+          installments_remaining: number
+          locked_gold_rate?: number | null
+          matured_at?: string | null
+          maturity_date: string
+          monthly_amount: number
+          notes?: string | null
+          payout_amount?: number | null
+          payout_date?: string | null
+          payout_mode?: string | null
+          payout_reference?: string | null
+          scheme_id: string
+          start_date: string
+          status?: Database["public"]["Enums"]["enrollment_status"]
+          total_due?: number
+          total_paid?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          bonus_amount?: number | null
+          bonus_earned?: boolean | null
+          branch_id?: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          enrollment_date?: string
+          enrollment_number?: string
+          gold_weight_earned?: number | null
+          id?: string
+          installments_paid?: number
+          installments_remaining?: number
+          locked_gold_rate?: number | null
+          matured_at?: string | null
+          maturity_date?: string
+          monthly_amount?: number
+          notes?: string | null
+          payout_amount?: number | null
+          payout_date?: string | null
+          payout_mode?: string | null
+          payout_reference?: string | null
+          scheme_id?: string
+          start_date?: string
+          status?: Database["public"]["Enums"]["enrollment_status"]
+          total_due?: number
+          total_paid?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheme_enrollments_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheme_enrollments_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheme_enrollments_scheme_id_fkey"
+            columns: ["scheme_id"]
+            isOneToOne: false
+            referencedRelation: "schemes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scheme_payments: {
+        Row: {
+          amount_due: number
+          amount_paid: number | null
+          bank_name: string | null
+          branch_id: string
+          cheque_date: string | null
+          cheque_number: string | null
+          created_at: string
+          created_by: string | null
+          due_date: string
+          enrollment_id: string
+          id: string
+          installment_number: number
+          notes: string | null
+          payment_date: string | null
+          payment_mode: Database["public"]["Enums"]["payment_mode"] | null
+          payment_number: string
+          penalty_amount: number | null
+          receipt_printed: boolean | null
+          reference_number: string | null
+          status: Database["public"]["Enums"]["scheme_payment_status"]
+          upi_id: string | null
+        }
+        Insert: {
+          amount_due: number
+          amount_paid?: number | null
+          bank_name?: string | null
+          branch_id: string
+          cheque_date?: string | null
+          cheque_number?: string | null
+          created_at?: string
+          created_by?: string | null
+          due_date: string
+          enrollment_id: string
+          id?: string
+          installment_number: number
+          notes?: string | null
+          payment_date?: string | null
+          payment_mode?: Database["public"]["Enums"]["payment_mode"] | null
+          payment_number: string
+          penalty_amount?: number | null
+          receipt_printed?: boolean | null
+          reference_number?: string | null
+          status?: Database["public"]["Enums"]["scheme_payment_status"]
+          upi_id?: string | null
+        }
+        Update: {
+          amount_due?: number
+          amount_paid?: number | null
+          bank_name?: string | null
+          branch_id?: string
+          cheque_date?: string | null
+          cheque_number?: string | null
+          created_at?: string
+          created_by?: string | null
+          due_date?: string
+          enrollment_id?: string
+          id?: string
+          installment_number?: number
+          notes?: string | null
+          payment_date?: string | null
+          payment_mode?: Database["public"]["Enums"]["payment_mode"] | null
+          payment_number?: string
+          penalty_amount?: number | null
+          receipt_printed?: boolean | null
+          reference_number?: string | null
+          status?: Database["public"]["Enums"]["scheme_payment_status"]
+          upi_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheme_payments_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheme_payments_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "scheme_enrollments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schemes: {
+        Row: {
+          bonus_month: number | null
+          bonus_type: string
+          bonus_value: number
+          branch_id: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          duration_months: number
+          end_date: string | null
+          gold_rate_lock_type: string | null
+          grace_period_days: number | null
+          id: string
+          is_gold_scheme: boolean | null
+          late_payment_penalty_percent: number | null
+          max_enrollments: number | null
+          min_enrollments: number | null
+          monthly_amount: number
+          scheme_code: string
+          scheme_name: string
+          start_date: string | null
+          status: Database["public"]["Enums"]["scheme_status"]
+          terms_conditions: string | null
+          total_amount: number | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          bonus_month?: number | null
+          bonus_type?: string
+          bonus_value?: number
+          branch_id: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_months?: number
+          end_date?: string | null
+          gold_rate_lock_type?: string | null
+          grace_period_days?: number | null
+          id?: string
+          is_gold_scheme?: boolean | null
+          late_payment_penalty_percent?: number | null
+          max_enrollments?: number | null
+          min_enrollments?: number | null
+          monthly_amount: number
+          scheme_code: string
+          scheme_name: string
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["scheme_status"]
+          terms_conditions?: string | null
+          total_amount?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          bonus_month?: number | null
+          bonus_type?: string
+          bonus_value?: number
+          branch_id?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_months?: number
+          end_date?: string | null
+          gold_rate_lock_type?: string | null
+          grace_period_days?: number | null
+          id?: string
+          is_gold_scheme?: boolean | null
+          late_payment_penalty_percent?: number | null
+          max_enrollments?: number | null
+          min_enrollments?: number | null
+          monthly_amount?: number
+          scheme_code?: string
+          scheme_name?: string
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["scheme_status"]
+          terms_conditions?: string | null
+          total_amount?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schemes_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stock_movements: {
         Row: {
           branch_id: string
@@ -1778,6 +2078,12 @@ export type Database = {
         | "karigar_admin"
         | "auditor"
         | "customer"
+      enrollment_status:
+        | "active"
+        | "completed"
+        | "cancelled"
+        | "defaulted"
+        | "matured"
       gold_purity: "24K" | "22K" | "18K" | "14K" | "10K"
       invoice_status:
         | "draft"
@@ -1817,6 +2123,8 @@ export type Database = {
         | "with_karigar"
         | "in_repair"
         | "melted"
+      scheme_payment_status: "pending" | "paid" | "overdue" | "waived"
+      scheme_status: "active" | "inactive" | "discontinued"
       silver_purity: "999" | "925" | "900" | "800"
       stock_movement_type:
         | "purchase"
@@ -1967,6 +2275,13 @@ export const Constants = {
         "auditor",
         "customer",
       ],
+      enrollment_status: [
+        "active",
+        "completed",
+        "cancelled",
+        "defaulted",
+        "matured",
+      ],
       gold_purity: ["24K", "22K", "18K", "14K", "10K"],
       invoice_status: [
         "draft",
@@ -2011,6 +2326,8 @@ export const Constants = {
         "in_repair",
         "melted",
       ],
+      scheme_payment_status: ["pending", "paid", "overdue", "waived"],
+      scheme_status: ["active", "inactive", "discontinued"],
       silver_purity: ["999", "925", "900", "800"],
       stock_movement_type: [
         "purchase",
