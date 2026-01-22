@@ -56,6 +56,9 @@ import ExpensesList from "./pages/expenses/ExpensesList";
 // Accounting Pages
 import DayBook from "./pages/accounting/DayBook";
 import ChartOfAccountsPage from "./pages/accounting/ChartOfAccountsPage";
+import Ledgers from "./pages/accounting/Ledgers";
+import BankBook from "./pages/accounting/BankBook";
+import Reports from "./pages/accounting/Reports";
 
 // Settings Pages
 import SettingsPage from "./pages/settings/SettingsPage";
@@ -133,9 +136,9 @@ const App = () => (
                   {/* Accounting Routes */}
                   <Route path="/accounting/daybook" element={<DayBook />} />
                   <Route path="/accounting/chart-of-accounts" element={<ChartOfAccountsPage />} />
-                  <Route path="/accounting/ledgers" element={<Dashboard />} />
-                  <Route path="/accounting/bank" element={<Dashboard />} />
-                  <Route path="/accounting/reports" element={<Dashboard />} />
+                  <Route path="/accounting/ledgers" element={<Ledgers />} />
+                  <Route path="/accounting/bank" element={<BankBook />} />
+                  <Route path="/accounting/reports" element={<Reports />} />
                   
                   {/* Settings Routes */}
                   <Route path="/settings" element={<SettingsPage />} />
