@@ -40,6 +40,12 @@ import NewLoan from "./pages/loans/NewLoan";
 import LoanDetail from "./pages/loans/LoanDetail";
 import Collections from "./pages/loans/Collections";
 
+// Scheme Pages
+import SchemesList from "./pages/schemes/SchemesList";
+import Enrollments from "./pages/schemes/Enrollments";
+import EnrollmentDetail from "./pages/schemes/EnrollmentDetail";
+import SchemePayments from "./pages/schemes/SchemePayments";
+
 // Layout
 import { AppLayout } from "./components/layout/AppLayout";
 
@@ -91,8 +97,13 @@ const App = () => (
                   <Route path="/loans/collections" element={<Collections />} />
                   <Route path="/loans/:id" element={<LoanDetail />} />
                   
+                  {/* Scheme Routes */}
+                  <Route path="/schemes" element={<SchemesList />} />
+                  <Route path="/schemes/enrollments" element={<Enrollments />} />
+                  <Route path="/schemes/enrollments/:id" element={<EnrollmentDetail />} />
+                  <Route path="/schemes/payments" element={<SchemePayments />} />
+                  
                   {/* Placeholder routes for other modules */}
-                  <Route path="/schemes" element={<Dashboard />} />
                   <Route path="/orders/*" element={<Dashboard />} />
                   <Route path="/accounting/*" element={<Dashboard />} />
                   <Route path="/staff" element={<Dashboard />} />
