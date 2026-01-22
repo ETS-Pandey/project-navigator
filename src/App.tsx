@@ -57,6 +57,9 @@ import ExpensesList from "./pages/expenses/ExpensesList";
 import DayBook from "./pages/accounting/DayBook";
 import ChartOfAccountsPage from "./pages/accounting/ChartOfAccountsPage";
 
+// Settings Pages
+import SettingsPage from "./pages/settings/SettingsPage";
+
 // Staff Pages
 import StaffList from "./pages/staff/StaffList";
 
@@ -134,9 +137,11 @@ const App = () => (
                   <Route path="/accounting/bank" element={<Dashboard />} />
                   <Route path="/accounting/reports" element={<Dashboard />} />
                   
+                  {/* Settings Routes */}
+                  <Route path="/settings" element={<SettingsPage />} />
+                  
                   {/* Placeholder routes */}
                   <Route path="/reports" element={<Dashboard />} />
-                  <Route path="/settings" element={<Dashboard />} />
                 </Route>
 
                 {/* Redirects */}

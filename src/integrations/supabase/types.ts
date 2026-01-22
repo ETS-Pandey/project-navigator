@@ -65,6 +65,41 @@ export type Database = {
         }
         Relationships: []
       }
+      business_settings: {
+        Row: {
+          branch_id: string | null
+          created_at: string
+          id: string
+          setting_key: string
+          setting_value: Json
+          updated_at: string
+        }
+        Insert: {
+          branch_id?: string | null
+          created_at?: string
+          id?: string
+          setting_key: string
+          setting_value?: Json
+          updated_at?: string
+        }
+        Update: {
+          branch_id?: string | null
+          created_at?: string
+          id?: string
+          setting_key?: string
+          setting_value?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_settings_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categories: {
         Row: {
           code: string
@@ -1436,6 +1471,59 @@ export type Database = {
             columns: ["invoice_id"]
             isOneToOne: false
             referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      print_templates: {
+        Row: {
+          body_settings: Json | null
+          branch_id: string | null
+          created_at: string
+          footer_content: Json | null
+          header_content: Json | null
+          id: string
+          is_active: boolean | null
+          is_default: boolean | null
+          page_settings: Json | null
+          template_name: string
+          template_type: string
+          updated_at: string
+        }
+        Insert: {
+          body_settings?: Json | null
+          branch_id?: string | null
+          created_at?: string
+          footer_content?: Json | null
+          header_content?: Json | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          page_settings?: Json | null
+          template_name: string
+          template_type: string
+          updated_at?: string
+        }
+        Update: {
+          body_settings?: Json | null
+          branch_id?: string | null
+          created_at?: string
+          footer_content?: Json | null
+          header_content?: Json | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          page_settings?: Json | null
+          template_name?: string
+          template_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "print_templates_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
             referencedColumns: ["id"]
           },
         ]
