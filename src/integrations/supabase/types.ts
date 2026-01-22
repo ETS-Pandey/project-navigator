@@ -116,6 +116,98 @@ export type Database = {
         }
         Relationships: []
       }
+      customers: {
+        Row: {
+          aadhar: string | null
+          address: string | null
+          anniversary: string | null
+          branch_id: string
+          city: string | null
+          created_at: string
+          created_by: string | null
+          credit_limit: number | null
+          customer_code: string
+          customer_type: string
+          date_of_birth: string | null
+          email: string | null
+          gstin: string | null
+          id: string
+          is_active: boolean
+          loyalty_points: number | null
+          name: string
+          notes: string | null
+          outstanding_balance: number | null
+          pan: string | null
+          phone: string | null
+          pincode: string | null
+          state: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          aadhar?: string | null
+          address?: string | null
+          anniversary?: string | null
+          branch_id: string
+          city?: string | null
+          created_at?: string
+          created_by?: string | null
+          credit_limit?: number | null
+          customer_code: string
+          customer_type?: string
+          date_of_birth?: string | null
+          email?: string | null
+          gstin?: string | null
+          id?: string
+          is_active?: boolean
+          loyalty_points?: number | null
+          name: string
+          notes?: string | null
+          outstanding_balance?: number | null
+          pan?: string | null
+          phone?: string | null
+          pincode?: string | null
+          state?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          aadhar?: string | null
+          address?: string | null
+          anniversary?: string | null
+          branch_id?: string
+          city?: string | null
+          created_at?: string
+          created_by?: string | null
+          credit_limit?: number | null
+          customer_code?: string
+          customer_type?: string
+          date_of_birth?: string | null
+          email?: string | null
+          gstin?: string | null
+          id?: string
+          is_active?: boolean
+          loyalty_points?: number | null
+          name?: string
+          notes?: string | null
+          outstanding_balance?: number | null
+          pan?: string | null
+          phone?: string | null
+          pincode?: string | null
+          state?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       daily_rates: {
         Row: {
           branch_id: string
@@ -192,6 +284,443 @@ export type Database = {
             columns: ["branch_id"]
             isOneToOne: false
             referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoice_items: {
+        Row: {
+          cgst_amount: number | null
+          cgst_percent: number | null
+          created_at: string
+          description: string | null
+          discount_amount: number | null
+          discount_percent: number | null
+          display_order: number | null
+          gross_weight: number | null
+          hsn_code: string | null
+          id: string
+          igst_amount: number | null
+          igst_percent: number | null
+          invoice_id: string
+          item_code: string | null
+          item_name: string
+          making_charge_type:
+            | Database["public"]["Enums"]["making_charge_type"]
+            | null
+          making_charge_value: number | null
+          making_charges: number | null
+          metal_type: Database["public"]["Enums"]["metal_type"] | null
+          metal_value: number | null
+          net_weight: number | null
+          other_charges: number | null
+          product_id: string | null
+          purity: string | null
+          quantity: number
+          rate_per_gram: number | null
+          sgst_amount: number | null
+          sgst_percent: number | null
+          stone_value: number | null
+          taxable_amount: number
+          total_amount: number
+          unit_price: number
+        }
+        Insert: {
+          cgst_amount?: number | null
+          cgst_percent?: number | null
+          created_at?: string
+          description?: string | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          display_order?: number | null
+          gross_weight?: number | null
+          hsn_code?: string | null
+          id?: string
+          igst_amount?: number | null
+          igst_percent?: number | null
+          invoice_id: string
+          item_code?: string | null
+          item_name: string
+          making_charge_type?:
+            | Database["public"]["Enums"]["making_charge_type"]
+            | null
+          making_charge_value?: number | null
+          making_charges?: number | null
+          metal_type?: Database["public"]["Enums"]["metal_type"] | null
+          metal_value?: number | null
+          net_weight?: number | null
+          other_charges?: number | null
+          product_id?: string | null
+          purity?: string | null
+          quantity?: number
+          rate_per_gram?: number | null
+          sgst_amount?: number | null
+          sgst_percent?: number | null
+          stone_value?: number | null
+          taxable_amount?: number
+          total_amount?: number
+          unit_price?: number
+        }
+        Update: {
+          cgst_amount?: number | null
+          cgst_percent?: number | null
+          created_at?: string
+          description?: string | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          display_order?: number | null
+          gross_weight?: number | null
+          hsn_code?: string | null
+          id?: string
+          igst_amount?: number | null
+          igst_percent?: number | null
+          invoice_id?: string
+          item_code?: string | null
+          item_name?: string
+          making_charge_type?:
+            | Database["public"]["Enums"]["making_charge_type"]
+            | null
+          making_charge_value?: number | null
+          making_charges?: number | null
+          metal_type?: Database["public"]["Enums"]["metal_type"] | null
+          metal_value?: number | null
+          net_weight?: number | null
+          other_charges?: number | null
+          product_id?: string | null
+          purity?: string | null
+          quantity?: number
+          rate_per_gram?: number | null
+          sgst_amount?: number | null
+          sgst_percent?: number | null
+          stone_value?: number | null
+          taxable_amount?: number
+          total_amount?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_items_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoice_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoices: {
+        Row: {
+          amount_paid: number | null
+          balance_due: number | null
+          branch_id: string
+          cgst_amount: number | null
+          created_at: string
+          created_by: string | null
+          customer_address: string | null
+          customer_gstin: string | null
+          customer_id: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          discount_amount: number | null
+          discount_percent: number | null
+          grand_total: number
+          gross_amount: number
+          id: string
+          igst_amount: number | null
+          invoice_date: string
+          invoice_number: string
+          invoice_type: string
+          is_interstate: boolean | null
+          notes: string | null
+          old_gold_amount: number | null
+          payment_due_date: string | null
+          round_off: number | null
+          sgst_amount: number | null
+          status: Database["public"]["Enums"]["invoice_status"]
+          taxable_amount: number
+          terms_conditions: string | null
+          total_gst: number | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          amount_paid?: number | null
+          balance_due?: number | null
+          branch_id: string
+          cgst_amount?: number | null
+          created_at?: string
+          created_by?: string | null
+          customer_address?: string | null
+          customer_gstin?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          grand_total?: number
+          gross_amount?: number
+          id?: string
+          igst_amount?: number | null
+          invoice_date?: string
+          invoice_number: string
+          invoice_type?: string
+          is_interstate?: boolean | null
+          notes?: string | null
+          old_gold_amount?: number | null
+          payment_due_date?: string | null
+          round_off?: number | null
+          sgst_amount?: number | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          taxable_amount?: number
+          terms_conditions?: string | null
+          total_gst?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          amount_paid?: number | null
+          balance_due?: number | null
+          branch_id?: string
+          cgst_amount?: number | null
+          created_at?: string
+          created_by?: string | null
+          customer_address?: string | null
+          customer_gstin?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          grand_total?: number
+          gross_amount?: number
+          id?: string
+          igst_amount?: number | null
+          invoice_date?: string
+          invoice_number?: string
+          invoice_type?: string
+          is_interstate?: boolean | null
+          notes?: string | null
+          old_gold_amount?: number | null
+          payment_due_date?: string | null
+          round_off?: number | null
+          sgst_amount?: number | null
+          status?: Database["public"]["Enums"]["invoice_status"]
+          taxable_amount?: number
+          terms_conditions?: string | null
+          total_gst?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      old_gold_purchases: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          branch_id: string
+          created_at: string
+          created_by: string | null
+          customer_id: string | null
+          deduction_amount: number | null
+          deduction_percent: number | null
+          deduction_weight: number | null
+          gross_value: number
+          gross_weight: number
+          id: string
+          invoice_id: string | null
+          metal_type: Database["public"]["Enums"]["metal_type"]
+          net_value: number
+          net_weight: number
+          notes: string | null
+          purchase_date: string
+          purchase_number: string
+          purity: string
+          rate_per_gram: number
+          status: string
+          tested_by: string | null
+          testing_method: string | null
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          branch_id: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          deduction_amount?: number | null
+          deduction_percent?: number | null
+          deduction_weight?: number | null
+          gross_value: number
+          gross_weight: number
+          id?: string
+          invoice_id?: string | null
+          metal_type?: Database["public"]["Enums"]["metal_type"]
+          net_value: number
+          net_weight: number
+          notes?: string | null
+          purchase_date?: string
+          purchase_number: string
+          purity: string
+          rate_per_gram: number
+          status?: string
+          tested_by?: string | null
+          testing_method?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          branch_id?: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          deduction_amount?: number | null
+          deduction_percent?: number | null
+          deduction_weight?: number | null
+          gross_value?: number
+          gross_weight?: number
+          id?: string
+          invoice_id?: string | null
+          metal_type?: Database["public"]["Enums"]["metal_type"]
+          net_value?: number
+          net_weight?: number
+          notes?: string | null
+          purchase_date?: string
+          purchase_number?: string
+          purity?: string
+          rate_per_gram?: number
+          status?: string
+          tested_by?: string | null
+          testing_method?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "old_gold_purchases_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "old_gold_purchases_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "old_gold_purchases_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          bank_name: string | null
+          branch_id: string
+          cheque_date: string | null
+          cheque_number: string | null
+          created_at: string
+          created_by: string | null
+          customer_id: string | null
+          id: string
+          invoice_id: string | null
+          notes: string | null
+          payment_date: string
+          payment_mode: Database["public"]["Enums"]["payment_mode"]
+          payment_number: string
+          reference_number: string | null
+          status: string
+          updated_at: string
+          upi_id: string | null
+        }
+        Insert: {
+          amount: number
+          bank_name?: string | null
+          branch_id: string
+          cheque_date?: string | null
+          cheque_number?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          id?: string
+          invoice_id?: string | null
+          notes?: string | null
+          payment_date?: string
+          payment_mode: Database["public"]["Enums"]["payment_mode"]
+          payment_number: string
+          reference_number?: string | null
+          status?: string
+          updated_at?: string
+          upi_id?: string | null
+        }
+        Update: {
+          amount?: number
+          bank_name?: string | null
+          branch_id?: string
+          cheque_date?: string | null
+          cheque_number?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          id?: string
+          invoice_id?: string | null
+          notes?: string | null
+          payment_date?: string
+          payment_mode?: Database["public"]["Enums"]["payment_mode"]
+          payment_number?: string
+          reference_number?: string | null
+          status?: string
+          updated_at?: string
+          upi_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
             referencedColumns: ["id"]
           },
         ]
@@ -477,6 +1006,193 @@ export type Database = {
         }
         Relationships: []
       }
+      quotation_items: {
+        Row: {
+          created_at: string
+          description: string | null
+          discount_amount: number | null
+          discount_percent: number | null
+          display_order: number | null
+          gross_weight: number | null
+          hsn_code: string | null
+          id: string
+          item_code: string | null
+          item_name: string
+          making_charges: number | null
+          metal_type: Database["public"]["Enums"]["metal_type"] | null
+          metal_value: number | null
+          net_weight: number | null
+          product_id: string | null
+          purity: string | null
+          quantity: number
+          quotation_id: string
+          rate_per_gram: number | null
+          stone_value: number | null
+          total_amount: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          display_order?: number | null
+          gross_weight?: number | null
+          hsn_code?: string | null
+          id?: string
+          item_code?: string | null
+          item_name: string
+          making_charges?: number | null
+          metal_type?: Database["public"]["Enums"]["metal_type"] | null
+          metal_value?: number | null
+          net_weight?: number | null
+          product_id?: string | null
+          purity?: string | null
+          quantity?: number
+          quotation_id: string
+          rate_per_gram?: number | null
+          stone_value?: number | null
+          total_amount?: number
+          unit_price?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          display_order?: number | null
+          gross_weight?: number | null
+          hsn_code?: string | null
+          id?: string
+          item_code?: string | null
+          item_name?: string
+          making_charges?: number | null
+          metal_type?: Database["public"]["Enums"]["metal_type"] | null
+          metal_value?: number | null
+          net_weight?: number | null
+          product_id?: string | null
+          purity?: string | null
+          quantity?: number
+          quotation_id?: string
+          rate_per_gram?: number | null
+          stone_value?: number | null
+          total_amount?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotation_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotation_items_quotation_id_fkey"
+            columns: ["quotation_id"]
+            isOneToOne: false
+            referencedRelation: "quotations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quotations: {
+        Row: {
+          branch_id: string
+          converted_invoice_id: string | null
+          created_at: string
+          created_by: string | null
+          customer_email: string | null
+          customer_id: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          discount_amount: number | null
+          grand_total: number
+          gross_amount: number
+          id: string
+          notes: string | null
+          quotation_date: string
+          quotation_number: string
+          status: string
+          taxable_amount: number
+          terms_conditions: string | null
+          total_gst: number | null
+          updated_at: string
+          updated_by: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          branch_id: string
+          converted_invoice_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          discount_amount?: number | null
+          grand_total?: number
+          gross_amount?: number
+          id?: string
+          notes?: string | null
+          quotation_date?: string
+          quotation_number: string
+          status?: string
+          taxable_amount?: number
+          terms_conditions?: string | null
+          total_gst?: number | null
+          updated_at?: string
+          updated_by?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          branch_id?: string
+          converted_invoice_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          discount_amount?: number | null
+          grand_total?: number
+          gross_amount?: number
+          id?: string
+          notes?: string | null
+          quotation_date?: string
+          quotation_number?: string
+          status?: string
+          taxable_amount?: number
+          terms_conditions?: string | null
+          total_gst?: number | null
+          updated_at?: string
+          updated_by?: string | null
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotations_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotations_converted_invoice_id_fkey"
+            columns: ["converted_invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotations_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rate_history: {
         Row: {
           changed_at: string
@@ -726,9 +1442,24 @@ export type Database = {
         | "auditor"
         | "customer"
       gold_purity: "24K" | "22K" | "18K" | "14K" | "10K"
+      invoice_status:
+        | "draft"
+        | "confirmed"
+        | "paid"
+        | "partially_paid"
+        | "cancelled"
+        | "returned"
       making_charge_type: "per_gram" | "percentage" | "flat"
       metal_color: "yellow" | "white" | "rose" | "two_tone" | "tri_tone"
       metal_type: "gold" | "silver" | "platinum" | "palladium"
+      payment_mode:
+        | "cash"
+        | "card"
+        | "upi"
+        | "bank_transfer"
+        | "cheque"
+        | "credit"
+        | "old_gold"
       product_status:
         | "in_stock"
         | "sold"
@@ -887,9 +1618,26 @@ export const Constants = {
         "customer",
       ],
       gold_purity: ["24K", "22K", "18K", "14K", "10K"],
+      invoice_status: [
+        "draft",
+        "confirmed",
+        "paid",
+        "partially_paid",
+        "cancelled",
+        "returned",
+      ],
       making_charge_type: ["per_gram", "percentage", "flat"],
       metal_color: ["yellow", "white", "rose", "two_tone", "tri_tone"],
       metal_type: ["gold", "silver", "platinum", "palladium"],
+      payment_mode: [
+        "cash",
+        "card",
+        "upi",
+        "bank_transfer",
+        "cheque",
+        "credit",
+        "old_gold",
+      ],
       product_status: [
         "in_stock",
         "sold",
