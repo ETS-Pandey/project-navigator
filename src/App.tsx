@@ -30,6 +30,10 @@ import Quotations from "./pages/billing/Quotations";
 import NewQuotation from "./pages/billing/NewQuotation";
 import OldGold from "./pages/billing/OldGold";
 
+// Customer Pages
+import Customers from "./pages/customers/Customers";
+import CustomerDetail from "./pages/customers/CustomerDetail";
+
 // Layout
 import { AppLayout } from "./components/layout/AppLayout";
 
@@ -71,8 +75,11 @@ const App = () => (
                   <Route path="/billing/quotations/new" element={<NewQuotation />} />
                   <Route path="/billing/old-gold" element={<OldGold />} />
                   
+                  {/* Customer Routes */}
+                  <Route path="/customers" element={<Customers />} />
+                  <Route path="/customers/:id" element={<CustomerDetail />} />
+                  
                   {/* Placeholder routes for other modules */}
-                  <Route path="/customers/*" element={<Dashboard />} />
                   <Route path="/loans/*" element={<Dashboard />} />
                   <Route path="/schemes" element={<Dashboard />} />
                   <Route path="/orders/*" element={<Dashboard />} />
