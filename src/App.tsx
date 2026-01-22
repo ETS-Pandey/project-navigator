@@ -14,6 +14,12 @@ import Dashboard from "./pages/Dashboard";
 import Rates from "./pages/Rates";
 import NotFound from "./pages/NotFound";
 
+// Inventory Pages
+import Products from "./pages/inventory/Products";
+import Categories from "./pages/inventory/Categories";
+import ProductForm from "./pages/inventory/ProductForm";
+import StockOperations from "./pages/inventory/StockOperations";
+
 // Layout
 import { AppLayout } from "./components/layout/AppLayout";
 
@@ -38,7 +44,13 @@ const App = () => (
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/rates" element={<Rates />} />
                   {/* Placeholder routes for other modules */}
-                  <Route path="/inventory/*" element={<Dashboard />} />
+                  {/* Inventory Routes */}
+                  <Route path="/inventory/products" element={<Products />} />
+                  <Route path="/inventory/products/new" element={<ProductForm />} />
+                  <Route path="/inventory/products/:id/edit" element={<ProductForm />} />
+                  <Route path="/inventory/categories" element={<Categories />} />
+                  <Route path="/inventory/stock" element={<StockOperations />} />
+                  <Route path="/inventory/barcodes" element={<Dashboard />} />
                   <Route path="/billing/*" element={<Dashboard />} />
                   <Route path="/customers/*" element={<Dashboard />} />
                   <Route path="/loans/*" element={<Dashboard />} />
