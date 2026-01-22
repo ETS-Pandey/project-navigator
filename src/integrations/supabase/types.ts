@@ -65,6 +65,57 @@ export type Database = {
         }
         Relationships: []
       }
+      categories: {
+        Row: {
+          code: string
+          created_at: string
+          default_making_charge_type:
+            | Database["public"]["Enums"]["making_charge_type"]
+            | null
+          default_making_charge_value: number | null
+          description: string | null
+          display_order: number | null
+          hsn_code: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          default_making_charge_type?:
+            | Database["public"]["Enums"]["making_charge_type"]
+            | null
+          default_making_charge_value?: number | null
+          description?: string | null
+          display_order?: number | null
+          hsn_code?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          default_making_charge_type?:
+            | Database["public"]["Enums"]["making_charge_type"]
+            | null
+          default_making_charge_value?: number | null
+          description?: string | null
+          display_order?: number | null
+          hsn_code?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       daily_rates: {
         Row: {
           branch_id: string
@@ -145,6 +196,254 @@ export type Database = {
           },
         ]
       }
+      product_images: {
+        Row: {
+          created_at: string
+          display_order: number | null
+          id: string
+          image_url: string
+          is_primary: boolean | null
+          product_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url: string
+          is_primary?: boolean | null
+          product_id: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url?: string
+          is_primary?: boolean | null
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_stones: {
+        Row: {
+          carat_weight: number | null
+          certificate_number: string | null
+          certification: string | null
+          clarity: string | null
+          color: string | null
+          created_at: string
+          cut: string | null
+          id: string
+          product_id: string
+          stone_count: number
+          stone_shape: string | null
+          stone_type: string
+          stone_value: number
+        }
+        Insert: {
+          carat_weight?: number | null
+          certificate_number?: string | null
+          certification?: string | null
+          clarity?: string | null
+          color?: string | null
+          created_at?: string
+          cut?: string | null
+          id?: string
+          product_id: string
+          stone_count?: number
+          stone_shape?: string | null
+          stone_type: string
+          stone_value?: number
+        }
+        Update: {
+          carat_weight?: number | null
+          certificate_number?: string | null
+          certification?: string | null
+          clarity?: string | null
+          color?: string | null
+          created_at?: string
+          cut?: string | null
+          id?: string
+          product_id?: string
+          stone_count?: number
+          stone_shape?: string | null
+          stone_type?: string
+          stone_value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_stones_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          barcode: string | null
+          branch_id: string
+          category_id: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          gross_weight: number
+          hallmark_center: string | null
+          hallmark_date: string | null
+          has_stones: boolean | null
+          huid: string | null
+          id: string
+          is_featured: boolean | null
+          is_hallmarked: boolean | null
+          is_published: boolean | null
+          item_code: string
+          location: string | null
+          making_charge_amount: number | null
+          making_charge_type: Database["public"]["Enums"]["making_charge_type"]
+          making_charge_value: number
+          metal_color: Database["public"]["Enums"]["metal_color"] | null
+          metal_type: Database["public"]["Enums"]["metal_type"]
+          metal_value: number | null
+          mrp: number | null
+          name: string
+          net_weight: number
+          purchase_date: string | null
+          purchase_invoice: string | null
+          purity: string
+          status: Database["public"]["Enums"]["product_status"]
+          stone_count: number | null
+          stone_value: number | null
+          stone_weight: number | null
+          sub_category_id: string | null
+          supplier_id: string | null
+          total_cost: number | null
+          total_weight: number | null
+          updated_at: string
+          updated_by: string | null
+          wastage_percent: number | null
+          wastage_weight: number | null
+          wholesale_price: number | null
+        }
+        Insert: {
+          barcode?: string | null
+          branch_id: string
+          category_id: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          gross_weight: number
+          hallmark_center?: string | null
+          hallmark_date?: string | null
+          has_stones?: boolean | null
+          huid?: string | null
+          id?: string
+          is_featured?: boolean | null
+          is_hallmarked?: boolean | null
+          is_published?: boolean | null
+          item_code: string
+          location?: string | null
+          making_charge_amount?: number | null
+          making_charge_type?: Database["public"]["Enums"]["making_charge_type"]
+          making_charge_value?: number
+          metal_color?: Database["public"]["Enums"]["metal_color"] | null
+          metal_type?: Database["public"]["Enums"]["metal_type"]
+          metal_value?: number | null
+          mrp?: number | null
+          name: string
+          net_weight: number
+          purchase_date?: string | null
+          purchase_invoice?: string | null
+          purity: string
+          status?: Database["public"]["Enums"]["product_status"]
+          stone_count?: number | null
+          stone_value?: number | null
+          stone_weight?: number | null
+          sub_category_id?: string | null
+          supplier_id?: string | null
+          total_cost?: number | null
+          total_weight?: number | null
+          updated_at?: string
+          updated_by?: string | null
+          wastage_percent?: number | null
+          wastage_weight?: number | null
+          wholesale_price?: number | null
+        }
+        Update: {
+          barcode?: string | null
+          branch_id?: string
+          category_id?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          gross_weight?: number
+          hallmark_center?: string | null
+          hallmark_date?: string | null
+          has_stones?: boolean | null
+          huid?: string | null
+          id?: string
+          is_featured?: boolean | null
+          is_hallmarked?: boolean | null
+          is_published?: boolean | null
+          item_code?: string
+          location?: string | null
+          making_charge_amount?: number | null
+          making_charge_type?: Database["public"]["Enums"]["making_charge_type"]
+          making_charge_value?: number
+          metal_color?: Database["public"]["Enums"]["metal_color"] | null
+          metal_type?: Database["public"]["Enums"]["metal_type"]
+          metal_value?: number | null
+          mrp?: number | null
+          name?: string
+          net_weight?: number
+          purchase_date?: string | null
+          purchase_invoice?: string | null
+          purity?: string
+          status?: Database["public"]["Enums"]["product_status"]
+          stone_count?: number | null
+          stone_value?: number | null
+          stone_weight?: number | null
+          sub_category_id?: string | null
+          supplier_id?: string | null
+          total_cost?: number | null
+          total_weight?: number | null
+          updated_at?: string
+          updated_by?: string | null
+          wastage_percent?: number | null
+          wastage_weight?: number | null
+          wholesale_price?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_sub_category_id_fkey"
+            columns: ["sub_category_id"]
+            isOneToOne: false
+            referencedRelation: "sub_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -221,6 +520,116 @@ export type Database = {
             columns: ["daily_rate_id"]
             isOneToOne: false
             referencedRelation: "daily_rates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stock_movements: {
+        Row: {
+          branch_id: string
+          created_at: string
+          created_by: string | null
+          from_location: string | null
+          id: string
+          movement_type: Database["public"]["Enums"]["stock_movement_type"]
+          notes: string | null
+          product_id: string
+          quantity: number
+          reference_id: string | null
+          reference_number: string | null
+          reference_type: string | null
+          to_location: string | null
+        }
+        Insert: {
+          branch_id: string
+          created_at?: string
+          created_by?: string | null
+          from_location?: string | null
+          id?: string
+          movement_type: Database["public"]["Enums"]["stock_movement_type"]
+          notes?: string | null
+          product_id: string
+          quantity?: number
+          reference_id?: string | null
+          reference_number?: string | null
+          reference_type?: string | null
+          to_location?: string | null
+        }
+        Update: {
+          branch_id?: string
+          created_at?: string
+          created_by?: string | null
+          from_location?: string | null
+          id?: string
+          movement_type?: Database["public"]["Enums"]["stock_movement_type"]
+          notes?: string | null
+          product_id?: string
+          quantity?: number
+          reference_id?: string | null
+          reference_number?: string | null
+          reference_type?: string | null
+          to_location?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_movements_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sub_categories: {
+        Row: {
+          category_id: string
+          code: string
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          category_id: string
+          code: string
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string
+          code?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sub_categories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
             referencedColumns: ["id"]
           },
         ]
@@ -317,8 +726,26 @@ export type Database = {
         | "auditor"
         | "customer"
       gold_purity: "24K" | "22K" | "18K" | "14K" | "10K"
+      making_charge_type: "per_gram" | "percentage" | "flat"
+      metal_color: "yellow" | "white" | "rose" | "two_tone" | "tri_tone"
       metal_type: "gold" | "silver" | "platinum" | "palladium"
+      product_status:
+        | "in_stock"
+        | "sold"
+        | "on_approval"
+        | "with_karigar"
+        | "in_repair"
+        | "melted"
       silver_purity: "999" | "925" | "900" | "800"
+      stock_movement_type:
+        | "purchase"
+        | "sale"
+        | "transfer_in"
+        | "transfer_out"
+        | "adjustment"
+        | "karigar_issue"
+        | "karigar_receipt"
+        | "return"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -460,8 +887,28 @@ export const Constants = {
         "customer",
       ],
       gold_purity: ["24K", "22K", "18K", "14K", "10K"],
+      making_charge_type: ["per_gram", "percentage", "flat"],
+      metal_color: ["yellow", "white", "rose", "two_tone", "tri_tone"],
       metal_type: ["gold", "silver", "platinum", "palladium"],
+      product_status: [
+        "in_stock",
+        "sold",
+        "on_approval",
+        "with_karigar",
+        "in_repair",
+        "melted",
+      ],
       silver_purity: ["999", "925", "900", "800"],
+      stock_movement_type: [
+        "purchase",
+        "sale",
+        "transfer_in",
+        "transfer_out",
+        "adjustment",
+        "karigar_issue",
+        "karigar_receipt",
+        "return",
+      ],
     },
   },
 } as const
