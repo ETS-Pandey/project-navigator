@@ -101,7 +101,11 @@ export default function InvoicesPage() {
                     <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">No invoices yet</TableCell></TableRow>
                   ) : (
                     invoices.slice(0, 20).map((invoice) => (
-                      <TableRow key={invoice.id} className="cursor-pointer hover:bg-muted/50">
+                      <TableRow 
+                        key={invoice.id} 
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => navigate(`/billing/invoices/${invoice.id}`)}
+                      >
                         <TableCell className="font-medium">{invoice.invoice_number}</TableCell>
                         <TableCell>{formatDate(invoice.invoice_date)}</TableCell>
                         <TableCell>{invoice.customer_name || invoice.customer?.name || "Walk-in"}</TableCell>

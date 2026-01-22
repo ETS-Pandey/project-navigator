@@ -24,6 +24,7 @@ import Barcodes from "./pages/inventory/Barcodes";
 
 // Billing Pages
 import Invoices from "./pages/billing/Invoices";
+import InvoiceDetail from "./pages/billing/InvoiceDetail";
 import NewInvoice from "./pages/billing/NewInvoice";
 import Quotations from "./pages/billing/Quotations";
 import NewQuotation from "./pages/billing/NewQuotation";
@@ -64,6 +65,7 @@ const App = () => (
                   
                   {/* Billing Routes */}
                   <Route path="/billing/invoices" element={<Invoices />} />
+                  <Route path="/billing/invoices/:id" element={<InvoiceDetail />} />
                   <Route path="/billing/new" element={<NewInvoice />} />
                   <Route path="/billing/quotations" element={<Quotations />} />
                   <Route path="/billing/quotations/new" element={<NewQuotation />} />
