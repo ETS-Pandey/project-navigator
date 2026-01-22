@@ -22,6 +22,13 @@ import ProductForm from "./pages/inventory/ProductForm";
 import StockOperations from "./pages/inventory/StockOperations";
 import Barcodes from "./pages/inventory/Barcodes";
 
+// Billing Pages
+import Invoices from "./pages/billing/Invoices";
+import NewInvoice from "./pages/billing/NewInvoice";
+import Quotations from "./pages/billing/Quotations";
+import NewQuotation from "./pages/billing/NewQuotation";
+import OldGold from "./pages/billing/OldGold";
+
 // Layout
 import { AppLayout } from "./components/layout/AppLayout";
 
@@ -45,7 +52,7 @@ const App = () => (
                 <Route element={<AppLayout />}>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/rates" element={<Rates />} />
-                  {/* Placeholder routes for other modules */}
+                  
                   {/* Inventory Routes */}
                   <Route path="/inventory/products" element={<Products />} />
                   <Route path="/inventory/products/new" element={<ProductForm />} />
@@ -54,7 +61,15 @@ const App = () => (
                   <Route path="/inventory/categories" element={<Categories />} />
                   <Route path="/inventory/stock" element={<StockOperations />} />
                   <Route path="/inventory/barcodes" element={<Barcodes />} />
-                  <Route path="/billing/*" element={<Dashboard />} />
+                  
+                  {/* Billing Routes */}
+                  <Route path="/billing/invoices" element={<Invoices />} />
+                  <Route path="/billing/new" element={<NewInvoice />} />
+                  <Route path="/billing/quotations" element={<Quotations />} />
+                  <Route path="/billing/quotations/new" element={<NewQuotation />} />
+                  <Route path="/billing/old-gold" element={<OldGold />} />
+                  
+                  {/* Placeholder routes for other modules */}
                   <Route path="/customers/*" element={<Dashboard />} />
                   <Route path="/loans/*" element={<Dashboard />} />
                   <Route path="/schemes" element={<Dashboard />} />
