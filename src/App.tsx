@@ -46,6 +46,9 @@ import Enrollments from "./pages/schemes/Enrollments";
 import EnrollmentDetail from "./pages/schemes/EnrollmentDetail";
 import SchemePayments from "./pages/schemes/SchemePayments";
 
+// Staff Pages
+import StaffList from "./pages/staff/StaffList";
+
 // Layout
 import { AppLayout } from "./components/layout/AppLayout";
 
@@ -103,10 +106,12 @@ const App = () => (
                   <Route path="/schemes/enrollments/:id" element={<EnrollmentDetail />} />
                   <Route path="/schemes/payments" element={<SchemePayments />} />
                   
+                  {/* Staff Routes */}
+                  <Route path="/staff" element={<StaffList />} />
+                  
                   {/* Placeholder routes for other modules */}
                   <Route path="/orders/*" element={<Dashboard />} />
                   <Route path="/accounting/*" element={<Dashboard />} />
-                  <Route path="/staff" element={<Dashboard />} />
                   <Route path="/expenses/*" element={<Dashboard />} />
                   <Route path="/reports" element={<Dashboard />} />
                   <Route path="/settings" element={<Dashboard />} />
