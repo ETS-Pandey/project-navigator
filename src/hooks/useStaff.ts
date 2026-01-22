@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import type { StaffMember, StaffFormData, StaffFilters, AppRole, BranchAccess } from "@/types/staff";
 
 // Fetch all staff members with their roles and branch access
@@ -285,4 +286,91 @@ export function getAssignableRoles(): AppRole[] {
     "karigar_admin",
     "auditor",
   ];
+}
+
+// Invite/Create new staff member
+export function useInviteStaff() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      email,
+      password,
+      full_name,
+      phone,
+      roles,
+      branch_ids,
+      primary_branch_id,
+    }: {
+      email: string;
+      password: string;
+      full_name: string;
+      phone?: string;
+      roles: AppRole[];
+      branch_ids: string[];
+      primary_branch_id: string;
+    }) => {
+      // Create the user via Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name,
+          },
+        },
+      });
+
+      if (authError) throw authError;
+      if (!authData.user) throw new Error("Failed to create user");
+
+      const userId = authData.user.id;
+
+      // Update profile with phone if provided
+      if (phone) {
+        await supabase
+          .from("profiles")
+          .update({ phone })
+          .eq("user_id", userId);
+      }
+
+      // Insert roles
+      if (roles.length > 0) {
+        const roleInserts = roles.map((role) => ({
+          user_id: userId,
+          role,
+        }));
+
+        const { error: rolesError } = await supabase
+          .from("user_roles")
+          .insert(roleInserts);
+
+        if (rolesError) throw rolesError;
+      }
+
+      // Insert branch access
+      if (branch_ids.length > 0) {
+        const branchInserts = branch_ids.map((branchId) => ({
+          user_id: userId,
+          branch_id: branchId,
+          is_primary: branchId === primary_branch_id,
+        }));
+
+        const { error: branchError } = await supabase
+          .from("user_branch_access")
+          .insert(branchInserts);
+
+        if (branchError) throw branchError;
+      }
+
+      return authData.user;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["staff"] });
+      toast.success("Staff member added successfully");
+    },
+    onError: (error) => {
+      toast.error(`Failed to add staff: ${error.message}`);
+    },
+  });
 }
