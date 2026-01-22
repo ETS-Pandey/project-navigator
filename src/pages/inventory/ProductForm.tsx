@@ -1,11 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ArrowLeft, Save, Calculator } from "lucide-react";
+import { ArrowLeft, Save, Calculator, ImageIcon } from "lucide-react";
 import { useCategories, useSubCategories } from "@/hooks/useCategories";
 import { useCreateProduct, useProduct, useUpdateProduct } from "@/hooks/useProducts";
+import { useSaveProductImages } from "@/hooks/useProductImages";
 import { useRates } from "@/contexts/RateContext";
 import { useBranch } from "@/contexts/BranchContext";
 import { Button } from "@/components/ui/button";
@@ -16,10 +17,19 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
+import { ProductImageUpload, uploadProductImages } from "@/components/inventory/ProductImageUpload";
 import { formatCurrency } from "@/lib/formatters";
 import { calculateMetalValue, calculateMakingCharges, calculateGST } from "@/lib/calculations";
 import { GOLD_PURITIES, SILVER_PURITIES, METAL_COLORS, MAKING_CHARGE_TYPES } from "@/lib/constants";
 import type { MetalType, MetalColor, MakingChargeType } from "@/types/inventory";
+
+interface ProductImage {
+  id?: string;
+  url: string;
+  file?: File;
+  isPrimary: boolean;
+  isUploading?: boolean;
+}
 
 const productSchema = z.object({
   category_id: z.string().min(1, "Category is required"),
@@ -55,6 +65,9 @@ export default function ProductForm() {
   const { data: product, isLoading: productLoading } = useProduct(id || "");
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
+  const saveProductImages = useSaveProductImages();
+
+  const [productImages, setProductImages] = useState<ProductImage[]>([]);
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -115,6 +128,17 @@ export default function ProductForm() {
         is_hallmarked: product.is_hallmarked,
         location: product.location || "",
       });
+
+      // Load existing images
+      if (product.images && product.images.length > 0) {
+        setProductImages(
+          product.images.map((img: any) => ({
+            id: img.id,
+            url: img.image_url,
+            isPrimary: img.is_primary || false,
+          }))
+        );
+      }
     }
   }, [product, isEditing, form]);
 
@@ -176,11 +200,25 @@ export default function ProductForm() {
       stone_count: data.has_stones ? 1 : 0,
     };
 
+    let savedProductId: string;
+
     if (isEditing && id) {
       await updateProduct.mutateAsync({ id, ...productData });
+      savedProductId = id;
     } else {
-      await createProduct.mutateAsync(productData);
+      const result = await createProduct.mutateAsync(productData);
+      savedProductId = result.id;
     }
+
+    // Upload and save images
+    if (productImages.length > 0) {
+      const uploadedImages = await uploadProductImages(savedProductId, productImages);
+      await saveProductImages.mutateAsync({
+        productId: savedProductId,
+        images: uploadedImages,
+      });
+    }
+
     navigate("/inventory/products");
   };
 
@@ -307,6 +345,28 @@ export default function ProductForm() {
                   />
                 </CardContent>
               </Card>
+
+              {/* Product Images */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ImageIcon className="h-5 w-5" />
+                    Product Images
+                  </CardTitle>
+                  <CardDescription>
+                    Upload up to 5 images. The first image will be used as the primary image.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ProductImageUpload
+                    images={productImages}
+                    onChange={setProductImages}
+                    productId={id}
+                    maxImages={5}
+                  />
+                </CardContent>
+              </Card>
+
 
               {/* Metal Details */}
               <Card>
