@@ -46,6 +46,17 @@ import Enrollments from "./pages/schemes/Enrollments";
 import EnrollmentDetail from "./pages/schemes/EnrollmentDetail";
 import SchemePayments from "./pages/schemes/SchemePayments";
 
+// Order Pages
+import RepairOrders from "./pages/orders/RepairOrders";
+import CustomOrders from "./pages/orders/CustomOrders";
+
+// Expense Pages
+import ExpensesList from "./pages/expenses/ExpensesList";
+
+// Accounting Pages
+import DayBook from "./pages/accounting/DayBook";
+import ChartOfAccountsPage from "./pages/accounting/ChartOfAccountsPage";
+
 // Staff Pages
 import StaffList from "./pages/staff/StaffList";
 
@@ -109,10 +120,21 @@ const App = () => (
                   {/* Staff Routes */}
                   <Route path="/staff" element={<StaffList />} />
                   
-                  {/* Placeholder routes for other modules */}
-                  <Route path="/orders/*" element={<Dashboard />} />
-                  <Route path="/accounting/*" element={<Dashboard />} />
-                  <Route path="/expenses/*" element={<Dashboard />} />
+                  {/* Order Routes */}
+                  <Route path="/orders/repairs" element={<RepairOrders />} />
+                  <Route path="/orders/custom" element={<CustomOrders />} />
+                  
+                  {/* Expense Routes */}
+                  <Route path="/expenses" element={<ExpensesList />} />
+                  
+                  {/* Accounting Routes */}
+                  <Route path="/accounting/daybook" element={<DayBook />} />
+                  <Route path="/accounting/chart-of-accounts" element={<ChartOfAccountsPage />} />
+                  <Route path="/accounting/ledgers" element={<Dashboard />} />
+                  <Route path="/accounting/bank" element={<Dashboard />} />
+                  <Route path="/accounting/reports" element={<Dashboard />} />
+                  
+                  {/* Placeholder routes */}
                   <Route path="/reports" element={<Dashboard />} />
                   <Route path="/settings" element={<Dashboard />} />
                 </Route>
