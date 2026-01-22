@@ -34,6 +34,12 @@ import OldGold from "./pages/billing/OldGold";
 import Customers from "./pages/customers/Customers";
 import CustomerDetail from "./pages/customers/CustomerDetail";
 
+// Loan Pages
+import ActiveLoans from "./pages/loans/ActiveLoans";
+import NewLoan from "./pages/loans/NewLoan";
+import LoanDetail from "./pages/loans/LoanDetail";
+import Collections from "./pages/loans/Collections";
+
 // Layout
 import { AppLayout } from "./components/layout/AppLayout";
 
@@ -79,8 +85,13 @@ const App = () => (
                   <Route path="/customers" element={<Customers />} />
                   <Route path="/customers/:id" element={<CustomerDetail />} />
                   
+                  {/* Loan Routes */}
+                  <Route path="/loans/active" element={<ActiveLoans />} />
+                  <Route path="/loans/new" element={<NewLoan />} />
+                  <Route path="/loans/collections" element={<Collections />} />
+                  <Route path="/loans/:id" element={<LoanDetail />} />
+                  
                   {/* Placeholder routes for other modules */}
-                  <Route path="/loans/*" element={<Dashboard />} />
                   <Route path="/schemes" element={<Dashboard />} />
                   <Route path="/orders/*" element={<Dashboard />} />
                   <Route path="/accounting/*" element={<Dashboard />} />
