@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 
 // Inventory Pages
 import Products from "./pages/inventory/Products";
+import ProductDetail from "./pages/inventory/ProductDetail";
 import Categories from "./pages/inventory/Categories";
 import ProductForm from "./pages/inventory/ProductForm";
 import StockOperations from "./pages/inventory/StockOperations";
@@ -48,6 +49,7 @@ const App = () => (
                   {/* Inventory Routes */}
                   <Route path="/inventory/products" element={<Products />} />
                   <Route path="/inventory/products/new" element={<ProductForm />} />
+                  <Route path="/inventory/products/:id" element={<ProductDetail />} />
                   <Route path="/inventory/products/:id/edit" element={<ProductForm />} />
                   <Route path="/inventory/categories" element={<Categories />} />
                   <Route path="/inventory/stock" element={<StockOperations />} />
