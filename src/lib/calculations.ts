@@ -36,20 +36,18 @@ export function calculateChargeableWeight(
  * Calculate making charges based on type
  */
 export function calculateMakingCharges(
-  metalValue: number,
   netWeight: number,
-  options: {
-    type: "per_gram" | "percentage" | "flat";
-    value: number;
-  }
+  metalValue: number,
+  chargeType: "per_gram" | "percentage" | "flat",
+  chargeValue: number
 ): number {
-  switch (options.type) {
+  switch (chargeType) {
     case "per_gram":
-      return netWeight * options.value;
+      return netWeight * chargeValue;
     case "percentage":
-      return metalValue * (options.value / 100);
+      return metalValue * (chargeValue / 100);
     case "flat":
-      return options.value;
+      return chargeValue;
     default:
       return 0;
   }

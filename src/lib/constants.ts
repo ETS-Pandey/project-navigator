@@ -17,6 +17,37 @@ export const SILVER_PURITY_PERCENTAGES = {
   "800": 0.800,
 } as const;
 
+// Gold purities for forms
+export const GOLD_PURITIES = [
+  { value: "24K", label: "24K (999)" },
+  { value: "22K", label: "22K (916)" },
+  { value: "18K", label: "18K (750)" },
+  { value: "14K", label: "14K (585)" },
+] as const;
+
+// Silver purities for forms
+export const SILVER_PURITIES = [
+  { value: "999", label: "999 Fine Silver" },
+  { value: "925", label: "925 Sterling" },
+  { value: "900", label: "900 Coin Silver" },
+] as const;
+
+// Metal colors for forms
+export const METAL_COLORS = [
+  { value: "yellow", label: "Yellow Gold" },
+  { value: "white", label: "White Gold" },
+  { value: "rose", label: "Rose Gold" },
+  { value: "two_tone", label: "Two Tone" },
+  { value: "tri_tone", label: "Tri Tone" },
+] as const;
+
+// Making charge types for forms
+export const MAKING_CHARGE_TYPES = [
+  { value: "per_gram", label: "Per Gram (₹/g)" },
+  { value: "percentage", label: "Percentage (%)" },
+  { value: "flat", label: "Flat Amount (₹)" },
+] as const;
+
 // GST rates for jewellery in India
 export const GST_RATES = {
   CGST: 1.5,
