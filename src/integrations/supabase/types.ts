@@ -116,6 +116,164 @@ export type Database = {
         }
         Relationships: []
       }
+      chart_of_accounts: {
+        Row: {
+          account_code: string
+          account_name: string
+          account_type: Database["public"]["Enums"]["account_type"]
+          created_at: string | null
+          current_balance: number | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          is_system_account: boolean | null
+          opening_balance: number | null
+          parent_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          account_code: string
+          account_name: string
+          account_type: Database["public"]["Enums"]["account_type"]
+          created_at?: string | null
+          current_balance?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_system_account?: boolean | null
+          opening_balance?: number | null
+          parent_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          account_code?: string
+          account_name?: string
+          account_type?: Database["public"]["Enums"]["account_type"]
+          created_at?: string | null
+          current_balance?: number | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_system_account?: boolean | null
+          opening_balance?: number | null
+          parent_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chart_of_accounts_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "chart_of_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      custom_orders: {
+        Row: {
+          actual_weight: number | null
+          advance_paid: number | null
+          assigned_karigar: string | null
+          balance_due: number | null
+          branch_id: string
+          completed_date: string | null
+          created_at: string | null
+          created_by: string | null
+          customer_id: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          delivered_date: string | null
+          design_description: string
+          design_reference_url: string | null
+          estimated_cost: number | null
+          estimated_weight: number | null
+          expected_date: string | null
+          final_cost: number | null
+          id: string
+          metal_type: Database["public"]["Enums"]["metal_type"] | null
+          notes: string | null
+          order_date: string
+          order_number: string
+          purity: string | null
+          status: Database["public"]["Enums"]["order_status"] | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          actual_weight?: number | null
+          advance_paid?: number | null
+          assigned_karigar?: string | null
+          balance_due?: number | null
+          branch_id: string
+          completed_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivered_date?: string | null
+          design_description: string
+          design_reference_url?: string | null
+          estimated_cost?: number | null
+          estimated_weight?: number | null
+          expected_date?: string | null
+          final_cost?: number | null
+          id?: string
+          metal_type?: Database["public"]["Enums"]["metal_type"] | null
+          notes?: string | null
+          order_date?: string
+          order_number: string
+          purity?: string | null
+          status?: Database["public"]["Enums"]["order_status"] | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          actual_weight?: number | null
+          advance_paid?: number | null
+          assigned_karigar?: string | null
+          balance_due?: number | null
+          branch_id?: string
+          completed_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivered_date?: string | null
+          design_description?: string
+          design_reference_url?: string | null
+          estimated_cost?: number | null
+          estimated_weight?: number | null
+          expected_date?: string | null
+          final_cost?: number | null
+          id?: string
+          metal_type?: Database["public"]["Enums"]["metal_type"] | null
+          notes?: string | null
+          order_date?: string
+          order_number?: string
+          purity?: string | null
+          status?: Database["public"]["Enums"]["order_status"] | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_orders_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "custom_orders_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customers: {
         Row: {
           aadhar: string | null
@@ -284,6 +442,122 @@ export type Database = {
             columns: ["branch_id"]
             isOneToOne: false
             referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expense_categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          parent_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          parent_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          parent_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expense_categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "expense_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expenses: {
+        Row: {
+          amount: number
+          approved_by: string | null
+          branch_id: string
+          category_id: string | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          expense_date: string
+          expense_number: string
+          gst_amount: number | null
+          id: string
+          is_gst_applicable: boolean | null
+          payment_mode: Database["public"]["Enums"]["payment_mode"] | null
+          reference_number: string | null
+          status: string | null
+          updated_at: string | null
+          updated_by: string | null
+          vendor_name: string | null
+        }
+        Insert: {
+          amount: number
+          approved_by?: string | null
+          branch_id: string
+          category_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          expense_date?: string
+          expense_number: string
+          gst_amount?: number | null
+          id?: string
+          is_gst_applicable?: boolean | null
+          payment_mode?: Database["public"]["Enums"]["payment_mode"] | null
+          reference_number?: string | null
+          status?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          vendor_name?: string | null
+        }
+        Update: {
+          amount?: number
+          approved_by?: string | null
+          branch_id?: string
+          category_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          expense_date?: string
+          expense_number?: string
+          gst_amount?: number | null
+          id?: string
+          is_gst_applicable?: boolean | null
+          payment_mode?: Database["public"]["Enums"]["payment_mode"] | null
+          reference_number?: string | null
+          status?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          vendor_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expenses_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "expenses_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "expense_categories"
             referencedColumns: ["id"]
           },
         ]
@@ -530,6 +804,110 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journal_entries: {
+        Row: {
+          branch_id: string
+          created_at: string | null
+          created_by: string | null
+          entry_date: string
+          entry_number: string
+          id: string
+          is_posted: boolean | null
+          narration: string | null
+          reference_id: string | null
+          reference_type: string | null
+          total_credit: number
+          total_debit: number
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          branch_id: string
+          created_at?: string | null
+          created_by?: string | null
+          entry_date?: string
+          entry_number: string
+          id?: string
+          is_posted?: boolean | null
+          narration?: string | null
+          reference_id?: string | null
+          reference_type?: string | null
+          total_credit?: number
+          total_debit?: number
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          branch_id?: string
+          created_at?: string | null
+          created_by?: string | null
+          entry_date?: string
+          entry_number?: string
+          id?: string
+          is_posted?: boolean | null
+          narration?: string | null
+          reference_id?: string | null
+          reference_type?: string | null
+          total_credit?: number
+          total_debit?: number
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_entries_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journal_entry_lines: {
+        Row: {
+          account_id: string
+          created_at: string | null
+          credit_amount: number | null
+          debit_amount: number | null
+          id: string
+          journal_entry_id: string
+          narration: string | null
+        }
+        Insert: {
+          account_id: string
+          created_at?: string | null
+          credit_amount?: number | null
+          debit_amount?: number | null
+          id?: string
+          journal_entry_id: string
+          narration?: string | null
+        }
+        Update: {
+          account_id?: string
+          created_at?: string | null
+          credit_amount?: number | null
+          debit_amount?: number | null
+          id?: string
+          journal_entry_id?: string
+          narration?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_entry_lines_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "chart_of_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journal_entry_lines_journal_entry_id_fkey"
+            columns: ["journal_entry_id"]
+            isOneToOne: false
+            referencedRelation: "journal_entries"
             referencedColumns: ["id"]
           },
         ]
@@ -1577,6 +1955,114 @@ export type Database = {
           },
         ]
       }
+      repair_orders: {
+        Row: {
+          advance_paid: number | null
+          assigned_to: string | null
+          balance_due: number | null
+          branch_id: string
+          completed_date: string | null
+          created_at: string | null
+          created_by: string | null
+          customer_id: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          delivered_date: string | null
+          estimated_cost: number | null
+          expected_date: string | null
+          final_cost: number | null
+          id: string
+          issue_description: string | null
+          item_description: string
+          item_type: string | null
+          metal_type: Database["public"]["Enums"]["metal_type"] | null
+          notes: string | null
+          order_number: string
+          purity: string | null
+          received_date: string
+          status: Database["public"]["Enums"]["order_status"] | null
+          updated_at: string | null
+          updated_by: string | null
+          weight_received: number | null
+          weight_returned: number | null
+        }
+        Insert: {
+          advance_paid?: number | null
+          assigned_to?: string | null
+          balance_due?: number | null
+          branch_id: string
+          completed_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivered_date?: string | null
+          estimated_cost?: number | null
+          expected_date?: string | null
+          final_cost?: number | null
+          id?: string
+          issue_description?: string | null
+          item_description: string
+          item_type?: string | null
+          metal_type?: Database["public"]["Enums"]["metal_type"] | null
+          notes?: string | null
+          order_number: string
+          purity?: string | null
+          received_date?: string
+          status?: Database["public"]["Enums"]["order_status"] | null
+          updated_at?: string | null
+          updated_by?: string | null
+          weight_received?: number | null
+          weight_returned?: number | null
+        }
+        Update: {
+          advance_paid?: number | null
+          assigned_to?: string | null
+          balance_due?: number | null
+          branch_id?: string
+          completed_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivered_date?: string | null
+          estimated_cost?: number | null
+          expected_date?: string | null
+          final_cost?: number | null
+          id?: string
+          issue_description?: string | null
+          item_description?: string
+          item_type?: string | null
+          metal_type?: Database["public"]["Enums"]["metal_type"] | null
+          notes?: string | null
+          order_number?: string
+          purity?: string | null
+          received_date?: string
+          status?: Database["public"]["Enums"]["order_status"] | null
+          updated_at?: string | null
+          updated_by?: string | null
+          weight_received?: number | null
+          weight_returned?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_orders_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "repair_orders_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scheme_enrollments: {
         Row: {
           bonus_amount: number | null
@@ -2066,6 +2552,7 @@ export type Database = {
       }
     }
     Enums: {
+      account_type: "asset" | "liability" | "equity" | "income" | "expense"
       app_role:
         | "owner"
         | "admin"
@@ -2108,6 +2595,12 @@ export type Database = {
       making_charge_type: "per_gram" | "percentage" | "flat"
       metal_color: "yellow" | "white" | "rose" | "two_tone" | "tri_tone"
       metal_type: "gold" | "silver" | "platinum" | "palladium"
+      order_status:
+        | "pending"
+        | "in_progress"
+        | "ready"
+        | "delivered"
+        | "cancelled"
       payment_mode:
         | "cash"
         | "card"
@@ -2262,6 +2755,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      account_type: ["asset", "liability", "equity", "income", "expense"],
       app_role: [
         "owner",
         "admin",
@@ -2309,6 +2803,13 @@ export const Constants = {
       making_charge_type: ["per_gram", "percentage", "flat"],
       metal_color: ["yellow", "white", "rose", "two_tone", "tri_tone"],
       metal_type: ["gold", "silver", "platinum", "palladium"],
+      order_status: [
+        "pending",
+        "in_progress",
+        "ready",
+        "delivered",
+        "cancelled",
+      ],
       payment_mode: [
         "cash",
         "card",
