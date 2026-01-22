@@ -19,6 +19,7 @@ import Products from "./pages/inventory/Products";
 import Categories from "./pages/inventory/Categories";
 import ProductForm from "./pages/inventory/ProductForm";
 import StockOperations from "./pages/inventory/StockOperations";
+import Barcodes from "./pages/inventory/Barcodes";
 
 // Layout
 import { AppLayout } from "./components/layout/AppLayout";
@@ -50,7 +51,7 @@ const App = () => (
                   <Route path="/inventory/products/:id/edit" element={<ProductForm />} />
                   <Route path="/inventory/categories" element={<Categories />} />
                   <Route path="/inventory/stock" element={<StockOperations />} />
-                  <Route path="/inventory/barcodes" element={<Dashboard />} />
+                  <Route path="/inventory/barcodes" element={<Barcodes />} />
                   <Route path="/billing/*" element={<Dashboard />} />
                   <Route path="/customers/*" element={<Dashboard />} />
                   <Route path="/loans/*" element={<Dashboard />} />
