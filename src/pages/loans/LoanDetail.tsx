@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { format, parseISO, isAfter } from "date-fns";
-import { ArrowLeft, Printer, CreditCard, Package, History, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Printer, CreditCard, Package, History, AlertTriangle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLoan, useLoanPayments, getDaysOverdue } from "@/hooks/useLoans";
 import { formatCurrency, formatWeight } from "@/lib/formatters";
 import { LoanPaymentDialog } from "@/components/loans/LoanPaymentDialog";
+import { LoanRenewalDialog } from "@/components/loans/LoanRenewalDialog";
 import { LoanAgreementPrintTemplate } from "@/components/loans/LoanAgreementPrintTemplate";
 
 const statusColors: Record<string, string> = {
@@ -18,6 +19,7 @@ const statusColors: Record<string, string> = {
   active: "bg-green-100 text-green-800",
   closed: "bg-gray-100 text-gray-800",
   defaulted: "bg-red-100 text-red-800",
+  renewed: "bg-blue-100 text-blue-800",
 };
 
 export default function LoanDetail() {
@@ -27,6 +29,7 @@ export default function LoanDetail() {
   const { data: loan, isLoading } = useLoan(id);
   const { data: payments = [] } = useLoanPayments(id);
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+  const [renewalDialogOpen, setRenewalDialogOpen] = useState(false);
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
@@ -87,10 +90,16 @@ export default function LoanDetail() {
             Print Agreement
           </Button>
           {loan.status === 'active' && (
-            <Button onClick={() => setPaymentDialogOpen(true)}>
-              <CreditCard className="mr-2 h-4 w-4" />
-              Record Payment
-            </Button>
+            <>
+              <Button variant="outline" onClick={() => setRenewalDialogOpen(true)}>
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Renew Loan
+              </Button>
+              <Button onClick={() => setPaymentDialogOpen(true)}>
+                <CreditCard className="mr-2 h-4 w-4" />
+                Record Payment
+              </Button>
+            </>
           )}
         </div>
       </div>
@@ -252,6 +261,12 @@ export default function LoanDetail() {
           <LoanPaymentDialog
             open={paymentDialogOpen}
             onOpenChange={setPaymentDialogOpen}
+            loan={loan}
+          />
+          
+          <LoanRenewalDialog
+            open={renewalDialogOpen}
+            onOpenChange={setRenewalDialogOpen}
             loan={loan}
           />
           
