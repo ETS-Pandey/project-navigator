@@ -58,7 +58,10 @@ import DayBook from "./pages/accounting/DayBook";
 import ChartOfAccountsPage from "./pages/accounting/ChartOfAccountsPage";
 import Ledgers from "./pages/accounting/Ledgers";
 import BankBook from "./pages/accounting/BankBook";
-import Reports from "./pages/accounting/Reports";
+import AccountingReports from "./pages/accounting/Reports";
+
+// Reports Pages
+import ReportsPage from "./pages/reports/ReportsPage";
 
 // Settings Pages
 import SettingsPage from "./pages/settings/SettingsPage";
@@ -138,13 +141,13 @@ const App = () => (
                   <Route path="/accounting/chart-of-accounts" element={<ChartOfAccountsPage />} />
                   <Route path="/accounting/ledgers" element={<Ledgers />} />
                   <Route path="/accounting/bank" element={<BankBook />} />
-                  <Route path="/accounting/reports" element={<Reports />} />
+                  <Route path="/accounting/reports" element={<AccountingReports />} />
                   
                   {/* Settings Routes */}
                   <Route path="/settings" element={<SettingsPage />} />
                   
-                  {/* Placeholder routes */}
-                  <Route path="/reports" element={<Dashboard />} />
+                  {/* Reports Routes */}
+                  <Route path="/reports" element={<ReportsPage />} />
                 </Route>
 
                 {/* Redirects */}
