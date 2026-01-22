@@ -2,9 +2,20 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { BranchProvider } from "@/contexts/BranchContext";
+import { RateProvider } from "@/contexts/RateContext";
+
+// Pages
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import Dashboard from "./pages/Dashboard";
+import Rates from "./pages/Rates";
 import NotFound from "./pages/NotFound";
+
+// Layout
+import { AppLayout } from "./components/layout/AppLayout";
 
 const queryClient = new QueryClient();
 
@@ -14,11 +25,41 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <BranchProvider>
+            <RateProvider>
+              <Routes>
+                {/* Auth Routes */}
+                <Route path="/auth/login" element={<Login />} />
+                <Route path="/auth/register" element={<Register />} />
+
+                {/* App Routes (Protected) */}
+                <Route element={<AppLayout />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/rates" element={<Rates />} />
+                  {/* Placeholder routes for other modules */}
+                  <Route path="/inventory/*" element={<Dashboard />} />
+                  <Route path="/billing/*" element={<Dashboard />} />
+                  <Route path="/customers/*" element={<Dashboard />} />
+                  <Route path="/loans/*" element={<Dashboard />} />
+                  <Route path="/schemes" element={<Dashboard />} />
+                  <Route path="/orders/*" element={<Dashboard />} />
+                  <Route path="/accounting/*" element={<Dashboard />} />
+                  <Route path="/staff" element={<Dashboard />} />
+                  <Route path="/expenses/*" element={<Dashboard />} />
+                  <Route path="/reports" element={<Dashboard />} />
+                  <Route path="/settings" element={<Dashboard />} />
+                </Route>
+
+                {/* Redirects */}
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                
+                {/* Catch-all */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </RateProvider>
+          </BranchProvider>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
