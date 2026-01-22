@@ -1,6 +1,14 @@
 // JewelPro Loans Module Types
 
 export type LoanStatus = 'pending' | 'active' | 'closed' | 'defaulted' | 'auctioned' | 'renewed';
+
+export interface LoanRenewalFormData {
+  new_interest_rate: number;
+  new_tenure_months: number;
+  interest_type: 'simple' | 'compound';
+  renewal_fee: number;
+  notes?: string;
+}
 export type LoanPaymentType = 'interest' | 'principal' | 'part_release' | 'full_redemption' | 'renewal_fee';
 export type PaymentMode = 'cash' | 'card' | 'upi' | 'bank_transfer' | 'cheque';
 

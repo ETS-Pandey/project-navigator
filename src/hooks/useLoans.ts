@@ -384,6 +384,179 @@ export function useCreateLoanPayment() {
   });
 }
 
+// Renewal form data type
+export interface LoanRenewalFormData {
+  new_interest_rate: number;
+  new_tenure_months: number;
+  interest_type: 'simple' | 'compound';
+  renewal_fee: number;
+  notes?: string;
+}
+
+// Renew loan
+export function useRenewLoan() {
+  const queryClient = useQueryClient();
+  const { currentBranch } = useBranch();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ loanId, formData }: { loanId: string; formData: LoanRenewalFormData }) => {
+      if (!currentBranch?.id) throw new Error("No branch selected");
+
+      // Fetch current loan
+      const { data: oldLoan, error: fetchError } = await supabase
+        .from("loans")
+        .select("*, customer:customers(id, name)")
+        .eq("id", loanId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Fetch collaterals from old loan
+      const { data: collaterals, error: collateralFetchError } = await supabase
+        .from("loan_collaterals")
+        .select("*")
+        .eq("loan_id", loanId)
+        .eq("is_released", false);
+
+      if (collateralFetchError) throw collateralFetchError;
+
+      // Generate new loan number
+      const today = format(new Date(), "yyyyMMdd");
+      const { count } = await supabase
+        .from("loans")
+        .select("*", { count: "exact", head: true })
+        .ilike("loan_number", `LN-${today}%`);
+
+      const newLoanNumber = `LN-${today}-${String((count || 0) + 1).padStart(3, "0")}`;
+
+      // Calculate new loan values
+      const newPrincipal = Number(oldLoan.outstanding_total) + formData.renewal_fee;
+      const newLtvPercent = (newPrincipal / Number(oldLoan.collateral_value)) * 100;
+      const newDueDate = format(addMonths(new Date(), formData.new_tenure_months), "yyyy-MM-dd");
+
+      // Create new loan
+      const { data: newLoan, error: createError } = await supabase
+        .from("loans")
+        .insert({
+          branch_id: currentBranch.id,
+          customer_id: oldLoan.customer_id,
+          loan_number: newLoanNumber,
+          loan_date: format(new Date(), "yyyy-MM-dd"),
+          collateral_value: oldLoan.collateral_value,
+          loan_amount: newPrincipal,
+          ltv_percent: newLtvPercent,
+          interest_rate: formData.new_interest_rate,
+          interest_type: formData.interest_type,
+          tenure_months: formData.new_tenure_months,
+          due_date: newDueDate,
+          outstanding_principal: newPrincipal,
+          outstanding_total: newPrincipal,
+          outstanding_interest: 0,
+          principal_paid: 0,
+          interest_paid: 0,
+          interest_accrued: 0,
+          renewed_from_loan_id: loanId,
+          notes: formData.notes ? `Renewed from ${oldLoan.loan_number}. ${formData.notes}` : `Renewed from ${oldLoan.loan_number}`,
+          status: "active",
+        })
+        .select()
+        .single();
+
+      if (createError) throw createError;
+
+      // Transfer collaterals to new loan
+      for (const collateral of collaterals) {
+        const { error: collateralError } = await supabase
+          .from("loan_collaterals")
+          .insert({
+            loan_id: newLoan.id,
+            item_description: collateral.item_description,
+            metal_type: collateral.metal_type,
+            purity: collateral.purity,
+            gross_weight: collateral.gross_weight,
+            net_weight: collateral.net_weight,
+            stone_weight: collateral.stone_weight,
+            rate_per_gram: collateral.rate_per_gram,
+            item_value: collateral.item_value,
+            storage_location: collateral.storage_location,
+            packet_number: collateral.packet_number,
+            image_url: collateral.image_url,
+          });
+
+        if (collateralError) throw collateralError;
+      }
+
+      // Record renewal fee as payment on old loan if applicable
+      if (formData.renewal_fee > 0) {
+        const paymentToday = format(new Date(), "yyyyMMdd");
+        const { count: paymentCount } = await supabase
+          .from("loan_payments")
+          .select("*", { count: "exact", head: true })
+          .ilike("payment_number", `LP-${paymentToday}%`);
+
+        const paymentNumber = `LP-${paymentToday}-${String((paymentCount || 0) + 1).padStart(3, "0")}`;
+
+        await supabase
+          .from("loan_payments")
+          .insert({
+            loan_id: loanId,
+            branch_id: currentBranch.id,
+            payment_number: paymentNumber,
+            payment_date: format(new Date(), "yyyy-MM-dd"),
+            payment_type: "renewal_fee",
+            amount: formData.renewal_fee,
+            principal_amount: 0,
+            interest_amount: 0,
+            penalty_amount: 0,
+            payment_mode: "cash",
+            notes: `Renewal fee for new loan ${newLoanNumber}`,
+          });
+      }
+
+      // Mark old loan as renewed
+      const { error: updateError } = await supabase
+        .from("loans")
+        .update({
+          status: "renewed",
+          renewed_to_loan_id: newLoan.id,
+          closed_date: format(new Date(), "yyyy-MM-dd"),
+        })
+        .eq("id", loanId);
+
+      if (updateError) throw updateError;
+
+      // Mark old collaterals as released (transferred)
+      await supabase
+        .from("loan_collaterals")
+        .update({
+          is_released: true,
+          released_at: new Date().toISOString(),
+        })
+        .eq("loan_id", loanId);
+
+      return newLoan;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["loans"] });
+      queryClient.invalidateQueries({ queryKey: ["loan"] });
+      queryClient.invalidateQueries({ queryKey: ["loan-payments"] });
+      queryClient.invalidateQueries({ queryKey: ["loan-statistics"] });
+      toast({
+        title: "Loan Renewed",
+        description: "The loan has been renewed with new terms.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to renew loan",
+        variant: "destructive",
+      });
+    },
+  });
+}
+
 // Calculate interest for a loan
 export function calculateLoanInterest(
   principal: number,
