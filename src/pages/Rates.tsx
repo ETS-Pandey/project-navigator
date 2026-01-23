@@ -39,7 +39,7 @@ type RateFormValues = z.infer<typeof rateSchema>;
 export default function Rates() {
   const { user } = useAuth();
   const { currentBranch } = useBranch();
-  const { rates, refreshRates } = useRates();
+  const { rates, latestRates, refreshRates, error: ratesError } = useRates();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [autoCalculate, setAutoCalculate] = useState(true);
@@ -65,28 +65,29 @@ export default function Rates() {
     },
   });
 
-  // Load existing rates
+  // Load existing rates - prefer today's rates, fallback to latest rates for pre-fill
   useEffect(() => {
-    if (rates) {
+    const rateData = rates || latestRates;
+    if (rateData) {
       form.reset({
-        gold_24k_buy: rates.gold_24k_buy,
-        gold_24k_sell: rates.gold_24k_sell,
-        gold_22k_buy: rates.gold_22k_buy || 0,
-        gold_22k_sell: rates.gold_22k_sell || 0,
-        gold_18k_buy: rates.gold_18k_buy || 0,
-        gold_18k_sell: rates.gold_18k_sell || 0,
-        gold_14k_buy: rates.gold_14k_buy || 0,
-        gold_14k_sell: rates.gold_14k_sell || 0,
-        silver_999_buy: rates.silver_999_buy || 0,
-        silver_999_sell: rates.silver_999_sell || 0,
-        silver_925_buy: rates.silver_925_buy || 0,
-        silver_925_sell: rates.silver_925_sell || 0,
-        platinum_buy: rates.platinum_buy || 0,
-        platinum_sell: rates.platinum_sell || 0,
-        wholesale_discount_percent: rates.wholesale_discount_percent,
+        gold_24k_buy: rateData.gold_24k_buy,
+        gold_24k_sell: rateData.gold_24k_sell,
+        gold_22k_buy: rateData.gold_22k_buy || 0,
+        gold_22k_sell: rateData.gold_22k_sell || 0,
+        gold_18k_buy: rateData.gold_18k_buy || 0,
+        gold_18k_sell: rateData.gold_18k_sell || 0,
+        gold_14k_buy: rateData.gold_14k_buy || 0,
+        gold_14k_sell: rateData.gold_14k_sell || 0,
+        silver_999_buy: rateData.silver_999_buy || 0,
+        silver_999_sell: rateData.silver_999_sell || 0,
+        silver_925_buy: rateData.silver_925_buy || 0,
+        silver_925_sell: rateData.silver_925_sell || 0,
+        platinum_buy: rateData.platinum_buy || 0,
+        platinum_sell: rateData.platinum_sell || 0,
+        wholesale_discount_percent: rateData.wholesale_discount_percent,
       });
     }
-  }, [rates, form]);
+  }, [rates, latestRates, form]);
 
   // Auto-calculate lower purities from 24K
   const handleAutoCalculate = () => {
@@ -196,6 +197,11 @@ export default function Rates() {
           <p className="text-muted-foreground">
             Set today's gold, silver, and platinum rates for {currentBranch?.name}
           </p>
+          {ratesError && !rates && latestRates && (
+            <p className="text-sm text-amber-600 mt-1">
+              No rates for today. Pre-filled with rates from {new Date(latestRates.rate_date).toLocaleDateString()}.
+            </p>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <Switch
