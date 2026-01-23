@@ -2,8 +2,6 @@ import {
   TrendingUp, 
   TrendingDown, 
   IndianRupee, 
-  Package, 
-  Users, 
   AlertTriangle,
   Plus,
   Receipt,
@@ -12,10 +10,12 @@ import {
   Landmark,
   Tag,
   Wallet,
-  Eye
+  Eye,
+  Loader2
 } from "lucide-react";
 import { useRates } from "@/contexts/RateContext";
 import { useBranch } from "@/contexts/BranchContext";
+import { useDashboardStats } from "@/hooks/useDashboard";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,29 +25,7 @@ import { Link } from "react-router-dom";
 export default function Dashboard() {
   const { rates, isLoading: ratesLoading, error: ratesError } = useRates();
   const { currentBranch } = useBranch();
-
-  // Mock data for demonstration
-  const salesData = {
-    today: 245000,
-    todayCount: 5,
-    week: 1250000,
-    month: 4850000,
-    monthComparison: 12.5,
-  };
-
-  const financialData = {
-    cashBalance: 185000,
-    bankBalance: 2450000,
-    receivables: 320000,
-    payables: 145000,
-  };
-
-  const alerts = [
-    { type: "warning", message: "5 items below minimum stock", link: "/inventory/products" },
-    { type: "error", message: "3 customer payments overdue", link: "/customers" },
-    { type: "info", message: "2 loan EMIs due today", link: "/loans/collections" },
-    { type: "warning", message: "4 repairs ready for pickup", link: "/orders/repairs" },
-  ];
+  const { sales, financial, alerts, isLoading: statsLoading } = useDashboardStats();
 
   const quickActions = [
     { label: "New Sale", icon: Receipt, href: "/billing/new", color: "bg-primary" },
@@ -56,8 +34,8 @@ export default function Dashboard() {
     { label: "New Customer", icon: UserPlus, href: "/customers/new", color: "bg-info" },
     { label: "New Loan", icon: Landmark, href: "/loans/new", color: "bg-burgundy" },
     { label: "Print Labels", icon: Tag, href: "/inventory/barcodes", color: "bg-muted-foreground" },
-    { label: "Record Expense", icon: Wallet, href: "/expenses/new", color: "bg-destructive" },
-    { label: "View Catalog", icon: Eye, href: "/catalog", color: "bg-accent-foreground" },
+    { label: "Record Expense", icon: Wallet, href: "/expenses", color: "bg-destructive" },
+    { label: "View Reports", icon: Eye, href: "/reports", color: "bg-accent-foreground" },
   ];
 
   return (
@@ -175,10 +153,16 @@ export default function Dashboard() {
             <IndianRupee className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(salesData.today)}</div>
-            <p className="text-xs text-muted-foreground">
-              {salesData.todayCount} invoice(s)
-            </p>
+            {statsLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{formatCurrency(sales?.today || 0)}</div>
+                <p className="text-xs text-muted-foreground">
+                  {sales?.todayCount || 0} invoice(s)
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -188,29 +172,41 @@ export default function Dashboard() {
             <TrendingUp className="h-4 w-4 text-success" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(salesData.week)}</div>
-            <p className="text-xs text-muted-foreground">7 day total</p>
+            {statsLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{formatCurrency(sales?.week || 0)}</div>
+                <p className="text-xs text-muted-foreground">7 day total</p>
+              </>
+            )}
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">This Month</CardTitle>
-            {salesData.monthComparison >= 0 ? (
+            {(sales?.monthComparison || 0) >= 0 ? (
               <TrendingUp className="h-4 w-4 text-success" />
             ) : (
               <TrendingDown className="h-4 w-4 text-destructive" />
             )}
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(salesData.month)}</div>
-            <p className="text-xs text-muted-foreground">
-              <span className={salesData.monthComparison >= 0 ? "text-success" : "text-destructive"}>
-                {salesData.monthComparison >= 0 ? "+" : ""}
-                {salesData.monthComparison}%
-              </span>{" "}
-              vs last month
-            </p>
+            {statsLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{formatCurrency(sales?.month || 0)}</div>
+                <p className="text-xs text-muted-foreground">
+                  <span className={(sales?.monthComparison || 0) >= 0 ? "text-success" : "text-destructive"}>
+                    {(sales?.monthComparison || 0) >= 0 ? "+" : ""}
+                    {sales?.monthComparison || 0}%
+                  </span>{" "}
+                  vs last month
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -220,8 +216,14 @@ export default function Dashboard() {
             <Wallet className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(financialData.cashBalance)}</div>
-            <p className="text-xs text-muted-foreground">In hand</p>
+            {statsLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{formatCurrency(financial?.cashBalance || 0)}</div>
+                <p className="text-xs text-muted-foreground">In hand</p>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -293,7 +295,11 @@ export default function Dashboard() {
             <CardDescription>Cash in Hand</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold">{formatCurrency(financialData.cashBalance)}</div>
+            {statsLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            ) : (
+              <div className="text-xl font-bold">{formatCurrency(financial?.cashBalance || 0)}</div>
+            )}
           </CardContent>
         </Card>
         <Card>
@@ -301,7 +307,11 @@ export default function Dashboard() {
             <CardDescription>Bank Balance</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold">{formatCurrency(financialData.bankBalance)}</div>
+            {statsLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            ) : (
+              <div className="text-xl font-bold">{formatCurrency(financial?.bankBalance || 0)}</div>
+            )}
           </CardContent>
         </Card>
         <Card>
@@ -309,7 +319,11 @@ export default function Dashboard() {
             <CardDescription>Receivables</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-success">{formatCurrency(financialData.receivables)}</div>
+            {statsLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            ) : (
+              <div className="text-xl font-bold text-success">{formatCurrency(financial?.receivables || 0)}</div>
+            )}
           </CardContent>
         </Card>
         <Card>
@@ -317,7 +331,11 @@ export default function Dashboard() {
             <CardDescription>Payables</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold text-destructive">{formatCurrency(financialData.payables)}</div>
+            {statsLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            ) : (
+              <div className="text-xl font-bold text-destructive">{formatCurrency(financial?.payables || 0)}</div>
+            )}
           </CardContent>
         </Card>
       </div>
