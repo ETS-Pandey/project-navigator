@@ -1,7 +1,6 @@
-import { LogOut, User, Building2, ChevronDown, Bell } from "lucide-react";
+import { LogOut, User, Building2, ChevronDown } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBranch } from "@/contexts/BranchContext";
-import { useRates } from "@/contexts/RateContext";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,44 +11,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { formatCurrency, formatRelativeTime } from "@/lib/formatters";
 import { Badge } from "@/components/ui/badge";
+import { LiveRateStrip } from "@/components/rates/LiveRateStrip";
+import { RateAlertsDropdown } from "@/components/rates/RateAlertsDropdown";
 
 export function AppHeader() {
   const { profile, signOut } = useAuth();
   const { branches, currentBranch, setCurrentBranch } = useBranch();
-  const { rates } = useRates();
 
   return (
     <header className="sticky top-0 z-50 flex h-14 items-center gap-4 border-b bg-background px-4 lg:px-6">
       <SidebarTrigger className="-ml-2" />
 
-      {/* Rate Strip */}
-      {rates && (
-        <div className="hidden md:flex items-center gap-4 text-sm">
-          <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground">Gold 24K:</span>
-            <span className="font-semibold text-primary">
-              {formatCurrency(rates.gold_24k_sell)}
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground">Gold 22K:</span>
-            <span className="font-semibold text-primary">
-              {formatCurrency(rates.gold_22k_sell || 0)}
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground">Silver:</span>
-            <span className="font-medium">
-              {formatCurrency(rates.silver_999_sell || 0)}
-            </span>
-          </div>
-          <Badge variant="outline" className="text-xs">
-            Updated {formatRelativeTime(rates.updated_at)}
-          </Badge>
-        </div>
-      )}
+      {/* Live Rate Strip */}
+      <LiveRateStrip />
 
       <div className="flex-1" />
 
@@ -86,13 +61,8 @@ export function AppHeader() {
         </DropdownMenu>
       )}
 
-      {/* Notifications */}
-      <Button variant="ghost" size="icon" className="relative">
-        <Bell className="h-5 w-5" />
-        <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
-          3
-        </span>
-      </Button>
+      {/* Rate Alerts */}
+      <RateAlertsDropdown />
 
       {/* User Menu */}
       <DropdownMenu>
