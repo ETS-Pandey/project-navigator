@@ -947,6 +947,39 @@ export type Database = {
           },
         ]
       }
+      live_market_rates: {
+        Row: {
+          fetched_at: string
+          gold_rate_inr: number
+          gold_rate_usd: number | null
+          id: string
+          platinum_rate_inr: number | null
+          silver_rate_inr: number
+          silver_rate_usd: number | null
+          source: string
+        }
+        Insert: {
+          fetched_at?: string
+          gold_rate_inr: number
+          gold_rate_usd?: number | null
+          id?: string
+          platinum_rate_inr?: number | null
+          silver_rate_inr: number
+          silver_rate_usd?: number | null
+          source?: string
+        }
+        Update: {
+          fetched_at?: string
+          gold_rate_inr?: number
+          gold_rate_usd?: number | null
+          id?: string
+          platinum_rate_inr?: number | null
+          silver_rate_inr?: number
+          silver_rate_usd?: number | null
+          source?: string
+        }
+        Relationships: []
+      }
       loan_collaterals: {
         Row: {
           created_at: string
@@ -1992,6 +2025,91 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rate_alert_configs: {
+        Row: {
+          alert_threshold_percent: number
+          branch_id: string
+          created_at: string
+          id: string
+          is_enabled: boolean
+          last_alerted_at: string | null
+          last_alerted_price: number | null
+          metal_type: string
+          updated_at: string
+        }
+        Insert: {
+          alert_threshold_percent?: number
+          branch_id: string
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          last_alerted_at?: string | null
+          last_alerted_price?: number | null
+          metal_type: string
+          updated_at?: string
+        }
+        Update: {
+          alert_threshold_percent?: number
+          branch_id?: string
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          last_alerted_at?: string | null
+          last_alerted_price?: number | null
+          metal_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rate_alert_configs_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rate_alerts: {
+        Row: {
+          branch_id: string
+          change_percent: number
+          created_at: string
+          current_rate: number
+          id: string
+          is_read: boolean
+          metal_type: string
+          previous_rate: number
+        }
+        Insert: {
+          branch_id: string
+          change_percent: number
+          created_at?: string
+          current_rate: number
+          id?: string
+          is_read?: boolean
+          metal_type: string
+          previous_rate: number
+        }
+        Update: {
+          branch_id?: string
+          change_percent?: number
+          created_at?: string
+          current_rate?: number
+          id?: string
+          is_read?: boolean
+          metal_type?: string
+          previous_rate?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rate_alerts_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
             referencedColumns: ["id"]
           },
         ]

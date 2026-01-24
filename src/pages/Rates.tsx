@@ -15,6 +15,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, Calculator, Save, RefreshCw } from "lucide-react";
 import { GOLD_PURITY_PERCENTAGES, SILVER_PURITY_PERCENTAGES } from "@/lib/constants";
 import { formatCurrency } from "@/lib/formatters";
+import { RateAlertConfig } from "@/components/rates/RateAlertConfig";
+import { useLiveRates } from "@/hooks/useLiveRates";
 
 const rateSchema = z.object({
   gold_24k_buy: z.coerce.number().min(0, "Rate must be positive"),
@@ -549,6 +551,9 @@ export default function Rates() {
           </div>
         </form>
       </Form>
+
+      {/* Rate Alert Configuration */}
+      <RateAlertConfig />
     </div>
   );
 }
