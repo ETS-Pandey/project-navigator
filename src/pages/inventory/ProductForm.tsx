@@ -117,15 +117,15 @@ export default function ProductForm() {
         purity: product.purity,
         metal_color: product.metal_color,
         gross_weight: product.gross_weight,
-        stone_weight: product.stone_weight,
-        wastage_percent: product.wastage_percent,
+        stone_weight: product.stone_weight || 0,
+        wastage_percent: product.wastage_percent || 0,
         making_charge_type: product.making_charge_type,
-        making_charge_value: product.making_charge_value,
-        has_stones: product.has_stones,
-        stone_value: product.stone_value,
+        making_charge_value: product.making_charge_value || 0,
+        has_stones: product.has_stones || false,
+        stone_value: product.stone_value || 0,
         huid: product.huid || "",
         hallmark_center: product.hallmark_center || "",
-        is_hallmarked: product.is_hallmarked,
+        is_hallmarked: product.is_hallmarked || false,
         location: product.location || "",
       });
 
@@ -578,7 +578,12 @@ export default function ProductForm() {
                         <FormItem>
                           <FormLabel>Stone Value (₹)</FormLabel>
                           <FormControl>
-                            <Input type="number" step="1" {...field} />
+                            <Input 
+                              type="number" 
+                              step="1" 
+                              value={field.value || ""} 
+                              onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
