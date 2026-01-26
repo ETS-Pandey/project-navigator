@@ -75,36 +75,44 @@ export function calculateSilverPurityRate(
 
 /**
  * Calculate GST components
+ * @param taxableAmount - Amount on which GST is calculated
+ * @param isInterstate - Whether the transaction is interstate
+ * @param gstRate - GST rate (default 3% for jewellery)
  */
 export function calculateGST(
   taxableAmount: number,
-  isInterstate: boolean
+  isInterstate: boolean,
+  gstRate: number = GST_RATES.CGST + GST_RATES.SGST
 ): {
   cgst: number;
   sgst: number;
   igst: number;
   totalGst: number;
   grandTotal: number;
+  gstPercent: number;
 } {
   if (isInterstate) {
-    const igst = taxableAmount * (GST_RATES.IGST / 100);
+    const igst = taxableAmount * (gstRate / 100);
     return {
       cgst: 0,
       sgst: 0,
       igst,
       totalGst: igst,
       grandTotal: taxableAmount + igst,
+      gstPercent: gstRate,
     };
   }
 
-  const cgst = taxableAmount * (GST_RATES.CGST / 100);
-  const sgst = taxableAmount * (GST_RATES.SGST / 100);
+  const halfRate = gstRate / 2;
+  const cgst = taxableAmount * (halfRate / 100);
+  const sgst = taxableAmount * (halfRate / 100);
   return {
     cgst,
     sgst,
     igst: 0,
     totalGst: cgst + sgst,
     grandTotal: taxableAmount + cgst + sgst,
+    gstPercent: gstRate,
   };
 }
 

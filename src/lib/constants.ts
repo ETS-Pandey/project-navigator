@@ -55,6 +55,16 @@ export const GST_RATES = {
   IGST: 3.0,
 } as const;
 
+// Available GST slabs in India
+export const GST_SLABS = [
+  { value: 0, label: "0% (Exempt)" },
+  { value: 3, label: "3% (Jewellery)" },
+  { value: 5, label: "5%" },
+  { value: 12, label: "12%" },
+  { value: 18, label: "18%" },
+  { value: 28, label: "28%" },
+] as const;
+
 // HSN codes for jewellery
 export const HSN_CODES = {
   GOLD_JEWELLERY: "7113",
