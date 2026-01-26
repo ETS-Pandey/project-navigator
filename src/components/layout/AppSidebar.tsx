@@ -61,9 +61,13 @@ const navigationItems = [
     icon: "LayoutDashboard",
   },
   {
-    title: "Daily Rates",
+    title: "Rates",
     url: "/rates",
     icon: "TrendingUp",
+    children: [
+      { title: "Set Today's Rates", url: "/rates" },
+      { title: "Rate History", url: "/rates/history" },
+    ],
   },
   {
     title: "Inventory",
