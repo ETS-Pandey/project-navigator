@@ -12,6 +12,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/Dashboard";
 import Rates from "./pages/Rates";
+import RateHistory from "./pages/rates/RateHistory";
 import NotFound from "./pages/NotFound";
 
 // Inventory Pages
@@ -92,6 +93,7 @@ const App = () => (
                 <Route element={<AppLayout />}>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/rates" element={<Rates />} />
+                  <Route path="/rates/history" element={<RateHistory />} />
                   
                   {/* Inventory Routes */}
                   <Route path="/inventory/products" element={<Products />} />
