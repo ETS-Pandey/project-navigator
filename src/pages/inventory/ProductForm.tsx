@@ -20,7 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import { ProductImageUpload, uploadProductImages } from "@/components/inventory/ProductImageUpload";
 import { formatCurrency } from "@/lib/formatters";
 import { calculateMetalValue, calculateMakingCharges, calculateGST } from "@/lib/calculations";
-import { GOLD_PURITIES, SILVER_PURITIES, METAL_COLORS, MAKING_CHARGE_TYPES } from "@/lib/constants";
+import { GOLD_PURITIES, SILVER_PURITIES, METAL_COLORS, MAKING_CHARGE_TYPES, GST_SLABS } from "@/lib/constants";
 import type { MetalType, MetalColor, MakingChargeType } from "@/types/inventory";
 
 interface ProductImage {
@@ -50,6 +50,7 @@ const productSchema = z.object({
   hallmark_center: z.string().optional(),
   is_hallmarked: z.boolean().default(false),
   location: z.string().optional(),
+  gst_rate: z.coerce.number().min(0).max(28).default(3),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -90,6 +91,7 @@ export default function ProductForm() {
       hallmark_center: "",
       is_hallmarked: false,
       location: "",
+      gst_rate: 3,
     },
   });
 
@@ -102,6 +104,7 @@ export default function ProductForm() {
   const watchedMakingChargeType = form.watch("making_charge_type");
   const watchedMakingChargeValue = form.watch("making_charge_value");
   const watchedStoneValue = form.watch("stone_value");
+  const watchedGstRate = form.watch("gst_rate");
 
   const { data: subCategories } = useSubCategories(watchedCategoryId);
 
@@ -127,6 +130,7 @@ export default function ProductForm() {
         hallmark_center: product.hallmark_center || "",
         is_hallmarked: product.is_hallmarked || false,
         location: product.location || "",
+        gst_rate: (product as any).gst_rate || 3,
       });
 
       // Load existing images
@@ -169,8 +173,8 @@ export default function ProductForm() {
     watchedMakingChargeValue
   );
   const subtotal = metalValue + makingChargeAmount + (watchedStoneValue || 0);
-  const gst = calculateGST(subtotal, false);
-  const totalCost = subtotal + gst.cgst + gst.sgst;
+  const gst = calculateGST(subtotal, false, watchedGstRate || 3);
+  const totalCost = subtotal + gst.totalGst;
 
   const onSubmit = async (data: ProductFormValues) => {
     const productData = {
@@ -502,12 +506,12 @@ export default function ProductForm() {
                 </CardContent>
               </Card>
 
-              {/* Making Charges */}
+              {/* Making Charges & GST */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Making Charges</CardTitle>
+                  <CardTitle>Making Charges & GST</CardTitle>
                 </CardHeader>
-                <CardContent className="grid gap-4 md:grid-cols-2">
+                <CardContent className="grid gap-4 md:grid-cols-3">
                   <FormField
                     control={form.control}
                     name="making_charge_type"
@@ -544,6 +548,29 @@ export default function ProductForm() {
                           <Input type="number" step="0.01" {...field} />
                         </FormControl>
                         <FormDescription>Amount: {formatCurrency(makingChargeAmount)}</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="gst_rate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>GST Rate</FormLabel>
+                        <Select onValueChange={(v) => field.onChange(parseFloat(v))} value={String(field.value)}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {GST_SLABS.map((slab) => (
+                              <SelectItem key={slab.value} value={String(slab.value)}>{slab.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -684,8 +711,8 @@ export default function ProductForm() {
                       <span className="font-medium">{formatCurrency(subtotal)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">GST (3%)</span>
-                      <span className="font-medium">{formatCurrency(gst.cgst + gst.sgst)}</span>
+                      <span className="text-muted-foreground">GST ({watchedGstRate || 3}%)</span>
+                      <span className="font-medium">{formatCurrency(gst.totalGst)}</span>
                     </div>
                     <Separator />
                     <div className="flex justify-between text-lg font-bold">
