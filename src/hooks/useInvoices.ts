@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useBranch } from "@/contexts/BranchContext";
 import { toast } from "sonner";
+import { createInvoiceJournalEntry } from "@/hooks/useJournalEntryCreation";
 import type { Invoice, InvoiceItem, InvoiceItemFormData, InvoiceStatus } from "@/types/billing";
 
 interface InvoiceFilters {
@@ -168,6 +169,20 @@ export function useCreateInvoice() {
           .insert(invoiceItems);
         
         if (itemsError) throw itemsError;
+      }
+
+      // Create journal entry for confirmed invoices
+      if (invoiceData.status === "confirmed" && invoice.grand_total > 0) {
+        await createInvoiceJournalEntry(
+          currentBranch.id,
+          invoice.id,
+          invoiceNumber,
+          invoice.invoice_date,
+          invoice.grand_total,
+          invoice.cgst_amount || 0,
+          invoice.sgst_amount || 0,
+          invoice.igst_amount || 0
+        );
       }
       
       return invoice;

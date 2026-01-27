@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useBranch } from "@/contexts/BranchContext";
 import { toast } from "sonner";
+import { createPaymentJournalEntry } from "@/hooks/useJournalEntryCreation";
 import type { Payment, PaymentFormData, PaymentMode } from "@/types/billing";
 
 interface PaymentFilters {
@@ -113,6 +114,17 @@ export function useCreatePayment() {
             .eq("id", data.invoice_id);
         }
       }
+
+      // Create journal entry for the payment
+      await createPaymentJournalEntry(
+        currentBranch.id,
+        payment.id,
+        paymentNumber,
+        payment.payment_date,
+        data.amount,
+        data.payment_mode,
+        undefined // invoice number not available here
+      );
       
       return payment;
     },
