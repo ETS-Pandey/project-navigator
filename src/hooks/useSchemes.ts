@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useBranch } from "@/contexts/BranchContext";
 import { useToast } from "@/hooks/use-toast";
 import { addMonths, format, parseISO, startOfMonth, endOfMonth, isBefore } from "date-fns";
+import { createSchemePaymentJournalEntry } from "@/hooks/useJournalEntryCreation";
 import type { 
   Scheme, 
   SchemeEnrollment, 
@@ -397,7 +398,7 @@ export function useRecordSchemePayment() {
       // Get enrollment to update totals
       const { data: enrollment } = await supabase
         .from('scheme_enrollments')
-        .select('*, scheme:schemes(*)')
+        .select('*, scheme:schemes(*), customer:customers(name)')
         .eq('id', enrollmentId)
         .single();
 
@@ -425,6 +426,26 @@ export function useRecordSchemePayment() {
         .eq('id', enrollmentId);
 
       if (enrollmentError) throw enrollmentError;
+
+      // Create journal entry for the payment
+      const { data: payment } = await supabase
+        .from('scheme_payments')
+        .select('payment_number, branch_id')
+        .eq('id', paymentId)
+        .single();
+
+      if (payment) {
+        const customerData = enrollment.customer as { name?: string } | null;
+        await createSchemePaymentJournalEntry(
+          payment.branch_id,
+          paymentId,
+          payment.payment_number,
+          format(new Date(), 'yyyy-MM-dd'),
+          data.amount,
+          data.payment_mode,
+          customerData?.name
+        );
+      }
 
       return { isMatured };
     },

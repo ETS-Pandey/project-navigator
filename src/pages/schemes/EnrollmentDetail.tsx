@@ -1,13 +1,17 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { format, parseISO, differenceInDays } from "date-fns";
-import { ArrowLeft, Printer, CreditCard, Gift, Calendar, CheckCircle2, Clock } from "lucide-react";
+import { format, parseISO, differenceInDays, isBefore, isToday } from "date-fns";
+import { ArrowLeft, Printer, CreditCard, Gift, Calendar, CheckCircle2, Clock, Banknote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
-import { useSchemeEnrollment, useSchemePayments } from "@/hooks/useSchemes";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useSchemeEnrollment, useSchemePayments, useRecordSchemePayment } from "@/hooks/useSchemes";
+import { SchemePaymentForm } from "@/components/schemes/SchemePaymentForm";
 import { formatCurrency } from "@/lib/formatters";
+import type { SchemePaymentFormData, SchemePayment } from "@/types/schemes";
 
 const statusColors: Record<string, string> = {
   active: "bg-green-100 text-green-800",
@@ -29,6 +33,18 @@ export default function EnrollmentDetail() {
   const navigate = useNavigate();
   const { data: enrollment, isLoading } = useSchemeEnrollment(id);
   const { data: payments = [] } = useSchemePayments(id);
+  const recordPayment = useRecordSchemePayment();
+  const [selectedPayment, setSelectedPayment] = useState<SchemePayment | null>(null);
+
+  const handleRecordPayment = async (data: SchemePaymentFormData) => {
+    if (!selectedPayment || !id) return;
+    await recordPayment.mutateAsync({
+      paymentId: selectedPayment.id,
+      enrollmentId: id,
+      data,
+    });
+    setSelectedPayment(null);
+  };
 
   if (isLoading) {
     return (
@@ -170,33 +186,56 @@ export default function EnrollmentDetail() {
                     <TableHead className="text-right">Amount</TableHead>
                     <TableHead>Mode</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {payments.map((payment) => (
-                    <TableRow key={payment.id}>
-                      <TableCell>{payment.installment_number}</TableCell>
-                      <TableCell>{format(parseISO(payment.due_date), "dd MMM yyyy")}</TableCell>
-                      <TableCell>
-                        {payment.payment_date
-                          ? format(parseISO(payment.payment_date), "dd MMM yyyy")
-                          : "-"}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {payment.status === 'paid'
-                          ? formatCurrency(payment.amount_paid)
-                          : formatCurrency(payment.amount_due)}
-                      </TableCell>
-                      <TableCell className="capitalize">
-                        {payment.payment_mode?.replace("_", " ") || "-"}
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={paymentStatusColors[payment.status]}>
-                          {payment.status}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {payments.map((payment) => {
+                    const canCollect = payment.status === 'pending' || payment.status === 'overdue';
+                    const isOverdue = isBefore(parseISO(payment.due_date), new Date()) && payment.status !== 'paid';
+                    const isDueToday = isToday(parseISO(payment.due_date));
+                    
+                    return (
+                      <TableRow key={payment.id}>
+                        <TableCell>{payment.installment_number}</TableCell>
+                        <TableCell>
+                          <span className={isOverdue ? "text-red-600 font-medium" : isDueToday ? "text-orange-600 font-medium" : ""}>
+                            {format(parseISO(payment.due_date), "dd MMM yyyy")}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          {payment.payment_date
+                            ? format(parseISO(payment.payment_date), "dd MMM yyyy")
+                            : "-"}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {payment.status === 'paid'
+                            ? formatCurrency(payment.amount_paid)
+                            : formatCurrency(payment.amount_due)}
+                        </TableCell>
+                        <TableCell className="capitalize">
+                          {payment.payment_mode?.replace("_", " ") || "-"}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={paymentStatusColors[payment.status]}>
+                            {payment.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {canCollect && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setSelectedPayment(payment)}
+                            >
+                              <Banknote className="h-4 w-4 mr-1" />
+                              Collect
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </CardContent>
@@ -270,6 +309,24 @@ export default function EnrollmentDetail() {
           )}
         </div>
       </div>
+
+      {/* Payment Collection Dialog */}
+      <Dialog open={!!selectedPayment} onOpenChange={() => setSelectedPayment(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Collect Installment #{selectedPayment?.installment_number}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedPayment && (
+            <SchemePaymentForm
+              amount={selectedPayment.amount_due}
+              onSubmit={handleRecordPayment}
+              isLoading={recordPayment.isPending}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
