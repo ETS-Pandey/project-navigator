@@ -79,13 +79,26 @@ export function useCreatePayment() {
       
       const paymentNumber = `${prefix}-${String((count || 0) + 1).padStart(4, "0")}`;
       
+      // Clean up data - convert empty strings to null for optional fields
+      const cleanedData = {
+        payment_mode: data.payment_mode,
+        amount: data.amount,
+        invoice_id: data.invoice_id || null,
+        customer_id: data.customer_id || null,
+        reference_number: data.reference_number || null,
+        bank_name: data.bank_name || null,
+        cheque_number: data.cheque_number || null,
+        cheque_date: data.cheque_date || null,
+        upi_id: data.upi_id || null,
+        notes: data.notes || null,
+        branch_id: currentBranch.id,
+        payment_number: paymentNumber,
+        payment_date: today.toISOString().split('T')[0],
+      };
+      
       const { data: payment, error } = await supabase
         .from("payments")
-        .insert({
-          ...data,
-          branch_id: currentBranch.id,
-          payment_number: paymentNumber,
-        })
+        .insert(cleanedData)
         .select()
         .single();
       
@@ -95,7 +108,7 @@ export function useCreatePayment() {
       if (data.invoice_id) {
         const { data: invoice } = await supabase
           .from("invoices")
-          .select("amount_paid, grand_total")
+          .select("amount_paid, grand_total, invoice_number")
           .eq("id", data.invoice_id)
           .single();
         
@@ -112,19 +125,29 @@ export function useCreatePayment() {
               status: newStatus,
             })
             .eq("id", data.invoice_id);
-        }
-      }
 
-      // Create journal entry for the payment
-      await createPaymentJournalEntry(
-        currentBranch.id,
-        payment.id,
-        paymentNumber,
-        payment.payment_date,
-        data.amount,
-        data.payment_mode,
-        undefined // invoice number not available here
-      );
+          // Create journal entry for the payment with invoice number
+          await createPaymentJournalEntry(
+            currentBranch.id,
+            payment.id,
+            paymentNumber,
+            payment.payment_date,
+            data.amount,
+            data.payment_mode,
+            invoice.invoice_number
+          );
+        }
+      } else {
+        // Create journal entry for the payment without invoice reference
+        await createPaymentJournalEntry(
+          currentBranch.id,
+          payment.id,
+          paymentNumber,
+          payment.payment_date,
+          data.amount,
+          data.payment_mode
+        );
+      }
       
       return payment;
     },
@@ -132,6 +155,11 @@ export function useCreatePayment() {
       queryClient.invalidateQueries({ queryKey: ["payments"] });
       queryClient.invalidateQueries({ queryKey: ["invoices"] });
       queryClient.invalidateQueries({ queryKey: ["invoice"] });
+      queryClient.invalidateQueries({ queryKey: ["invoice-payments"] });
+      queryClient.invalidateQueries({ queryKey: ["journal-entries"] });
+      queryClient.invalidateQueries({ queryKey: ["daybook-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-financial"] });
+      queryClient.invalidateQueries({ queryKey: ["customer-history"] });
       toast.success("Payment recorded successfully");
     },
     onError: (error) => {

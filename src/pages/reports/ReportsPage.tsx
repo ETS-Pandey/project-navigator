@@ -387,8 +387,8 @@ export default function ReportsPage() {
               icon={Receipt}
             />
             <MetricCard
-              title="Amount Received"
-              value={formatCurrency(stats?.paidAmount || 0)}
+              title="Total Collections"
+              value={formatCurrency(stats?.totalPayments || 0)}
               icon={ArrowUpRight}
               iconColor="text-green-600"
             />
@@ -400,41 +400,82 @@ export default function ReportsPage() {
             />
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Payment Collection Status</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm font-medium">Collection Rate</span>
-                    <span className="text-sm text-muted-foreground">
-                      {stats?.totalSales ? ((stats.paidAmount / stats.totalSales) * 100).toFixed(1) : 0}%
-                    </span>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Payment Collection Status</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between mb-2">
+                      <span className="text-sm font-medium">Collection Rate</span>
+                      <span className="text-sm text-muted-foreground">
+                        {stats?.totalSales ? ((stats.paidAmount / stats.totalSales) * 100).toFixed(1) : 0}%
+                      </span>
+                    </div>
+                    <Progress
+                      value={stats?.totalSales ? (stats.paidAmount / stats.totalSales) * 100 : 0}
+                      className="h-3"
+                    />
                   </div>
-                  <Progress
-                    value={stats?.totalSales ? (stats.paidAmount / stats.totalSales) * 100 : 0}
-                    className="h-3"
-                  />
+                  <div className="grid grid-cols-2 gap-4 pt-4">
+                    <div className="p-4 bg-green-50 rounded-lg">
+                      <p className="text-sm text-green-700">Collected</p>
+                      <p className="text-xl font-bold text-green-800">
+                        {formatCurrency(stats?.paidAmount || 0)}
+                      </p>
+                    </div>
+                    <div className="p-4 bg-red-50 rounded-lg">
+                      <p className="text-sm text-red-700">Pending</p>
+                      <p className="text-xl font-bold text-red-800">
+                        {formatCurrency(stats?.pendingAmount || 0)}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 pt-4">
-                  <div className="p-4 bg-green-50 rounded-lg">
-                    <p className="text-sm text-green-700">Collected</p>
-                    <p className="text-xl font-bold text-green-800">
-                      {formatCurrency(stats?.paidAmount || 0)}
-                    </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Payments by Mode</CardTitle>
+                <CardDescription>{stats?.paymentsCount || 0} total payments received</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Wallet className="h-4 w-4 text-green-700" />
+                      <span className="text-sm font-medium text-green-700">Cash</span>
+                    </div>
+                    <span className="font-bold text-green-800">{formatCurrency(stats?.cashPayments || 0)}</span>
                   </div>
-                  <div className="p-4 bg-red-50 rounded-lg">
-                    <p className="text-sm text-red-700">Pending</p>
-                    <p className="text-xl font-bold text-red-800">
-                      {formatCurrency(stats?.pendingAmount || 0)}
-                    </p>
+                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="h-4 w-4 text-blue-700" />
+                      <span className="text-sm font-medium text-blue-700">Card</span>
+                    </div>
+                    <span className="font-bold text-blue-800">{formatCurrency(stats?.cardPayments || 0)}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Receipt className="h-4 w-4 text-purple-700" />
+                      <span className="text-sm font-medium text-purple-700">UPI</span>
+                    </div>
+                    <span className="font-bold text-purple-800">{formatCurrency(stats?.upiPayments || 0)}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-cyan-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <PiggyBank className="h-4 w-4 text-cyan-700" />
+                      <span className="text-sm font-medium text-cyan-700">Bank Transfer</span>
+                    </div>
+                    <span className="font-bold text-cyan-800">{formatCurrency(stats?.bankTransferPayments || 0)}</span>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Inventory Tab */}

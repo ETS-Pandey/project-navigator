@@ -256,6 +256,7 @@ export function useUpdateInvoice() {
 
 export function useUpdateInvoiceStatus() {
   const queryClient = useQueryClient();
+  const { currentBranch } = useBranch();
   
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: InvoiceStatus }) => {
@@ -267,11 +268,29 @@ export function useUpdateInvoiceStatus() {
         .single();
       
       if (error) throw error;
+      
+      // Create journal entry when invoice is confirmed
+      if (status === "confirmed" && currentBranch?.id && data.grand_total > 0) {
+        await createInvoiceJournalEntry(
+          currentBranch.id,
+          data.id,
+          data.invoice_number,
+          data.invoice_date,
+          data.grand_total,
+          data.cgst_amount || 0,
+          data.sgst_amount || 0,
+          data.igst_amount || 0
+        );
+      }
+      
       return data;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["invoices"] });
       queryClient.invalidateQueries({ queryKey: ["invoice", variables.id] });
+      queryClient.invalidateQueries({ queryKey: ["journal-entries"] });
+      queryClient.invalidateQueries({ queryKey: ["daybook-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-financial"] });
       toast.success("Invoice status updated");
     },
     onError: (error) => {

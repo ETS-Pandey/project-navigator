@@ -11,7 +11,8 @@ import {
   Tag,
   Wallet,
   Eye,
-  Loader2
+  Loader2,
+  CreditCard
 } from "lucide-react";
 import { useRates } from "@/contexts/RateContext";
 import { useBranch } from "@/contexts/BranchContext";
@@ -146,7 +147,7 @@ export default function Dashboard() {
       </div>
 
       {/* Sales Summary */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Today's Sales</CardTitle>
@@ -160,6 +161,25 @@ export default function Dashboard() {
                 <div className="text-2xl font-bold">{formatCurrency(sales?.today || 0)}</div>
                 <p className="text-xs text-muted-foreground">
                   {sales?.todayCount || 0} invoice(s)
+                </p>
+              </>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Today's Collections</CardTitle>
+            <CreditCard className="h-4 w-4 text-success" />
+          </CardHeader>
+          <CardContent>
+            {statsLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            ) : (
+              <>
+                <div className="text-2xl font-bold text-success">{formatCurrency(financial?.todayPayments || 0)}</div>
+                <p className="text-xs text-muted-foreground">
+                  {financial?.todayPaymentCount || 0} payment(s)
                 </p>
               </>
             )}
@@ -231,16 +251,16 @@ export default function Dashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Month Expenses</CardTitle>
-            <Wallet className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Month Collections</CardTitle>
+            <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             {statsLoading ? (
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             ) : (
               <>
-                <div className="text-2xl font-bold">{formatCurrency(financial?.monthExpenses || 0)}</div>
-                <p className="text-xs text-muted-foreground">{financial?.monthExpenseCount || 0} entries</p>
+                <div className="text-2xl font-bold">{formatCurrency(financial?.monthPayments || 0)}</div>
+                <p className="text-xs text-muted-foreground">{financial?.monthPaymentCount || 0} payments</p>
               </>
             )}
           </CardContent>
