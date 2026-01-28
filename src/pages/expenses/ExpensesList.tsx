@@ -66,7 +66,12 @@ export default function ExpensesList() {
   });
   
   const onSubmit = async (data: ExpenseFormData) => {
-    await createExpense.mutateAsync(data as import("@/types/expenses").ExpenseFormData);
+    // Find category name to include in journal entry
+    const selectedCategory = categories.find(c => c.id === data.category_id);
+    await createExpense.mutateAsync({
+      ...data,
+      category_name: selectedCategory?.name,
+    } as import("@/types/expenses").ExpenseFormData & { category_name?: string });
     setIsNewDialogOpen(false);
     form.reset();
   };

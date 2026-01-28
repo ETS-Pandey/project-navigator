@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useBranch } from "@/contexts/BranchContext";
 import { toast } from "sonner";
 import type { Expense, ExpenseCategory, ExpenseFormData } from "@/types/expenses";
+import { createExpenseJournalEntry } from "./useJournalEntryCreation";
 
 interface ExpenseFilters {
   categoryId?: string;
@@ -128,7 +129,7 @@ export function useCreateExpense() {
   const { currentBranch } = useBranch();
   
   return useMutation({
-    mutationFn: async (data: ExpenseFormData) => {
+    mutationFn: async (data: ExpenseFormData & { category_name?: string }) => {
       if (!currentBranch?.id) throw new Error("No branch selected");
       
       // Generate expense number
@@ -157,6 +158,7 @@ export function useCreateExpense() {
         reference_number: data.reference_number || null,
         is_gst_applicable: data.is_gst_applicable || false,
         gst_amount: data.gst_amount || null,
+        status: "approved", // Auto-approve expenses
       };
       
       const { data: result, error } = await supabase
@@ -166,10 +168,26 @@ export function useCreateExpense() {
         .single();
       
       if (error) throw error;
+      
+      // Create journal entry for the expense
+      await createExpenseJournalEntry(
+        currentBranch.id,
+        result.id,
+        expenseNumber,
+        data.expense_date,
+        data.amount,
+        data.payment_mode,
+        data.category_name,
+        data.is_gst_applicable ? data.gst_amount : undefined
+      );
+      
       return result;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
+      queryClient.invalidateQueries({ queryKey: ["journal-entries"] });
+      queryClient.invalidateQueries({ queryKey: ["daybook-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-financial"] });
       toast.success("Expense recorded successfully");
     },
     onError: (error) => {

@@ -235,3 +235,50 @@ export async function createSchemePaymentJournalEntry(
     ],
   });
 }
+
+// Helper for expense recording
+export async function createExpenseJournalEntry(
+  branchId: string,
+  expenseId: string,
+  expenseNumber: string,
+  expenseDate: string,
+  amount: number,
+  paymentMode: string,
+  categoryName?: string,
+  gstAmount?: number
+) {
+  const assetAccountCode = paymentMode === "cash" ? "1000" : "1100"; // Cash or Bank
+  const expenseAmount = gstAmount ? amount - gstAmount : amount;
+
+  const lines: JournalLineInput[] = [
+    {
+      account_code: "5000", // Operating Expenses
+      debit: expenseAmount,
+      narration: categoryName ? `${categoryName} expense` : "Operating expense",
+    },
+  ];
+
+  // Add GST input credit if applicable
+  if (gstAmount && gstAmount > 0) {
+    lines.push({
+      account_code: "1300", // GST Input Credit (Asset)
+      debit: gstAmount,
+      narration: "GST Input Credit",
+    });
+  }
+
+  lines.push({
+    account_code: assetAccountCode,
+    credit: amount,
+    narration: `${paymentMode.toUpperCase()} paid`,
+  });
+
+  return createJournalEntry({
+    branchId,
+    entryDate: expenseDate,
+    narration: `Expense: ${expenseNumber}${categoryName ? ` - ${categoryName}` : ""}`,
+    referenceType: "expense",
+    referenceId: expenseId,
+    lines,
+  });
+}

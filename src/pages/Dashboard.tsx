@@ -146,7 +146,7 @@ export default function Dashboard() {
       </div>
 
       {/* Sales Summary */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Today's Sales</CardTitle>
@@ -160,6 +160,25 @@ export default function Dashboard() {
                 <div className="text-2xl font-bold">{formatCurrency(sales?.today || 0)}</div>
                 <p className="text-xs text-muted-foreground">
                   {sales?.todayCount || 0} invoice(s)
+                </p>
+              </>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Today's Expenses</CardTitle>
+            <Wallet className="h-4 w-4 text-destructive" />
+          </CardHeader>
+          <CardContent>
+            {statsLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            ) : (
+              <>
+                <div className="text-2xl font-bold text-destructive">{formatCurrency(financial?.todayExpenses || 0)}</div>
+                <p className="text-xs text-muted-foreground">
+                  {financial?.todayExpenseCount || 0} expense(s)
                 </p>
               </>
             )}
@@ -212,7 +231,7 @@ export default function Dashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Cash Balance</CardTitle>
+            <CardTitle className="text-sm font-medium">Month Expenses</CardTitle>
             <Wallet className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -220,8 +239,8 @@ export default function Dashboard() {
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             ) : (
               <>
-                <div className="text-2xl font-bold">{formatCurrency(financial?.cashBalance || 0)}</div>
-                <p className="text-xs text-muted-foreground">In hand</p>
+                <div className="text-2xl font-bold">{formatCurrency(financial?.monthExpenses || 0)}</div>
+                <p className="text-xs text-muted-foreground">{financial?.monthExpenseCount || 0} entries</p>
               </>
             )}
           </CardContent>
