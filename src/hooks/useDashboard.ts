@@ -152,6 +152,29 @@ export function useDashboardStats() {
 
       const monthExpenseTotal = monthExpenses?.reduce((sum, exp) => sum + (exp.amount || 0), 0) || 0;
 
+      // Get today's payments (collections)
+      const { data: todayPayments, error: todayPayError } = await supabase
+        .from("payments")
+        .select("amount")
+        .eq("branch_id", branchId)
+        .gte("payment_date", todayStart.split('T')[0])
+        .lte("payment_date", todayEnd.split('T')[0]);
+
+      if (todayPayError) throw todayPayError;
+
+      const todayPaymentTotal = todayPayments?.reduce((sum, pay) => sum + (pay.amount || 0), 0) || 0;
+
+      // Get this month's payments
+      const { data: monthPayments, error: monthPayError } = await supabase
+        .from("payments")
+        .select("amount")
+        .eq("branch_id", branchId)
+        .gte("payment_date", monthStart.split('T')[0]);
+
+      if (monthPayError) throw monthPayError;
+
+      const monthPaymentTotal = monthPayments?.reduce((sum, pay) => sum + (pay.amount || 0), 0) || 0;
+
       return {
         cashBalance,
         bankBalance,
@@ -161,6 +184,10 @@ export function useDashboardStats() {
         todayExpenseCount: todayExpenses?.length || 0,
         monthExpenses: monthExpenseTotal,
         monthExpenseCount: monthExpenses?.length || 0,
+        todayPayments: todayPaymentTotal,
+        todayPaymentCount: todayPayments?.length || 0,
+        monthPayments: monthPaymentTotal,
+        monthPaymentCount: monthPayments?.length || 0,
       };
     },
     enabled: !!branchId,

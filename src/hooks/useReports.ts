@@ -12,6 +12,14 @@ export interface SystemStats {
   paidAmount: number;
   pendingAmount: number;
   
+  // Payments (Collections)
+  totalPayments: number;
+  paymentsCount: number;
+  cashPayments: number;
+  cardPayments: number;
+  upiPayments: number;
+  bankTransferPayments: number;
+  
   // Inventory
   totalProducts: number;
   availableProducts: number;
@@ -98,6 +106,7 @@ export function useSystemStats(dateFrom?: string, dateTo?: string) {
         repairsRes,
         customOrdersRes,
         oldGoldRes,
+        paymentsRes,
       ] = await Promise.all([
         // Invoices
         supabase
@@ -159,6 +168,12 @@ export function useSystemStats(dateFrom?: string, dateTo?: string) {
           .from("old_gold_purchases")
           .select("net_value, net_weight")
           .eq("branch_id", branchId),
+        
+        // Payments
+        supabase
+          .from("payments")
+          .select("amount, payment_mode")
+          .eq("branch_id", branchId),
       ]);
       
       const invoices = invoicesRes.data || [];
@@ -171,7 +186,22 @@ export function useSystemStats(dateFrom?: string, dateTo?: string) {
       const repairs = repairsRes.data || [];
       const customOrders = customOrdersRes.data || [];
       const oldGold = oldGoldRes.data || [];
+      const payments = paymentsRes.data || [];
       
+      // Calculate payment stats
+      const totalPayments = payments.reduce((sum, p) => sum + Number(p.amount || 0), 0);
+      const cashPayments = payments
+        .filter(p => p.payment_mode === "cash")
+        .reduce((sum, p) => sum + Number(p.amount || 0), 0);
+      const cardPayments = payments
+        .filter(p => p.payment_mode === "card")
+        .reduce((sum, p) => sum + Number(p.amount || 0), 0);
+      const upiPayments = payments
+        .filter(p => p.payment_mode === "upi")
+        .reduce((sum, p) => sum + Number(p.amount || 0), 0);
+      const bankTransferPayments = payments
+        .filter(p => p.payment_mode === "bank_transfer")
+        .reduce((sum, p) => sum + Number(p.amount || 0), 0);
       // Calculate invoice stats
       const totalSales = invoices.reduce((sum, inv) => sum + Number(inv.grand_total || 0), 0);
       const totalGstCollected = invoices.reduce((sum, inv) => sum + Number(inv.total_gst || 0), 0);
@@ -245,6 +275,14 @@ export function useSystemStats(dateFrom?: string, dateTo?: string) {
         avgInvoiceValue: invoices.length > 0 ? totalSales / invoices.length : 0,
         paidAmount,
         pendingAmount,
+        
+        // Payment stats
+        totalPayments,
+        paymentsCount: payments.length,
+        cashPayments,
+        cardPayments,
+        upiPayments,
+        bankTransferPayments,
         
         totalProducts: products.length,
         availableProducts,
