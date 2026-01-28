@@ -129,11 +129,38 @@ export function useDashboardStats() {
 
       const totalPayables = payables?.reduce((sum, exp) => sum + (exp.amount || 0), 0) || 0;
 
+      // Get today's expenses
+      const { data: todayExpenses, error: todayExpError } = await supabase
+        .from("expenses")
+        .select("amount")
+        .eq("branch_id", branchId)
+        .gte("expense_date", todayStart.split('T')[0])
+        .lte("expense_date", todayEnd.split('T')[0]);
+
+      if (todayExpError) throw todayExpError;
+
+      const todayExpenseTotal = todayExpenses?.reduce((sum, exp) => sum + (exp.amount || 0), 0) || 0;
+
+      // Get this month's expenses
+      const { data: monthExpenses, error: monthExpError } = await supabase
+        .from("expenses")
+        .select("amount")
+        .eq("branch_id", branchId)
+        .gte("expense_date", monthStart.split('T')[0]);
+
+      if (monthExpError) throw monthExpError;
+
+      const monthExpenseTotal = monthExpenses?.reduce((sum, exp) => sum + (exp.amount || 0), 0) || 0;
+
       return {
         cashBalance,
         bankBalance,
         receivables: totalReceivables,
         payables: totalPayables,
+        todayExpenses: todayExpenseTotal,
+        todayExpenseCount: todayExpenses?.length || 0,
+        monthExpenses: monthExpenseTotal,
+        monthExpenseCount: monthExpenses?.length || 0,
       };
     },
     enabled: !!branchId,
