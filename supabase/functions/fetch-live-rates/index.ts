@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Free metals API - returns rates in INR per gram
+// Free API - Frankfurt Exchange rates (no API key required)
 async function fetchMetalRates(): Promise<{
   gold: number;
   silver: number;
@@ -13,33 +13,53 @@ async function fetchMetalRates(): Promise<{
   goldUsd: number;
   silverUsd: number;
 }> {
-  // Using a simulated rate calculation based on international gold prices
-  // In production, you would integrate with actual APIs like:
-  // - goldpricez.com
-  // - metals.live
-  // - goldapi.io
-  
-  // Current approximate international rates (USD per troy ounce)
-  // These would come from an actual API in production
-  const baseGoldUsdOz = 2650 + (Math.random() * 50 - 25); // ~$2650/oz with fluctuation
-  const baseSilverUsdOz = 31 + (Math.random() * 1 - 0.5); // ~$31/oz with fluctuation
-  const basePlatinumUsdOz = 1050 + (Math.random() * 20 - 10); // ~$1050/oz with fluctuation
-  
-  // USD to INR exchange rate (approximate)
-  const usdToInr = 83.5;
-  
-  // Troy ounce to gram conversion
   const ozToGram = 31.1035;
   
+  // Fetch USD to INR exchange rate from free API
+  let usdToInr = 83.5; // fallback
+  try {
+    const forexResponse = await fetch("https://api.exchangerate-api.com/v4/latest/USD");
+    if (forexResponse.ok) {
+      const forexData = await forexResponse.json();
+      usdToInr = forexData.rates?.INR || 83.5;
+    }
+  } catch (e) {
+    console.log("Using fallback USD/INR rate:", e);
+  }
+
+  // Fetch gold/silver prices from free public API
+  let goldUsdOz = 2650;
+  let silverUsdOz = 31;
+  let platinumUsdOz = 1050;
+
+  try {
+    // Using goldpricez.com's public endpoint (no API key)
+    const metalResponse = await fetch("https://data-asg.goldprice.org/dbXRates/USD");
+    if (metalResponse.ok) {
+      const metalData = await metalResponse.json();
+      // goldprice.org returns rates in USD per ounce
+      if (metalData.items && metalData.items[0]) {
+        const item = metalData.items[0];
+        goldUsdOz = item.xauPrice || goldUsdOz;
+        silverUsdOz = item.xagPrice || silverUsdOz;
+        platinumUsdOz = item.xptPrice || platinumUsdOz;
+      }
+    }
+  } catch (e) {
+    console.log("Using fallback metal prices, API error:", e);
+  }
+
   // Calculate rate per gram in INR
-  const goldInrPerGram = (baseGoldUsdOz / ozToGram) * usdToInr;
-  const silverInrPerGram = (baseSilverUsdOz / ozToGram) * usdToInr;
-  const platinumInrPerGram = (basePlatinumUsdOz / ozToGram) * usdToInr;
-  
+  const goldInrPerGram = (goldUsdOz / ozToGram) * usdToInr;
+  const silverInrPerGram = (silverUsdOz / ozToGram) * usdToInr;
+  const platinumInrPerGram = (platinumUsdOz / ozToGram) * usdToInr;
+
   // USD per gram
-  const goldUsdPerGram = baseGoldUsdOz / ozToGram;
-  const silverUsdPerGram = baseSilverUsdOz / ozToGram;
-  
+  const goldUsdPerGram = goldUsdOz / ozToGram;
+  const silverUsdPerGram = silverUsdOz / ozToGram;
+
+  console.log(`Fetched rates - Gold: $${goldUsdOz}/oz, Silver: $${silverUsdOz}/oz, USD/INR: ${usdToInr}`);
+
   return {
     gold: Math.round(goldInrPerGram * 100) / 100,
     silver: Math.round(silverInrPerGram * 100) / 100,
