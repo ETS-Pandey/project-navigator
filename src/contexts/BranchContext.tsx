@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./AuthContext";
+
+const BRANCH_STORAGE_KEY = "jewelpro_current_branch_id";
 
 interface Branch {
   id: string;
@@ -30,19 +32,31 @@ const BranchContext = createContext<BranchContextType | undefined>(undefined);
 export function BranchProvider({ children }: { children: React.ReactNode }) {
   const { user, hasAnyRole } = useAuth();
   const [branches, setBranches] = useState<Branch[]>([]);
-  const [currentBranch, setCurrentBranch] = useState<Branch | null>(null);
+  const [currentBranch, setCurrentBranchState] = useState<Branch | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchBranches = async () => {
+  // Function to set current branch and persist to localStorage
+  const setCurrentBranch = useCallback((branch: Branch) => {
+    setCurrentBranchState(branch);
+    try {
+      localStorage.setItem(BRANCH_STORAGE_KEY, branch.id);
+    } catch (e) {
+      console.error("Failed to save branch to localStorage:", e);
+    }
+  }, []);
+
+  const fetchBranches = useCallback(async () => {
     if (!user) {
       setBranches([]);
-      setCurrentBranch(null);
+      setCurrentBranchState(null);
       setIsLoading(false);
       return;
     }
 
     try {
       setIsLoading(true);
+
+      let fetchedBranches: Branch[] = [];
 
       // Owners and admins can see all branches
       if (hasAnyRole(["owner", "admin"])) {
@@ -54,12 +68,7 @@ export function BranchProvider({ children }: { children: React.ReactNode }) {
           .order("name");
 
         if (data) {
-          setBranches(data as Branch[]);
-          // Set main branch or first branch as default
-          const mainBranch = data.find((b) => b.is_main_branch) || data[0];
-          if (mainBranch && !currentBranch) {
-            setCurrentBranch(mainBranch as Branch);
-          }
+          fetchedBranches = data as Branch[];
         }
       } else {
         // Other users see only their assigned branches
@@ -69,32 +78,46 @@ export function BranchProvider({ children }: { children: React.ReactNode }) {
           .eq("user_id", user.id);
 
         if (accessData) {
-          const userBranches = accessData
+          fetchedBranches = accessData
             .map((a) => a.branches as Branch | null)
             .filter((b): b is Branch => b !== null && b.is_active);
-          
-          setBranches(userBranches);
-          
-          // Set primary branch or first branch as default
-          const primaryAccess = accessData.find((a) => a.is_primary);
-          const primaryBranch = primaryAccess?.branches as Branch | null;
-          if (primaryBranch && !currentBranch) {
-            setCurrentBranch(primaryBranch);
-          } else if (userBranches[0] && !currentBranch) {
-            setCurrentBranch(userBranches[0]);
-          }
         }
+      }
+
+      setBranches(fetchedBranches);
+
+      if (fetchedBranches.length > 0) {
+        // Try to restore from localStorage
+        let restoredBranch: Branch | null = null;
+        try {
+          const savedBranchId = localStorage.getItem(BRANCH_STORAGE_KEY);
+          if (savedBranchId) {
+            restoredBranch = fetchedBranches.find(b => b.id === savedBranchId) || null;
+          }
+        } catch (e) {
+          console.error("Failed to read branch from localStorage:", e);
+        }
+
+        if (restoredBranch) {
+          setCurrentBranchState(restoredBranch);
+        } else {
+          // Fallback: Set main branch or first branch as default
+          const mainBranch = fetchedBranches.find((b) => b.is_main_branch) || fetchedBranches[0];
+          setCurrentBranch(mainBranch);
+        }
+      } else {
+        setCurrentBranchState(null);
       }
     } catch (error) {
       console.error("Error fetching branches:", error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user, hasAnyRole, setCurrentBranch]);
 
   useEffect(() => {
     fetchBranches();
-  }, [user]);
+  }, [fetchBranches]);
 
   return (
     <BranchContext.Provider
