@@ -43,6 +43,7 @@ import Collections from "./pages/loans/Collections";
 
 // Scheme Pages
 import SchemesList from "./pages/schemes/SchemesList";
+import SchemeDetail from "./pages/schemes/SchemeDetail";
 import Enrollments from "./pages/schemes/Enrollments";
 import EnrollmentDetail from "./pages/schemes/EnrollmentDetail";
 import SchemePayments from "./pages/schemes/SchemePayments";
@@ -124,6 +125,7 @@ const App = () => (
                   
                   {/* Scheme Routes */}
                   <Route path="/schemes" element={<SchemesList />} />
+                  <Route path="/schemes/:id" element={<SchemeDetail />} />
                   <Route path="/schemes/enrollments" element={<Enrollments />} />
                   <Route path="/schemes/enrollments/:id" element={<EnrollmentDetail />} />
                   <Route path="/schemes/payments" element={<SchemePayments />} />
