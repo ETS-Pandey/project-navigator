@@ -947,6 +947,86 @@ export type Database = {
           },
         ]
       }
+      karigars: {
+        Row: {
+          aadhar: string | null
+          address: string | null
+          balance_gold_grams: number | null
+          balance_silver_grams: number | null
+          branch_id: string
+          city: string | null
+          code: string
+          commission_rate: number | null
+          created_at: string
+          created_by: string | null
+          email: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          notes: string | null
+          pan: string | null
+          phone: string | null
+          pincode: string | null
+          specialization: string | null
+          state: string | null
+          updated_at: string
+        }
+        Insert: {
+          aadhar?: string | null
+          address?: string | null
+          balance_gold_grams?: number | null
+          balance_silver_grams?: number | null
+          branch_id: string
+          city?: string | null
+          code: string
+          commission_rate?: number | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          notes?: string | null
+          pan?: string | null
+          phone?: string | null
+          pincode?: string | null
+          specialization?: string | null
+          state?: string | null
+          updated_at?: string
+        }
+        Update: {
+          aadhar?: string | null
+          address?: string | null
+          balance_gold_grams?: number | null
+          balance_silver_grams?: number | null
+          branch_id?: string
+          city?: string | null
+          code?: string
+          commission_rate?: number | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          notes?: string | null
+          pan?: string | null
+          phone?: string | null
+          pincode?: string | null
+          specialization?: string | null
+          state?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "karigars_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       live_market_rates: {
         Row: {
           fetched_at: string
@@ -1670,6 +1750,7 @@ export type Database = {
           is_hallmarked: boolean | null
           is_published: boolean | null
           item_code: string
+          karigar_id: string | null
           location: string | null
           making_charge_amount: number | null
           making_charge_type: Database["public"]["Enums"]["making_charge_type"]
@@ -1684,6 +1765,7 @@ export type Database = {
           purchase_invoice: string | null
           purity: string
           status: Database["public"]["Enums"]["product_status"]
+          stock_quantity: number | null
           stone_count: number | null
           stone_value: number | null
           stone_weight: number | null
@@ -1714,6 +1796,7 @@ export type Database = {
           is_hallmarked?: boolean | null
           is_published?: boolean | null
           item_code: string
+          karigar_id?: string | null
           location?: string | null
           making_charge_amount?: number | null
           making_charge_type?: Database["public"]["Enums"]["making_charge_type"]
@@ -1728,6 +1811,7 @@ export type Database = {
           purchase_invoice?: string | null
           purity: string
           status?: Database["public"]["Enums"]["product_status"]
+          stock_quantity?: number | null
           stone_count?: number | null
           stone_value?: number | null
           stone_weight?: number | null
@@ -1758,6 +1842,7 @@ export type Database = {
           is_hallmarked?: boolean | null
           is_published?: boolean | null
           item_code?: string
+          karigar_id?: string | null
           location?: string | null
           making_charge_amount?: number | null
           making_charge_type?: Database["public"]["Enums"]["making_charge_type"]
@@ -1772,6 +1857,7 @@ export type Database = {
           purchase_invoice?: string | null
           purity?: string
           status?: Database["public"]["Enums"]["product_status"]
+          stock_quantity?: number | null
           stone_count?: number | null
           stone_value?: number | null
           stone_weight?: number | null
@@ -1798,6 +1884,13 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_karigar_id_fkey"
+            columns: ["karigar_id"]
+            isOneToOne: false
+            referencedRelation: "karigars"
             referencedColumns: ["id"]
           },
           {

@@ -116,6 +116,8 @@ export function useCreateProduct() {
           mrp: data.mrp || null,
           wholesale_price: data.wholesale_price || null,
           location: data.location || null,
+          stock_quantity: data.stock_quantity || 1,
+          karigar_id: data.karigar_id || null,
           item_code: itemCode,
           barcode: itemCode,
           created_by: user.id,

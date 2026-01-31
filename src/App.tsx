@@ -71,6 +71,9 @@ import SettingsPage from "./pages/settings/SettingsPage";
 // Staff Pages
 import StaffList from "./pages/staff/StaffList";
 
+// Karigar Pages
+import KarigarList from "./pages/karigar/KarigarList";
+
 // Layout
 import { AppLayout } from "./components/layout/AppLayout";
 
@@ -132,6 +135,9 @@ const App = () => (
                   
                   {/* Staff Routes */}
                   <Route path="/staff" element={<StaffList />} />
+                  
+                  {/* Karigar Routes */}
+                  <Route path="/karigars" element={<KarigarList />} />
                   
                   {/* Order Routes */}
                   <Route path="/orders/repairs" element={<RepairOrders />} />

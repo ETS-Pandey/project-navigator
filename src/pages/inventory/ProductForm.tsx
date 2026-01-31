@@ -18,6 +18,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { ProductImageUpload, uploadProductImages } from "@/components/inventory/ProductImageUpload";
+import { KarigarSelect } from "@/components/karigar/KarigarSelect";
+import { AITextAssist } from "@/components/ai/AITextAssist";
 import { formatCurrency } from "@/lib/formatters";
 import { calculateMetalValue, calculateMakingCharges, calculateGST } from "@/lib/calculations";
 import { GOLD_PURITIES, SILVER_PURITIES, METAL_COLORS, MAKING_CHARGE_TYPES, GST_SLABS } from "@/lib/constants";
@@ -51,6 +53,8 @@ const productSchema = z.object({
   is_hallmarked: z.boolean().default(false),
   location: z.string().optional(),
   gst_rate: z.coerce.number().min(0).max(28).default(3),
+  stock_quantity: z.coerce.number().min(1).default(1),
+  karigar_id: z.string().optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -92,6 +96,8 @@ export default function ProductForm() {
       is_hallmarked: false,
       location: "",
       gst_rate: 3,
+      stock_quantity: 1,
+      karigar_id: "",
     },
   });
 
@@ -131,6 +137,8 @@ export default function ProductForm() {
         is_hallmarked: product.is_hallmarked || false,
         location: product.location || "",
         gst_rate: (product as any).gst_rate || 3,
+        stock_quantity: (product as any).stock_quantity || 1,
+        karigar_id: (product as any).karigar_id || "",
       });
 
       // Load existing images
@@ -311,7 +319,14 @@ export default function ProductForm() {
                     name="name"
                     render={({ field }) => (
                       <FormItem className="md:col-span-2">
-                        <FormLabel>Product Name *</FormLabel>
+                        <div className="flex items-center justify-between">
+                          <FormLabel>Product Name *</FormLabel>
+                          <AITextAssist
+                            fieldName="product_name"
+                            context={`${form.watch("metal_type")} ${form.watch("purity")} jewelry`}
+                            onSuggestion={(text) => field.onChange(text)}
+                          />
+                        </div>
                         <FormControl>
                           <Input {...field} placeholder="e.g., 22K Gold Ring with Diamond" />
                         </FormControl>
@@ -325,7 +340,14 @@ export default function ProductForm() {
                     name="description"
                     render={({ field }) => (
                       <FormItem className="md:col-span-2">
-                        <FormLabel>Description</FormLabel>
+                        <div className="flex items-center justify-between">
+                          <FormLabel>Description</FormLabel>
+                          <AITextAssist
+                            fieldName="product_description"
+                            context={`${form.watch("name")} - ${form.watch("metal_type")} jewelry`}
+                            onSuggestion={(text) => field.onChange(text)}
+                          />
+                        </div>
                         <FormControl>
                           <Textarea {...field} placeholder="Product description..." rows={3} />
                         </FormControl>
@@ -342,6 +364,37 @@ export default function ProductForm() {
                         <FormLabel>Storage Location</FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="e.g., Shelf A, Tray 3" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="stock_quantity"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Stock Quantity</FormLabel>
+                        <FormControl>
+                          <Input type="number" min="1" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="karigar_id"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Assigned Karigar</FormLabel>
+                        <FormControl>
+                          <KarigarSelect
+                            value={field.value}
+                            onValueChange={(val) => field.onChange(val === "none" ? "" : val)}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

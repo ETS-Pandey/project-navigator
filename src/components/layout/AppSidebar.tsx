@@ -15,6 +15,7 @@ import {
   Settings,
   Gem,
   ChevronDown,
+  Hammer,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -52,6 +53,7 @@ const iconMap = {
   Wallet,
   BarChart3,
   Settings,
+  Hammer,
 };
 
 const navigationItems = [
@@ -130,6 +132,11 @@ const navigationItems = [
       { title: "Bank Book", url: "/accounting/bank" },
       { title: "Reports", url: "/accounting/reports" },
     ],
+  },
+  {
+    title: "Karigars",
+    url: "/karigars",
+    icon: "Hammer",
   },
   {
     title: "Staff",
