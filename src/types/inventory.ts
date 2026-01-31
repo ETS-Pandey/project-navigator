@@ -67,6 +67,8 @@ export interface Product {
   mrp: number | null;
   wholesale_price: number | null;
   status: ProductStatus;
+  stock_quantity: number;
+  karigar_id: string | null;
   location: string | null;
   supplier_id: string | null;
   purchase_date: string | null;
@@ -149,4 +151,6 @@ export interface ProductFormData {
   mrp?: number;
   wholesale_price?: number;
   location?: string;
+  stock_quantity?: number;
+  karigar_id?: string;
 }

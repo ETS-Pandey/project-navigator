@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCreateCustomOrder } from "@/hooks/useOrders";
 import { useCustomers } from "@/hooks/useCustomers";
+import { KarigarSelect } from "@/components/karigar/KarigarSelect";
+import { AITextAssist } from "@/components/ai/AITextAssist";
 
 const formSchema = z.object({
   customer_id: z.string().optional(),
@@ -122,7 +124,14 @@ export default function NewCustomOrderDialog({ onClose }: Props) {
                 name="design_description"
                 render={({ field }) => (
                   <FormItem className="md:col-span-2">
-                    <FormLabel>Design Description *</FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>Design Description *</FormLabel>
+                      <AITextAssist
+                        fieldName="order_notes"
+                        context="custom jewelry design description"
+                        onSuggestion={(text) => field.onChange(text)}
+                      />
+                    </div>
                     <FormControl>
                       <Textarea placeholder="Describe the custom design (e.g., Engagement ring with solitaire)" {...field} />
                     </FormControl>
@@ -214,7 +223,11 @@ export default function NewCustomOrderDialog({ onClose }: Props) {
                   <FormItem>
                     <FormLabel>Assigned Karigar</FormLabel>
                     <FormControl>
-                      <Input placeholder="Karigar name" {...field} />
+                      <KarigarSelect
+                        value={field.value}
+                        onValueChange={(val) => field.onChange(val === "none" ? "" : val)}
+                        placeholder="Select Karigar"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -276,7 +289,14 @@ export default function NewCustomOrderDialog({ onClose }: Props) {
             name="notes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Notes</FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel>Notes</FormLabel>
+                  <AITextAssist
+                    fieldName="order_notes"
+                    context="custom order notes"
+                    onSuggestion={(text) => field.onChange(text)}
+                  />
+                </div>
                 <FormControl>
                   <Textarea placeholder="Any additional notes" {...field} />
                 </FormControl>

@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCreateRepairOrder } from "@/hooks/useOrders";
 import { useCustomers } from "@/hooks/useCustomers";
+import { KarigarSelect } from "@/components/karigar/KarigarSelect";
+import { AITextAssist } from "@/components/ai/AITextAssist";
 
 const formSchema = z.object({
   customer_id: z.string().optional(),
@@ -123,7 +125,14 @@ export default function NewRepairOrderDialog({ onClose }: Props) {
                 name="item_description"
                 render={({ field }) => (
                   <FormItem className="md:col-span-2">
-                    <FormLabel>Item Description *</FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>Item Description *</FormLabel>
+                      <AITextAssist
+                        fieldName="repair_notes"
+                        context="jewelry item for repair"
+                        onSuggestion={(text) => field.onChange(text)}
+                      />
+                    </div>
                     <FormControl>
                       <Textarea placeholder="Describe the item (e.g., Gold chain, Ring)" {...field} />
                     </FormControl>
@@ -199,7 +208,14 @@ export default function NewRepairOrderDialog({ onClose }: Props) {
                 name="issue_description"
                 render={({ field }) => (
                   <FormItem className="md:col-span-2">
-                    <FormLabel>Issue / Work Required</FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>Issue / Work Required</FormLabel>
+                      <AITextAssist
+                        fieldName="repair_notes"
+                        context="repair work description"
+                        onSuggestion={(text) => field.onChange(text)}
+                      />
+                    </div>
                     <FormControl>
                       <Textarea placeholder="Describe the repair work needed" {...field} />
                     </FormControl>
@@ -263,7 +279,14 @@ export default function NewRepairOrderDialog({ onClose }: Props) {
             name="notes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Notes</FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel>Notes</FormLabel>
+                  <AITextAssist
+                    fieldName="repair_notes"
+                    context="repair order notes"
+                    onSuggestion={(text) => field.onChange(text)}
+                  />
+                </div>
                 <FormControl>
                   <Textarea placeholder="Any additional notes" {...field} />
                 </FormControl>

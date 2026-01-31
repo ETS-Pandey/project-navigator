@@ -182,6 +182,7 @@ export default function Products() {
                 <TableHead>Category</TableHead>
                 <TableHead>Metal</TableHead>
                 <TableHead className="text-right">Weight</TableHead>
+                <TableHead className="text-center">Qty</TableHead>
                 <TableHead className="text-right">Value</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -203,7 +204,7 @@ export default function Products() {
                 ))
               ) : products?.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="h-32 text-center">
+                  <TableCell colSpan={9} className="h-32 text-center">
                     <div className="flex flex-col items-center gap-2">
                       <Package className="h-8 w-8 text-muted-foreground" />
                       <p className="text-muted-foreground">No products found</p>
@@ -232,6 +233,9 @@ export default function Products() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">{formatWeight(product.net_weight)}</TableCell>
+                    <TableCell className="text-center">
+                      <Badge variant="outline">{(product as any).stock_quantity || 1}</Badge>
+                    </TableCell>
                     <TableCell className="text-right">{formatCurrency(product.total_cost)}</TableCell>
                     <TableCell>
                       <Badge className={STATUS_COLORS[product.status] || ""}>

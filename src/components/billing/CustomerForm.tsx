@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AITextAssist } from "@/components/ai/AITextAssist";
 import { INDIAN_STATES } from "@/lib/constants";
 import type { Customer, CustomerFormData } from "@/types/billing";
 
@@ -308,7 +309,14 @@ export function CustomerForm({ customer, onSubmit, isLoading }: CustomerFormProp
             name="notes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Notes</FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel>Notes</FormLabel>
+                  <AITextAssist
+                    fieldName="customer_notes"
+                    context={`Customer: ${form.watch("name")} - ${form.watch("customer_type")}`}
+                    onSuggestion={(text) => field.onChange(text)}
+                  />
+                </div>
                 <FormControl>
                   <Textarea placeholder="Any additional notes..." {...field} rows={2} />
                 </FormControl>
