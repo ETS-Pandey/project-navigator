@@ -2,17 +2,20 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { format, parseISO, isAfter } from "date-fns";
-import { ArrowLeft, Printer, CreditCard, Package, History, AlertTriangle, RefreshCw } from "lucide-react";
+import { ArrowLeft, Printer, CreditCard, Package, History, AlertTriangle, RefreshCw, Mail, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLoan, useLoanPayments, getDaysOverdue } from "@/hooks/useLoans";
-import { formatCurrency, formatWeight } from "@/lib/formatters";
+import { formatCurrency, formatWeight, formatDate } from "@/lib/formatters";
 import { LoanPaymentDialog } from "@/components/loans/LoanPaymentDialog";
 import { LoanRenewalDialog } from "@/components/loans/LoanRenewalDialog";
 import { LoanAgreementPrintTemplate } from "@/components/loans/LoanAgreementPrintTemplate";
+import { useEmailNotifications } from "@/hooks/useEmailNotifications";
+import { usePdfGenerator } from "@/hooks/usePdfGenerator";
+import { toast } from "sonner";
 
 const statusColors: Record<string, string> = {
   pending: "bg-yellow-100 text-yellow-800",
@@ -30,11 +33,58 @@ export default function LoanDetail() {
   const { data: payments = [] } = useLoanPayments(id);
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
   const [renewalDialogOpen, setRenewalDialogOpen] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  
+  const { sendLoanCreatedEmail } = useEmailNotifications();
+  const { generatePdfBase64 } = usePdfGenerator();
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
     documentTitle: `LoanAgreement-${loan?.loan_number || ""}`,
   });
+
+  const handleSendEmail = async () => {
+    if (!loan) return;
+    
+    const customerEmail = loan.customer?.email;
+    if (!customerEmail) {
+      toast.error("No customer email available");
+      return;
+    }
+    
+    setIsSendingEmail(true);
+    try {
+      // Generate PDF from print template
+      const pdfResult = await generatePdfBase64(
+        printRef.current,
+        `LoanAgreement_${loan.loan_number}`
+      );
+      
+      const success = await sendLoanCreatedEmail(
+        customerEmail,
+        loan.customer?.name || "Customer",
+        {
+          loanNumber: loan.loan_number,
+          loanAmount: loan.loan_amount,
+          interestRate: loan.interest_rate,
+          collateralValue: loan.collateral_value,
+          dueDate: formatDate(loan.due_date),
+        },
+        pdfResult?.base64
+      );
+      
+      if (success) {
+        toast.success("Loan agreement email sent successfully with PDF attachment");
+      } else {
+        toast.error("Failed to send email");
+      }
+    } catch (error) {
+      console.error("Email error:", error);
+      toast.error("Failed to send email");
+    } finally {
+      setIsSendingEmail(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -88,6 +138,19 @@ export default function LoanDetail() {
           <Button variant="outline" onClick={() => handlePrint()}>
             <Printer className="mr-2 h-4 w-4" />
             Print Agreement
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={handleSendEmail} 
+            disabled={isSendingEmail || !loan.customer?.email}
+            title={!loan.customer?.email ? "Customer has no email address" : "Send loan agreement via email"}
+          >
+            {isSendingEmail ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Mail className="h-4 w-4 mr-2" />
+            )}
+            Send Email
           </Button>
           {loan.status === 'active' && (
             <>

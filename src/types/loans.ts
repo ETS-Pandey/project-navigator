@@ -60,6 +60,8 @@ export interface Loan {
     id: string;
     name: string;
     phone?: string;
+    email?: string;
+    address?: string;
     customer_code: string;
   };
   collaterals?: LoanCollateral[];

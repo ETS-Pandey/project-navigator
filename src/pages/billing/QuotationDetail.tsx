@@ -1,15 +1,14 @@
 import { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
-import { ArrowLeft, Printer, CreditCard, XCircle, CheckCircle, Mail, Loader2 } from "lucide-react";
+import { ArrowLeft, Printer, Mail, Loader2, ArrowRightLeft, CheckCircle, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { InvoicePrintTemplate } from "@/components/billing/InvoicePrintTemplate";
-import { PaymentDialog } from "@/components/billing/PaymentDialog";
-import { useInvoice, useUpdateInvoiceStatus } from "@/hooks/useInvoices";
+import { QuotationPrintTemplate } from "@/components/billing/QuotationPrintTemplate";
+import { useQuotation, useUpdateQuotationStatus, useConvertQuotationToInvoice } from "@/hooks/useQuotations";
 import { useEmailNotifications } from "@/hooks/useEmailNotifications";
 import { usePdfGenerator } from "@/hooks/usePdfGenerator";
 import { formatCurrency, formatWeight, formatDate } from "@/lib/formatters";
@@ -17,39 +16,45 @@ import { toast } from "sonner";
 
 const statusColors: Record<string, string> = {
   draft: "bg-gray-500",
-  confirmed: "bg-blue-500",
-  paid: "bg-green-500",
-  partially_paid: "bg-yellow-500",
-  cancelled: "bg-red-500",
-  returned: "bg-orange-500",
+  sent: "bg-blue-500",
+  accepted: "bg-green-500",
+  rejected: "bg-red-500",
+  expired: "bg-gray-500",
+  converted: "bg-purple-500",
 };
 
-export default function InvoiceDetail() {
+export default function QuotationDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const printRef = useRef<HTMLDivElement>(null);
-  const [showPayment, setShowPayment] = useState(false);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   
-  const { data: invoice, isLoading } = useInvoice(id || "");
-  const updateStatus = useUpdateInvoiceStatus();
-  const { sendInvoiceEmail } = useEmailNotifications();
+  const { data: quotation, isLoading } = useQuotation(id || "");
+  const updateStatus = useUpdateQuotationStatus();
+  const convertToInvoice = useConvertQuotationToInvoice();
+  const { sendQuotationEmail } = useEmailNotifications();
   const { generatePdfBase64 } = usePdfGenerator();
   
   const handlePrint = useReactToPrint({
     contentRef: printRef,
-    documentTitle: `Invoice-${invoice?.invoice_number || ""}`,
+    documentTitle: `Quotation-${quotation?.quotation_number || ""}`,
   });
   
-  const handleStatusUpdate = async (status: "confirmed" | "cancelled") => {
+  const handleStatusUpdate = async (status: "sent" | "accepted" | "rejected") => {
     if (!id) return;
     await updateStatus.mutateAsync({ id, status });
   };
 
+  const handleConvert = async () => {
+    if (!id) return;
+    await convertToInvoice.mutateAsync(id);
+    navigate("/billing/invoices");
+  };
+
   const handleSendEmail = async () => {
-    if (!invoice) return;
+    if (!quotation) return;
     
-    const customerEmail = invoice.customer?.email;
+    const customerEmail = quotation.customer?.email;
     if (!customerEmail) {
       toast.error("No customer email available");
       return;
@@ -60,23 +65,27 @@ export default function InvoiceDetail() {
       // Generate PDF from print template
       const pdfResult = await generatePdfBase64(
         printRef.current,
-        `Invoice_${invoice.invoice_number}`
+        `Quotation_${quotation.quotation_number}`
       );
       
-      const success = await sendInvoiceEmail(
+      const success = await sendQuotationEmail(
         customerEmail,
-        invoice.customer_name || "Customer",
+        quotation.customer_name || "Customer",
         {
-          invoiceNumber: invoice.invoice_number,
-          date: formatDate(invoice.invoice_date),
-          totalAmount: invoice.grand_total,
-          balanceDue: invoice.balance_due || 0,
+          quotationNumber: quotation.quotation_number,
+          date: formatDate(quotation.quotation_date),
+          validUntil: quotation.valid_until ? formatDate(quotation.valid_until) : "",
+          totalAmount: quotation.grand_total,
         },
         pdfResult?.base64
       );
       
       if (success) {
-        toast.success("Invoice email sent successfully with PDF attachment");
+        toast.success("Quotation email sent successfully with PDF attachment");
+        // Auto-update status to "sent" if still draft
+        if (quotation.status === "draft") {
+          await updateStatus.mutateAsync({ id: quotation.id, status: "sent" });
+        }
       } else {
         toast.error("Failed to send email");
       }
@@ -101,20 +110,20 @@ export default function InvoiceDetail() {
     );
   }
   
-  if (!invoice) {
+  if (!quotation) {
     return (
       <div className="container mx-auto py-6">
         <div className="flex items-center gap-4 mb-6">
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-2xl font-bold">Invoice not found</h1>
+          <h1 className="text-2xl font-bold">Quotation not found</h1>
         </div>
       </div>
     );
   }
   
-  const items = invoice.items || [];
+  const items = quotation.items || [];
   
   return (
     <div className="container mx-auto py-6 space-y-6">
@@ -125,35 +134,44 @@ export default function InvoiceDetail() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold">{invoice.invoice_number}</h1>
-            <p className="text-muted-foreground">{formatDate(invoice.invoice_date)}</p>
+            <h1 className="text-2xl font-bold">{quotation.quotation_number}</h1>
+            <p className="text-muted-foreground">{formatDate(quotation.quotation_date)}</p>
           </div>
-          <Badge className={statusColors[invoice.status]}>{invoice.status}</Badge>
+          <Badge className={statusColors[quotation.status]}>{quotation.status}</Badge>
         </div>
         <div className="flex gap-2">
-          {invoice.status === "draft" && (
+          {quotation.status === "draft" && (
+            <Button variant="outline" onClick={() => handleStatusUpdate("sent")}>
+              Mark as Sent
+            </Button>
+          )}
+          {quotation.status === "sent" && (
             <>
-              <Button variant="outline" onClick={() => handleStatusUpdate("cancelled")}>
-                <XCircle className="h-4 w-4 mr-2" />
-                Cancel
-              </Button>
-              <Button onClick={() => handleStatusUpdate("confirmed")}>
+              <Button variant="outline" onClick={() => handleStatusUpdate("accepted")}>
                 <CheckCircle className="h-4 w-4 mr-2" />
-                Confirm
+                Accept
+              </Button>
+              <Button variant="outline" onClick={() => handleStatusUpdate("rejected")}>
+                <XCircle className="h-4 w-4 mr-2" />
+                Reject
               </Button>
             </>
           )}
-          {["confirmed", "partially_paid"].includes(invoice.status) && (
-            <Button variant="outline" onClick={() => setShowPayment(true)}>
-              <CreditCard className="h-4 w-4 mr-2" />
-              Record Payment
+          {(quotation.status === "accepted" || quotation.status === "sent") && (
+            <Button 
+              variant="outline" 
+              onClick={handleConvert}
+              disabled={convertToInvoice.isPending}
+            >
+              <ArrowRightLeft className="h-4 w-4 mr-2" />
+              Convert to Invoice
             </Button>
           )}
           <Button 
             variant="outline" 
             onClick={handleSendEmail} 
-            disabled={isSendingEmail || !invoice.customer?.email}
-            title={!invoice.customer?.email ? "Customer has no email address" : "Send invoice via email"}
+            disabled={isSendingEmail || !quotation.customer?.email}
+            title={!quotation.customer?.email ? "Customer has no email address" : "Send quotation via email"}
           >
             {isSendingEmail ? (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -180,19 +198,19 @@ export default function InvoiceDetail() {
             <CardContent className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-muted-foreground">Name</p>
-                <p className="font-medium">{invoice.customer_name || "Walk-in Customer"}</p>
+                <p className="font-medium">{quotation.customer_name || "Walk-in Customer"}</p>
               </div>
               <div>
                 <p className="text-muted-foreground">Phone</p>
-                <p className="font-medium">{invoice.customer_phone || "-"}</p>
+                <p className="font-medium">{quotation.customer_phone || "-"}</p>
               </div>
               <div>
                 <p className="text-muted-foreground">Address</p>
-                <p className="font-medium">{invoice.customer_address || "-"}</p>
+                <p className="font-medium">{quotation.customer_address || "-"}</p>
               </div>
               <div>
-                <p className="text-muted-foreground">GSTIN</p>
-                <p className="font-medium">{invoice.customer_gstin || "-"}</p>
+                <p className="text-muted-foreground">Valid Until</p>
+                <p className="font-medium">{quotation.valid_until ? formatDate(quotation.valid_until) : "-"}</p>
               </div>
             </CardContent>
           </Card>
@@ -200,7 +218,7 @@ export default function InvoiceDetail() {
           {/* Items */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Invoice Items</CardTitle>
+              <CardTitle className="text-base">Quotation Items</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <Table>
@@ -241,7 +259,7 @@ export default function InvoiceDetail() {
                         {formatCurrency(item.stone_value || 0)}
                       </TableCell>
                       <TableCell className="text-right font-medium">
-                        {formatCurrency(item.taxable_amount)}
+                        {formatCurrency(item.taxable_amount || item.total_amount)}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -255,64 +273,57 @@ export default function InvoiceDetail() {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Invoice Summary</CardTitle>
+              <CardTitle className="text-base">Quotation Summary</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Gross Amount:</span>
-                <span>{formatCurrency(invoice.gross_amount)}</span>
+                <span>{formatCurrency(quotation.gross_amount)}</span>
               </div>
               
-              {Number(invoice.discount_amount) > 0 && (
+              {Number(quotation.discount_amount) > 0 && (
                 <div className="flex justify-between text-green-600">
-                  <span>Discount ({invoice.discount_percent}%):</span>
-                  <span>-{formatCurrency(invoice.discount_amount || 0)}</span>
+                  <span>Discount ({quotation.discount_percent}%):</span>
+                  <span>-{formatCurrency(quotation.discount_amount || 0)}</span>
                 </div>
               )}
               
               <div className="flex justify-between font-medium">
                 <span>Taxable Amount:</span>
-                <span>{formatCurrency(invoice.taxable_amount)}</span>
+                <span>{formatCurrency(quotation.taxable_amount)}</span>
               </div>
               
               <Separator />
               
-              {invoice.is_interstate ? (
+              {quotation.is_interstate ? (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">IGST (3%):</span>
-                  <span>{formatCurrency(invoice.igst_amount || 0)}</span>
+                  <span>{formatCurrency(quotation.igst_amount || 0)}</span>
                 </div>
               ) : (
                 <>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">CGST (1.5%):</span>
-                    <span>{formatCurrency(invoice.cgst_amount || 0)}</span>
+                    <span>{formatCurrency(quotation.cgst_amount || 0)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">SGST (1.5%):</span>
-                    <span>{formatCurrency(invoice.sgst_amount || 0)}</span>
+                    <span>{formatCurrency(quotation.sgst_amount || 0)}</span>
                   </div>
                 </>
               )}
               
               <div className="flex justify-between font-medium">
                 <span>Total GST:</span>
-                <span>{formatCurrency(invoice.total_gst || 0)}</span>
+                <span>{formatCurrency(quotation.total_gst || 0)}</span>
               </div>
               
               <Separator />
               
-              {Number(invoice.old_gold_amount) > 0 && (
-                <div className="flex justify-between text-amber-600">
-                  <span>Old Gold Adjustment:</span>
-                  <span>-{formatCurrency(invoice.old_gold_amount || 0)}</span>
-                </div>
-              )}
-              
-              {Number(invoice.round_off) !== 0 && (
+              {Number(quotation.round_off) !== 0 && (
                 <div className="flex justify-between text-muted-foreground">
                   <span>Round Off:</span>
-                  <span>{Number(invoice.round_off) > 0 ? "+" : ""}{formatCurrency(invoice.round_off || 0)}</span>
+                  <span>{Number(quotation.round_off) > 0 ? "+" : ""}{formatCurrency(quotation.round_off || 0)}</span>
                 </div>
               )}
               
@@ -320,40 +331,18 @@ export default function InvoiceDetail() {
               
               <div className="flex justify-between text-lg font-bold">
                 <span>Grand Total:</span>
-                <span className="text-primary">{formatCurrency(invoice.grand_total)}</span>
-              </div>
-              
-              <Separator />
-              
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Amount Paid:</span>
-                <span className="text-green-600">{formatCurrency(invoice.amount_paid || 0)}</span>
-              </div>
-              <div className="flex justify-between font-medium">
-                <span>Balance Due:</span>
-                <span className={Number(invoice.balance_due) > 0 ? "text-destructive" : ""}>
-                  {formatCurrency(invoice.balance_due || 0)}
-                </span>
+                <span className="text-primary">{formatCurrency(quotation.grand_total)}</span>
               </div>
             </CardContent>
           </Card>
           
-          {/* Payments */}
-          {invoice.payments && invoice.payments.length > 0 && (
+          {quotation.notes && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Payments</CardTitle>
+                <CardTitle className="text-base">Notes</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
-                {invoice.payments.map((payment) => (
-                  <div key={payment.id} className="flex justify-between text-sm">
-                    <div>
-                      <p className="font-medium capitalize">{payment.payment_mode.replace("_", " ")}</p>
-                      <p className="text-xs text-muted-foreground">{formatDate(payment.payment_date)}</p>
-                    </div>
-                    <span className="font-medium text-green-600">{formatCurrency(payment.amount)}</span>
-                  </div>
-                ))}
+              <CardContent>
+                <p className="text-sm text-muted-foreground">{quotation.notes}</p>
               </CardContent>
             </Card>
           )}
@@ -362,15 +351,8 @@ export default function InvoiceDetail() {
       
       {/* Hidden Print Template */}
       <div className="hidden">
-        <InvoicePrintTemplate ref={printRef} invoice={invoice} items={items} />
+        <QuotationPrintTemplate ref={printRef} quotation={quotation} items={items} />
       </div>
-      
-      {/* Payment Dialog */}
-      <PaymentDialog
-        open={showPayment}
-        onOpenChange={setShowPayment}
-        invoice={invoice}
-      />
     </div>
   );
 }
