@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
-import { ArrowLeft, Printer, CreditCard, XCircle, CheckCircle } from "lucide-react";
+import { ArrowLeft, Printer, CreditCard, XCircle, CheckCircle, Mail, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,8 +10,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { InvoicePrintTemplate } from "@/components/billing/InvoicePrintTemplate";
 import { PaymentDialog } from "@/components/billing/PaymentDialog";
 import { useInvoice, useUpdateInvoiceStatus } from "@/hooks/useInvoices";
+import { useEmailNotifications } from "@/hooks/useEmailNotifications";
 import { formatCurrency, formatWeight, formatDate } from "@/lib/formatters";
-
+import { toast } from "sonner";
 const statusColors: Record<string, string> = {
   draft: "bg-gray-500",
   confirmed: "bg-blue-500",
@@ -26,9 +27,11 @@ export default function InvoiceDetail() {
   const navigate = useNavigate();
   const printRef = useRef<HTMLDivElement>(null);
   const [showPayment, setShowPayment] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
   
   const { data: invoice, isLoading } = useInvoice(id || "");
   const updateStatus = useUpdateInvoiceStatus();
+  const { sendInvoiceEmail } = useEmailNotifications();
   
   const handlePrint = useReactToPrint({
     contentRef: printRef,
@@ -38,6 +41,41 @@ export default function InvoiceDetail() {
   const handleStatusUpdate = async (status: "confirmed" | "cancelled") => {
     if (!id) return;
     await updateStatus.mutateAsync({ id, status });
+  };
+
+  const handleSendEmail = async () => {
+    if (!invoice) return;
+    
+    const customerEmail = invoice.customer?.email;
+    if (!customerEmail) {
+      toast.error("No customer email available");
+      return;
+    }
+    
+    setIsSendingEmail(true);
+    try {
+      const success = await sendInvoiceEmail(
+        customerEmail,
+        invoice.customer_name || "Customer",
+        {
+          invoiceNumber: invoice.invoice_number,
+          date: formatDate(invoice.invoice_date),
+          totalAmount: invoice.grand_total,
+          balanceDue: invoice.balance_due || 0,
+        }
+      );
+      
+      if (success) {
+        toast.success("Invoice email sent successfully");
+      } else {
+        toast.error("Failed to send email");
+      }
+    } catch (error) {
+      console.error("Email error:", error);
+      toast.error("Failed to send email");
+    } finally {
+      setIsSendingEmail(false);
+    }
   };
   
   if (isLoading) {
@@ -101,6 +139,19 @@ export default function InvoiceDetail() {
               Record Payment
             </Button>
           )}
+          <Button 
+            variant="outline" 
+            onClick={handleSendEmail} 
+            disabled={isSendingEmail || !invoice.customer?.email}
+            title={!invoice.customer?.email ? "Customer has no email address" : "Send invoice via email"}
+          >
+            {isSendingEmail ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Mail className="h-4 w-4 mr-2" />
+            )}
+            Send Email
+          </Button>
           <Button onClick={() => handlePrint()}>
             <Printer className="h-4 w-4 mr-2" />
             Print
