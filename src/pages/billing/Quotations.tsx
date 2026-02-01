@@ -120,7 +120,11 @@ export default function Quotations() {
                 </TableRow>
               ) : (
                 quotations.map((quotation) => (
-                  <TableRow key={quotation.id}>
+                  <TableRow 
+                    key={quotation.id} 
+                    className="cursor-pointer hover:bg-muted/50"
+                    onClick={() => navigate(`/billing/quotations/${quotation.id}`)}
+                  >
                     <TableCell className="font-medium">
                       {quotation.quotation_number}
                     </TableCell>

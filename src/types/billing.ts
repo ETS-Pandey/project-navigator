@@ -145,11 +145,19 @@ export interface Quotation {
   customer_name?: string;
   customer_phone?: string;
   customer_email?: string;
+  customer_address?: string;
+  customer_gstin?: string;
   gross_amount: number;
+  discount_percent?: number;
   discount_amount: number;
   taxable_amount: number;
+  cgst_amount?: number;
+  sgst_amount?: number;
+  igst_amount?: number;
   total_gst: number;
+  round_off?: number;
   grand_total: number;
+  is_interstate?: boolean;
   notes?: string;
   terms_conditions?: string;
   created_at: string;
@@ -179,6 +187,7 @@ export interface QuotationItem {
   unit_price: number;
   discount_percent: number;
   discount_amount: number;
+  taxable_amount?: number;
   total_amount: number;
   display_order: number;
 }

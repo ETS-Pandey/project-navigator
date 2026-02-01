@@ -28,6 +28,7 @@ import Invoices from "./pages/billing/Invoices";
 import InvoiceDetail from "./pages/billing/InvoiceDetail";
 import NewInvoice from "./pages/billing/NewInvoice";
 import Quotations from "./pages/billing/Quotations";
+import QuotationDetail from "./pages/billing/QuotationDetail";
 import NewQuotation from "./pages/billing/NewQuotation";
 import OldGold from "./pages/billing/OldGold";
 
@@ -114,6 +115,7 @@ const App = () => (
                   <Route path="/billing/new" element={<NewInvoice />} />
                   <Route path="/billing/quotations" element={<Quotations />} />
                   <Route path="/billing/quotations/new" element={<NewQuotation />} />
+                  <Route path="/billing/quotations/:id" element={<QuotationDetail />} />
                   <Route path="/billing/old-gold" element={<OldGold />} />
                   
                   {/* Customer Routes */}
