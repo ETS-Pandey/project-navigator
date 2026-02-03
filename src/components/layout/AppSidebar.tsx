@@ -147,6 +147,12 @@ const navigationItems = [
     title: "Expenses",
     url: "/expenses",
     icon: "Wallet",
+    children: [
+      { title: "All Expenses", url: "/expenses" },
+      { title: "Petty Cash", url: "/expenses/petty-cash" },
+      { title: "Payroll", url: "/expenses/payroll" },
+      { title: "Budgets", url: "/expenses/budgets" },
+    ],
   },
   {
     title: "Reports",
