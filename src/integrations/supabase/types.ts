@@ -65,6 +65,81 @@ export type Database = {
         }
         Relationships: []
       }
+      budgets: {
+        Row: {
+          alert_threshold_percent: number | null
+          branch_id: string
+          budget_name: string
+          budgeted_amount: number
+          category_id: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          is_active: boolean | null
+          notes: string | null
+          period_end: string
+          period_start: string
+          period_type: string
+          remaining_amount: number | null
+          spent_amount: number | null
+          updated_at: string | null
+          utilization_percent: number | null
+        }
+        Insert: {
+          alert_threshold_percent?: number | null
+          branch_id: string
+          budget_name: string
+          budgeted_amount?: number
+          category_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          period_end: string
+          period_start: string
+          period_type: string
+          remaining_amount?: number | null
+          spent_amount?: number | null
+          updated_at?: string | null
+          utilization_percent?: number | null
+        }
+        Update: {
+          alert_threshold_percent?: number | null
+          branch_id?: string
+          budget_name?: string
+          budgeted_amount?: number
+          category_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          period_end?: string
+          period_start?: string
+          period_type?: string
+          remaining_amount?: number | null
+          spent_amount?: number | null
+          updated_at?: string | null
+          utilization_percent?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "budgets_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "budgets_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "expense_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       business_settings: {
         Row: {
           branch_id: string | null
@@ -1588,6 +1663,120 @@ export type Database = {
           },
         ]
       }
+      petty_cash_funds: {
+        Row: {
+          branch_id: string
+          created_at: string | null
+          current_balance: number
+          custodian_id: string | null
+          fund_name: string
+          id: string
+          is_active: boolean | null
+          max_single_expense: number | null
+          opening_balance: number
+          updated_at: string | null
+        }
+        Insert: {
+          branch_id: string
+          created_at?: string | null
+          current_balance?: number
+          custodian_id?: string | null
+          fund_name?: string
+          id?: string
+          is_active?: boolean | null
+          max_single_expense?: number | null
+          opening_balance?: number
+          updated_at?: string | null
+        }
+        Update: {
+          branch_id?: string
+          created_at?: string | null
+          current_balance?: number
+          custodian_id?: string | null
+          fund_name?: string
+          id?: string
+          is_active?: boolean | null
+          max_single_expense?: number | null
+          opening_balance?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "petty_cash_funds_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      petty_cash_transactions: {
+        Row: {
+          amount: number
+          balance_after: number
+          branch_id: string
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          expense_id: string | null
+          fund_id: string
+          id: string
+          reference_number: string | null
+          transaction_date: string
+          transaction_type: string
+        }
+        Insert: {
+          amount: number
+          balance_after: number
+          branch_id: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          expense_id?: string | null
+          fund_id: string
+          id?: string
+          reference_number?: string | null
+          transaction_date?: string
+          transaction_type: string
+        }
+        Update: {
+          amount?: number
+          balance_after?: number
+          branch_id?: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          expense_id?: string | null
+          fund_id?: string
+          id?: string
+          reference_number?: string | null
+          transaction_date?: string
+          transaction_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "petty_cash_transactions_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "petty_cash_transactions_expense_id_fkey"
+            columns: ["expense_id"]
+            isOneToOne: false
+            referencedRelation: "expenses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "petty_cash_transactions_fund_id_fkey"
+            columns: ["fund_id"]
+            isOneToOne: false
+            referencedRelation: "petty_cash_funds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       print_templates: {
         Row: {
           body_settings: Json | null
@@ -2362,6 +2551,175 @@ export type Database = {
           },
         ]
       }
+      salary_records: {
+        Row: {
+          approved_by: string | null
+          basic_salary: number
+          bonus: number | null
+          branch_id: string
+          commission: number | null
+          created_at: string | null
+          created_by: string | null
+          da: number | null
+          days_in_month: number
+          days_worked: number
+          esi_deduction: number | null
+          gross_salary: number
+          hra: number | null
+          id: string
+          loan_deduction: number | null
+          net_salary: number
+          notes: string | null
+          other_allowances: number | null
+          other_deductions: number | null
+          overtime_amount: number | null
+          overtime_hours: number | null
+          payment_date: string | null
+          payment_mode: string | null
+          payment_reference: string | null
+          pf_deduction: number | null
+          professional_tax: number | null
+          salary_month: string
+          staff_id: string
+          status: string | null
+          tds: number | null
+          total_deductions: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          approved_by?: string | null
+          basic_salary?: number
+          bonus?: number | null
+          branch_id: string
+          commission?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          da?: number | null
+          days_in_month?: number
+          days_worked?: number
+          esi_deduction?: number | null
+          gross_salary?: number
+          hra?: number | null
+          id?: string
+          loan_deduction?: number | null
+          net_salary?: number
+          notes?: string | null
+          other_allowances?: number | null
+          other_deductions?: number | null
+          overtime_amount?: number | null
+          overtime_hours?: number | null
+          payment_date?: string | null
+          payment_mode?: string | null
+          payment_reference?: string | null
+          pf_deduction?: number | null
+          professional_tax?: number | null
+          salary_month: string
+          staff_id: string
+          status?: string | null
+          tds?: number | null
+          total_deductions?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          approved_by?: string | null
+          basic_salary?: number
+          bonus?: number | null
+          branch_id?: string
+          commission?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          da?: number | null
+          days_in_month?: number
+          days_worked?: number
+          esi_deduction?: number | null
+          gross_salary?: number
+          hra?: number | null
+          id?: string
+          loan_deduction?: number | null
+          net_salary?: number
+          notes?: string | null
+          other_allowances?: number | null
+          other_deductions?: number | null
+          overtime_amount?: number | null
+          overtime_hours?: number | null
+          payment_date?: string | null
+          payment_mode?: string | null
+          payment_reference?: string | null
+          pf_deduction?: number | null
+          professional_tax?: number | null
+          salary_month?: string
+          staff_id?: string
+          status?: string | null
+          tds?: number | null
+          total_deductions?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "salary_records_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      salary_structures: {
+        Row: {
+          basic_salary: number
+          branch_id: string
+          created_at: string | null
+          da_percent: number | null
+          designation: string
+          esi_percent: number | null
+          hra_percent: number | null
+          id: string
+          is_active: boolean | null
+          other_allowances: number | null
+          pf_percent: number | null
+          professional_tax: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          basic_salary?: number
+          branch_id: string
+          created_at?: string | null
+          da_percent?: number | null
+          designation: string
+          esi_percent?: number | null
+          hra_percent?: number | null
+          id?: string
+          is_active?: boolean | null
+          other_allowances?: number | null
+          pf_percent?: number | null
+          professional_tax?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          basic_salary?: number
+          branch_id?: string
+          created_at?: string | null
+          da_percent?: number | null
+          designation?: string
+          esi_percent?: number | null
+          hra_percent?: number | null
+          id?: string
+          is_active?: boolean | null
+          other_allowances?: number | null
+          pf_percent?: number | null
+          professional_tax?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "salary_structures_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scheme_enrollments: {
         Row: {
           bonus_amount: number | null
@@ -2655,6 +3013,68 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "schemes_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      staff_advances: {
+        Row: {
+          advance_type: string
+          amount: number
+          approved_by: string | null
+          branch_id: string
+          created_at: string | null
+          disbursement_date: string
+          expected_completion_date: string | null
+          id: string
+          interest_rate: number | null
+          monthly_deduction: number | null
+          outstanding_amount: number
+          reason: string | null
+          staff_id: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          advance_type: string
+          amount: number
+          approved_by?: string | null
+          branch_id: string
+          created_at?: string | null
+          disbursement_date: string
+          expected_completion_date?: string | null
+          id?: string
+          interest_rate?: number | null
+          monthly_deduction?: number | null
+          outstanding_amount: number
+          reason?: string | null
+          staff_id: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          advance_type?: string
+          amount?: number
+          approved_by?: string | null
+          branch_id?: string
+          created_at?: string | null
+          disbursement_date?: string
+          expected_completion_date?: string | null
+          id?: string
+          interest_rate?: number | null
+          monthly_deduction?: number | null
+          outstanding_amount?: number
+          reason?: string | null
+          staff_id?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_advances_branch_id_fkey"
             columns: ["branch_id"]
             isOneToOne: false
             referencedRelation: "branches"

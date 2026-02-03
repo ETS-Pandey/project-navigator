@@ -55,6 +55,9 @@ import CustomOrders from "./pages/orders/CustomOrders";
 
 // Expense Pages
 import ExpensesList from "./pages/expenses/ExpensesList";
+import PettyCash from "./pages/expenses/PettyCash";
+import Payroll from "./pages/expenses/Payroll";
+import Budgets from "./pages/expenses/Budgets";
 
 // Accounting Pages
 import DayBook from "./pages/accounting/DayBook";
@@ -147,6 +150,9 @@ const App = () => (
                   
                   {/* Expense Routes */}
                   <Route path="/expenses" element={<ExpensesList />} />
+                  <Route path="/expenses/petty-cash" element={<PettyCash />} />
+                  <Route path="/expenses/payroll" element={<Payroll />} />
+                  <Route path="/expenses/budgets" element={<Budgets />} />
                   
                   {/* Accounting Routes */}
                   <Route path="/accounting/daybook" element={<DayBook />} />
