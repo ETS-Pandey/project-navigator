@@ -2124,6 +2124,307 @@ export type Database = {
         }
         Relationships: []
       }
+      purchase_items: {
+        Row: {
+          created_at: string | null
+          discount_amount: number | null
+          discount_percent: number | null
+          display_order: number | null
+          gross_weight: number | null
+          gst_amount: number | null
+          gst_percent: number | null
+          hsn_code: string | null
+          id: string
+          item_description: string
+          making_charges: number | null
+          metal_type: string | null
+          net_weight: number | null
+          other_charges: number | null
+          product_id: string | null
+          purchase_id: string
+          purity: string | null
+          quantity: number
+          rate_per_gram: number | null
+          stone_value: number | null
+          stone_weight: number | null
+          taxable_amount: number
+          total_amount: number
+          unit: string | null
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          display_order?: number | null
+          gross_weight?: number | null
+          gst_amount?: number | null
+          gst_percent?: number | null
+          hsn_code?: string | null
+          id?: string
+          item_description: string
+          making_charges?: number | null
+          metal_type?: string | null
+          net_weight?: number | null
+          other_charges?: number | null
+          product_id?: string | null
+          purchase_id: string
+          purity?: string | null
+          quantity?: number
+          rate_per_gram?: number | null
+          stone_value?: number | null
+          stone_weight?: number | null
+          taxable_amount?: number
+          total_amount?: number
+          unit?: string | null
+          unit_price?: number
+        }
+        Update: {
+          created_at?: string | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          display_order?: number | null
+          gross_weight?: number | null
+          gst_amount?: number | null
+          gst_percent?: number | null
+          hsn_code?: string | null
+          id?: string
+          item_description?: string
+          making_charges?: number | null
+          metal_type?: string | null
+          net_weight?: number | null
+          other_charges?: number | null
+          product_id?: string | null
+          purchase_id?: string
+          purity?: string | null
+          quantity?: number
+          rate_per_gram?: number | null
+          stone_value?: number | null
+          stone_weight?: number | null
+          taxable_amount?: number
+          total_amount?: number
+          unit?: string | null
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchase_items_purchase_id_fkey"
+            columns: ["purchase_id"]
+            isOneToOne: false
+            referencedRelation: "purchases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      purchase_returns: {
+        Row: {
+          approved_by: string | null
+          branch_id: string
+          created_at: string | null
+          created_by: string | null
+          gross_amount: number
+          gst_amount: number | null
+          id: string
+          purchase_id: string
+          reason: string | null
+          return_date: string
+          return_number: string
+          status: string | null
+          total_amount: number
+          updated_at: string | null
+          vendor_id: string
+        }
+        Insert: {
+          approved_by?: string | null
+          branch_id: string
+          created_at?: string | null
+          created_by?: string | null
+          gross_amount?: number
+          gst_amount?: number | null
+          id?: string
+          purchase_id: string
+          reason?: string | null
+          return_date?: string
+          return_number: string
+          status?: string | null
+          total_amount?: number
+          updated_at?: string | null
+          vendor_id: string
+        }
+        Update: {
+          approved_by?: string | null
+          branch_id?: string
+          created_at?: string | null
+          created_by?: string | null
+          gross_amount?: number
+          gst_amount?: number | null
+          id?: string
+          purchase_id?: string
+          reason?: string | null
+          return_date?: string
+          return_number?: string
+          status?: string | null
+          total_amount?: number
+          updated_at?: string | null
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_returns_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchase_returns_purchase_id_fkey"
+            columns: ["purchase_id"]
+            isOneToOne: false
+            referencedRelation: "purchases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchase_returns_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      purchases: {
+        Row: {
+          amount_paid: number | null
+          approved_by: string | null
+          balance_due: number | null
+          branch_id: string
+          cgst_amount: number | null
+          cgst_percent: number | null
+          created_at: string | null
+          created_by: string | null
+          discount_amount: number | null
+          discount_percent: number | null
+          grand_total: number
+          gross_amount: number
+          id: string
+          igst_amount: number | null
+          igst_percent: number | null
+          invoice_date: string | null
+          invoice_number: string | null
+          is_interstate: boolean | null
+          notes: string | null
+          other_charges: number | null
+          payment_due_date: string | null
+          purchase_date: string
+          purchase_number: string
+          purchase_type: string
+          round_off: number | null
+          sgst_amount: number | null
+          sgst_percent: number | null
+          status: string | null
+          taxable_amount: number | null
+          total_gross_weight: number | null
+          total_gst: number | null
+          total_net_weight: number | null
+          updated_at: string | null
+          vendor_id: string | null
+        }
+        Insert: {
+          amount_paid?: number | null
+          approved_by?: string | null
+          balance_due?: number | null
+          branch_id: string
+          cgst_amount?: number | null
+          cgst_percent?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          grand_total?: number
+          gross_amount?: number
+          id?: string
+          igst_amount?: number | null
+          igst_percent?: number | null
+          invoice_date?: string | null
+          invoice_number?: string | null
+          is_interstate?: boolean | null
+          notes?: string | null
+          other_charges?: number | null
+          payment_due_date?: string | null
+          purchase_date?: string
+          purchase_number: string
+          purchase_type: string
+          round_off?: number | null
+          sgst_amount?: number | null
+          sgst_percent?: number | null
+          status?: string | null
+          taxable_amount?: number | null
+          total_gross_weight?: number | null
+          total_gst?: number | null
+          total_net_weight?: number | null
+          updated_at?: string | null
+          vendor_id?: string | null
+        }
+        Update: {
+          amount_paid?: number | null
+          approved_by?: string | null
+          balance_due?: number | null
+          branch_id?: string
+          cgst_amount?: number | null
+          cgst_percent?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          discount_amount?: number | null
+          discount_percent?: number | null
+          grand_total?: number
+          gross_amount?: number
+          id?: string
+          igst_amount?: number | null
+          igst_percent?: number | null
+          invoice_date?: string | null
+          invoice_number?: string | null
+          is_interstate?: boolean | null
+          notes?: string | null
+          other_charges?: number | null
+          payment_due_date?: string | null
+          purchase_date?: string
+          purchase_number?: string
+          purchase_type?: string
+          round_off?: number | null
+          sgst_amount?: number | null
+          sgst_percent?: number | null
+          status?: string | null
+          taxable_amount?: number | null
+          total_gross_weight?: number | null
+          total_gst?: number | null
+          total_net_weight?: number | null
+          updated_at?: string | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchases_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchases_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quotation_items: {
         Row: {
           created_at: string
@@ -3244,6 +3545,192 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      vendor_payments: {
+        Row: {
+          amount: number
+          bank_name: string | null
+          branch_id: string
+          cheque_date: string | null
+          cheque_number: string | null
+          created_at: string | null
+          created_by: string | null
+          deduction_amount: number | null
+          deduction_reason: string | null
+          id: string
+          notes: string | null
+          payment_date: string
+          payment_mode: string
+          payment_number: string
+          purchase_id: string | null
+          reference_number: string | null
+          tds_amount: number | null
+          vendor_id: string
+        }
+        Insert: {
+          amount: number
+          bank_name?: string | null
+          branch_id: string
+          cheque_date?: string | null
+          cheque_number?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deduction_amount?: number | null
+          deduction_reason?: string | null
+          id?: string
+          notes?: string | null
+          payment_date?: string
+          payment_mode: string
+          payment_number: string
+          purchase_id?: string | null
+          reference_number?: string | null
+          tds_amount?: number | null
+          vendor_id: string
+        }
+        Update: {
+          amount?: number
+          bank_name?: string | null
+          branch_id?: string
+          cheque_date?: string | null
+          cheque_number?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deduction_amount?: number | null
+          deduction_reason?: string | null
+          id?: string
+          notes?: string | null
+          payment_date?: string
+          payment_mode?: string
+          payment_number?: string
+          purchase_id?: string | null
+          reference_number?: string | null
+          tds_amount?: number | null
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_payments_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_payments_purchase_id_fkey"
+            columns: ["purchase_id"]
+            isOneToOne: false
+            referencedRelation: "purchases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_payments_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendors: {
+        Row: {
+          address: string | null
+          alt_phone: string | null
+          bank_account_number: string | null
+          bank_branch: string | null
+          bank_ifsc: string | null
+          bank_name: string | null
+          branch_id: string
+          city: string | null
+          company_name: string | null
+          created_at: string | null
+          created_by: string | null
+          credit_limit: number | null
+          credit_period_days: number | null
+          current_balance: number | null
+          email: string | null
+          gstin: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          notes: string | null
+          pan: string | null
+          phone: string | null
+          pincode: string | null
+          state: string | null
+          updated_at: string | null
+          vendor_code: string
+          vendor_type: string | null
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          alt_phone?: string | null
+          bank_account_number?: string | null
+          bank_branch?: string | null
+          bank_ifsc?: string | null
+          bank_name?: string | null
+          branch_id: string
+          city?: string | null
+          company_name?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          credit_limit?: number | null
+          credit_period_days?: number | null
+          current_balance?: number | null
+          email?: string | null
+          gstin?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          notes?: string | null
+          pan?: string | null
+          phone?: string | null
+          pincode?: string | null
+          state?: string | null
+          updated_at?: string | null
+          vendor_code: string
+          vendor_type?: string | null
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          alt_phone?: string | null
+          bank_account_number?: string | null
+          bank_branch?: string | null
+          bank_ifsc?: string | null
+          bank_name?: string | null
+          branch_id?: string
+          city?: string | null
+          company_name?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          credit_limit?: number | null
+          credit_period_days?: number | null
+          current_balance?: number | null
+          email?: string | null
+          gstin?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          notes?: string | null
+          pan?: string | null
+          phone?: string | null
+          pincode?: string | null
+          state?: string | null
+          updated_at?: string | null
+          vendor_code?: string
+          vendor_type?: string | null
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendors_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
