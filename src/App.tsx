@@ -59,6 +59,11 @@ import PettyCash from "./pages/expenses/PettyCash";
 import Payroll from "./pages/expenses/Payroll";
 import Budgets from "./pages/expenses/Budgets";
 
+// Purchase Pages
+import VendorList from "./pages/purchase/VendorList";
+import PurchasesList from "./pages/purchase/PurchasesList";
+import NewPurchase from "./pages/purchase/NewPurchase";
+
 // Accounting Pages
 import DayBook from "./pages/accounting/DayBook";
 import ChartOfAccountsPage from "./pages/accounting/ChartOfAccountsPage";
@@ -152,6 +157,12 @@ const App = () => (
                   <Route path="/expenses" element={<ExpensesList />} />
                   <Route path="/expenses/petty-cash" element={<PettyCash />} />
                   <Route path="/expenses/payroll" element={<Payroll />} />
+                  <Route path="/expenses/budgets" element={<Budgets />} />
+                  
+                  {/* Purchase Routes */}
+                  <Route path="/purchase/vendors" element={<VendorList />} />
+                  <Route path="/purchase/list" element={<PurchasesList />} />
+                  <Route path="/purchase/new" element={<NewPurchase />} />
                   <Route path="/expenses/budgets" element={<Budgets />} />
                   
                   {/* Accounting Routes */}

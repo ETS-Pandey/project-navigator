@@ -16,6 +16,7 @@ import {
   Gem,
   ChevronDown,
   Hammer,
+  ShoppingCart,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -54,6 +55,7 @@ const iconMap = {
   BarChart3,
   Settings,
   Hammer,
+  ShoppingCart,
 };
 
 const navigationItems = [
@@ -91,6 +93,16 @@ const navigationItems = [
       { title: "Invoices", url: "/billing/invoices" },
       { title: "Quotations", url: "/billing/quotations" },
       { title: "Old Gold", url: "/billing/old-gold" },
+    ],
+  },
+  {
+    title: "Purchase",
+    url: "/purchase",
+    icon: "ShoppingCart",
+    children: [
+      { title: "Vendors", url: "/purchase/vendors" },
+      { title: "Purchases", url: "/purchase/list" },
+      { title: "New Purchase", url: "/purchase/new" },
     ],
   },
   {
