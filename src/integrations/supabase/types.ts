@@ -14,6 +14,206 @@ export type Database = {
   }
   public: {
     Tables: {
+      appraisal_items: {
+        Row: {
+          appraisal_id: string
+          condition: string | null
+          created_at: string
+          description: string
+          gross_weight: number
+          hallmark_status: string | null
+          huid: string | null
+          id: string
+          image_url: string | null
+          item_number: number
+          making_charge_value: number | null
+          metal_type: string
+          metal_value: number
+          net_weight: number
+          notes: string | null
+          purity: string
+          rate_per_gram: number
+          stone_carat: number | null
+          stone_count: number | null
+          stone_type: string | null
+          stone_value: number | null
+          stone_weight: number | null
+          total_value: number
+          wastage_percent: number | null
+        }
+        Insert: {
+          appraisal_id: string
+          condition?: string | null
+          created_at?: string
+          description: string
+          gross_weight?: number
+          hallmark_status?: string | null
+          huid?: string | null
+          id?: string
+          image_url?: string | null
+          item_number?: number
+          making_charge_value?: number | null
+          metal_type?: string
+          metal_value?: number
+          net_weight?: number
+          notes?: string | null
+          purity: string
+          rate_per_gram?: number
+          stone_carat?: number | null
+          stone_count?: number | null
+          stone_type?: string | null
+          stone_value?: number | null
+          stone_weight?: number | null
+          total_value?: number
+          wastage_percent?: number | null
+        }
+        Update: {
+          appraisal_id?: string
+          condition?: string | null
+          created_at?: string
+          description?: string
+          gross_weight?: number
+          hallmark_status?: string | null
+          huid?: string | null
+          id?: string
+          image_url?: string | null
+          item_number?: number
+          making_charge_value?: number | null
+          metal_type?: string
+          metal_value?: number
+          net_weight?: number
+          notes?: string | null
+          purity?: string
+          rate_per_gram?: number
+          stone_carat?: number | null
+          stone_count?: number | null
+          stone_type?: string | null
+          stone_value?: number | null
+          stone_weight?: number | null
+          total_value?: number
+          wastage_percent?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appraisal_items_appraisal_id_fkey"
+            columns: ["appraisal_id"]
+            isOneToOne: false
+            referencedRelation: "appraisals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      appraisals: {
+        Row: {
+          appraisal_date: string
+          appraisal_number: string
+          appraised_by: string | null
+          branch_id: string
+          certificate_issued: boolean
+          certificate_number: string | null
+          created_at: string
+          created_by: string | null
+          customer_id: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          grand_total: number
+          id: string
+          items: Json
+          market_rate_gold: number | null
+          market_rate_silver: number | null
+          notes: string | null
+          purpose: string
+          status: string
+          terms_conditions: string | null
+          total_items: number
+          total_making_value: number
+          total_metal_value: number
+          total_stone_value: number
+          total_weight: number
+          updated_at: string
+          valid_until: string | null
+          validity_days: number | null
+          verified_by: string | null
+        }
+        Insert: {
+          appraisal_date?: string
+          appraisal_number: string
+          appraised_by?: string | null
+          branch_id: string
+          certificate_issued?: boolean
+          certificate_number?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          grand_total?: number
+          id?: string
+          items?: Json
+          market_rate_gold?: number | null
+          market_rate_silver?: number | null
+          notes?: string | null
+          purpose?: string
+          status?: string
+          terms_conditions?: string | null
+          total_items?: number
+          total_making_value?: number
+          total_metal_value?: number
+          total_stone_value?: number
+          total_weight?: number
+          updated_at?: string
+          valid_until?: string | null
+          validity_days?: number | null
+          verified_by?: string | null
+        }
+        Update: {
+          appraisal_date?: string
+          appraisal_number?: string
+          appraised_by?: string | null
+          branch_id?: string
+          certificate_issued?: boolean
+          certificate_number?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          grand_total?: number
+          id?: string
+          items?: Json
+          market_rate_gold?: number | null
+          market_rate_silver?: number | null
+          notes?: string | null
+          purpose?: string
+          status?: string
+          terms_conditions?: string | null
+          total_items?: number
+          total_making_value?: number
+          total_metal_value?: number
+          total_stone_value?: number
+          total_weight?: number
+          updated_at?: string
+          valid_until?: string | null
+          validity_days?: number | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appraisals_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appraisals_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       branches: {
         Row: {
           address: string | null
@@ -1472,6 +1672,95 @@ export type Database = {
           },
         ]
       }
+      melting_batches: {
+        Row: {
+          actual_output_weight: number | null
+          actual_pure_weight: number | null
+          assay_certificate: string | null
+          batch_date: string
+          batch_number: string
+          branch_id: string
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          expected_pure_weight: number | null
+          id: string
+          input_items: Json
+          input_total_weight: number
+          loss_percentage: number | null
+          metal_type: string
+          notes: string | null
+          output_allocation: Json | null
+          output_purity: string | null
+          refiner_name: string | null
+          refining_charges: number | null
+          started_at: string | null
+          status: string
+          updated_at: string
+          weight_loss: number | null
+        }
+        Insert: {
+          actual_output_weight?: number | null
+          actual_pure_weight?: number | null
+          assay_certificate?: string | null
+          batch_date?: string
+          batch_number: string
+          branch_id: string
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          expected_pure_weight?: number | null
+          id?: string
+          input_items?: Json
+          input_total_weight?: number
+          loss_percentage?: number | null
+          metal_type?: string
+          notes?: string | null
+          output_allocation?: Json | null
+          output_purity?: string | null
+          refiner_name?: string | null
+          refining_charges?: number | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          weight_loss?: number | null
+        }
+        Update: {
+          actual_output_weight?: number | null
+          actual_pure_weight?: number | null
+          assay_certificate?: string | null
+          batch_date?: string
+          batch_number?: string
+          branch_id?: string
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          expected_pure_weight?: number | null
+          id?: string
+          input_items?: Json
+          input_total_weight?: number
+          loss_percentage?: number | null
+          metal_type?: string
+          notes?: string | null
+          output_allocation?: Json | null
+          output_purity?: string | null
+          refiner_name?: string | null
+          refining_charges?: number | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          weight_loss?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "melting_batches_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       old_gold_purchases: {
         Row: {
           approved_at: string | null
@@ -2744,6 +3033,78 @@ export type Database = {
           },
         ]
       }
+      refining_records: {
+        Row: {
+          branch_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          lab_certificate: string | null
+          lab_name: string | null
+          melting_batch_id: string | null
+          metal_type: string
+          notes: string | null
+          pure_metal_content: number | null
+          record_number: string
+          sample_weight: number
+          test_date: string
+          tested_by: string | null
+          tested_purity: string
+          testing_method: string | null
+        }
+        Insert: {
+          branch_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          lab_certificate?: string | null
+          lab_name?: string | null
+          melting_batch_id?: string | null
+          metal_type?: string
+          notes?: string | null
+          pure_metal_content?: number | null
+          record_number: string
+          sample_weight: number
+          test_date?: string
+          tested_by?: string | null
+          tested_purity: string
+          testing_method?: string | null
+        }
+        Update: {
+          branch_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          lab_certificate?: string | null
+          lab_name?: string | null
+          melting_batch_id?: string | null
+          metal_type?: string
+          notes?: string | null
+          pure_metal_content?: number | null
+          record_number?: string
+          sample_weight?: number
+          test_date?: string
+          tested_by?: string | null
+          tested_purity?: string
+          testing_method?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "refining_records_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "refining_records_melting_batch_id_fkey"
+            columns: ["melting_batch_id"]
+            isOneToOne: false
+            referencedRelation: "melting_batches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       repair_orders: {
         Row: {
           advance_paid: number | null
@@ -3445,6 +3806,336 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      stone_inventory: {
+        Row: {
+          assigned_karigar_id: string | null
+          assigned_product_id: string | null
+          branch_id: string
+          carat_weight: number
+          certificate_number: string | null
+          certificate_url: string | null
+          certification: string | null
+          clarity_grade: string | null
+          color_grade: string | null
+          cost_price: number
+          created_at: string
+          created_by: string | null
+          cut_grade: string | null
+          dimensions: string | null
+          id: string
+          location: string | null
+          lot_id: string | null
+          market_value: number | null
+          notes: string | null
+          shape: string | null
+          status: string
+          stone_code: string
+          stone_type_id: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_karigar_id?: string | null
+          assigned_product_id?: string | null
+          branch_id: string
+          carat_weight?: number
+          certificate_number?: string | null
+          certificate_url?: string | null
+          certification?: string | null
+          clarity_grade?: string | null
+          color_grade?: string | null
+          cost_price?: number
+          created_at?: string
+          created_by?: string | null
+          cut_grade?: string | null
+          dimensions?: string | null
+          id?: string
+          location?: string | null
+          lot_id?: string | null
+          market_value?: number | null
+          notes?: string | null
+          shape?: string | null
+          status?: string
+          stone_code: string
+          stone_type_id: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_karigar_id?: string | null
+          assigned_product_id?: string | null
+          branch_id?: string
+          carat_weight?: number
+          certificate_number?: string | null
+          certificate_url?: string | null
+          certification?: string | null
+          clarity_grade?: string | null
+          color_grade?: string | null
+          cost_price?: number
+          created_at?: string
+          created_by?: string | null
+          cut_grade?: string | null
+          dimensions?: string | null
+          id?: string
+          location?: string | null
+          lot_id?: string | null
+          market_value?: number | null
+          notes?: string | null
+          shape?: string | null
+          status?: string
+          stone_code?: string
+          stone_type_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stone_inventory_assigned_karigar_id_fkey"
+            columns: ["assigned_karigar_id"]
+            isOneToOne: false
+            referencedRelation: "karigars"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_inventory_assigned_product_id_fkey"
+            columns: ["assigned_product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_inventory_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_inventory_lot_id_fkey"
+            columns: ["lot_id"]
+            isOneToOne: false
+            referencedRelation: "stone_lots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_inventory_stone_type_id_fkey"
+            columns: ["stone_type_id"]
+            isOneToOne: false
+            referencedRelation: "stone_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stone_lots: {
+        Row: {
+          available_carat_weight: number
+          available_pieces: number
+          branch_id: string
+          certificate_number: string | null
+          certification: string | null
+          clarity_grade: string | null
+          color_grade: string | null
+          cost_per_carat: number
+          created_at: string
+          created_by: string | null
+          cut_grade: string | null
+          id: string
+          lot_number: string
+          notes: string | null
+          purchase_date: string
+          shape: string | null
+          status: string
+          stone_type_id: string
+          supplier_name: string | null
+          total_carat_weight: number
+          total_cost: number
+          total_pieces: number
+          updated_at: string
+        }
+        Insert: {
+          available_carat_weight?: number
+          available_pieces?: number
+          branch_id: string
+          certificate_number?: string | null
+          certification?: string | null
+          clarity_grade?: string | null
+          color_grade?: string | null
+          cost_per_carat?: number
+          created_at?: string
+          created_by?: string | null
+          cut_grade?: string | null
+          id?: string
+          lot_number: string
+          notes?: string | null
+          purchase_date?: string
+          shape?: string | null
+          status?: string
+          stone_type_id: string
+          supplier_name?: string | null
+          total_carat_weight?: number
+          total_cost?: number
+          total_pieces?: number
+          updated_at?: string
+        }
+        Update: {
+          available_carat_weight?: number
+          available_pieces?: number
+          branch_id?: string
+          certificate_number?: string | null
+          certification?: string | null
+          clarity_grade?: string | null
+          color_grade?: string | null
+          cost_per_carat?: number
+          created_at?: string
+          created_by?: string | null
+          cut_grade?: string | null
+          id?: string
+          lot_number?: string
+          notes?: string | null
+          purchase_date?: string
+          shape?: string | null
+          status?: string
+          stone_type_id?: string
+          supplier_name?: string | null
+          total_carat_weight?: number
+          total_cost?: number
+          total_pieces?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stone_lots_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_lots_stone_type_id_fkey"
+            columns: ["stone_type_id"]
+            isOneToOne: false
+            referencedRelation: "stone_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stone_movements: {
+        Row: {
+          branch_id: string
+          carat_weight: number | null
+          created_at: string
+          created_by: string | null
+          id: string
+          karigar_id: string | null
+          lot_id: string | null
+          movement_type: string
+          notes: string | null
+          product_id: string | null
+          quantity: number
+          reference_number: string | null
+          stone_inventory_id: string | null
+        }
+        Insert: {
+          branch_id: string
+          carat_weight?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          karigar_id?: string | null
+          lot_id?: string | null
+          movement_type: string
+          notes?: string | null
+          product_id?: string | null
+          quantity?: number
+          reference_number?: string | null
+          stone_inventory_id?: string | null
+        }
+        Update: {
+          branch_id?: string
+          carat_weight?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          karigar_id?: string | null
+          lot_id?: string | null
+          movement_type?: string
+          notes?: string | null
+          product_id?: string | null
+          quantity?: number
+          reference_number?: string | null
+          stone_inventory_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stone_movements_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_movements_karigar_id_fkey"
+            columns: ["karigar_id"]
+            isOneToOne: false
+            referencedRelation: "karigars"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_movements_lot_id_fkey"
+            columns: ["lot_id"]
+            isOneToOne: false
+            referencedRelation: "stone_lots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_movements_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stone_movements_stone_inventory_id_fkey"
+            columns: ["stone_inventory_id"]
+            isOneToOne: false
+            referencedRelation: "stone_inventory"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stone_types: {
+        Row: {
+          category: string
+          code: string
+          created_at: string
+          default_unit: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          code: string
+          created_at?: string
+          default_unit?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          code?: string
+          created_at?: string
+          default_unit?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       sub_categories: {
         Row: {
