@@ -64,6 +64,18 @@ import VendorList from "./pages/purchase/VendorList";
 import PurchasesList from "./pages/purchase/PurchasesList";
 import NewPurchase from "./pages/purchase/NewPurchase";
 
+// Stone Inventory Pages
+import StoneInventoryPage from "./pages/stones/StoneInventoryPage";
+import StoneLotsPage from "./pages/stones/StoneLotsPage";
+
+// Melting Pages
+import MeltingPage from "./pages/melting/MeltingPage";
+import RefiningPage from "./pages/melting/RefiningPage";
+
+// Appraisal Pages
+import AppraisalListPage from "./pages/appraisal/AppraisalListPage";
+import NewAppraisalPage from "./pages/appraisal/NewAppraisalPage";
+
 // Accounting Pages
 import DayBook from "./pages/accounting/DayBook";
 import ChartOfAccountsPage from "./pages/accounting/ChartOfAccountsPage";
@@ -163,7 +175,18 @@ const App = () => (
                   <Route path="/purchase/vendors" element={<VendorList />} />
                   <Route path="/purchase/list" element={<PurchasesList />} />
                   <Route path="/purchase/new" element={<NewPurchase />} />
-                  <Route path="/expenses/budgets" element={<Budgets />} />
+                  
+                  {/* Stone Inventory Routes */}
+                  <Route path="/stones/inventory" element={<StoneInventoryPage />} />
+                  <Route path="/stones/lots" element={<StoneLotsPage />} />
+                  
+                  {/* Melting Routes */}
+                  <Route path="/melting/batches" element={<MeltingPage />} />
+                  <Route path="/melting/refining" element={<RefiningPage />} />
+                  
+                  {/* Appraisal Routes */}
+                  <Route path="/appraisals" element={<AppraisalListPage />} />
+                  <Route path="/appraisals/new" element={<NewAppraisalPage />} />
                   
                   {/* Accounting Routes */}
                   <Route path="/accounting/daybook" element={<DayBook />} />

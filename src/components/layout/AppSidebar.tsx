@@ -17,6 +17,9 @@ import {
   ChevronDown,
   Hammer,
   ShoppingCart,
+  Flame,
+  FileCheck,
+  Diamond,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -56,6 +59,9 @@ const iconMap = {
   Settings,
   Hammer,
   ShoppingCart,
+  Flame,
+  FileCheck,
+  Diamond,
 };
 
 const navigationItems = [
@@ -149,6 +155,29 @@ const navigationItems = [
     title: "Karigars",
     url: "/karigars",
     icon: "Hammer",
+  },
+  {
+    title: "Stone Inventory",
+    url: "/stones",
+    icon: "Diamond",
+    children: [
+      { title: "Stones", url: "/stones/inventory" },
+      { title: "Stone Lots", url: "/stones/lots" },
+    ],
+  },
+  {
+    title: "Melting",
+    url: "/melting",
+    icon: "Flame",
+    children: [
+      { title: "Melting Batches", url: "/melting/batches" },
+      { title: "Refining Records", url: "/melting/refining" },
+    ],
+  },
+  {
+    title: "Appraisals",
+    url: "/appraisals",
+    icon: "FileCheck",
   },
   {
     title: "Staff",
