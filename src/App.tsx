@@ -74,6 +74,7 @@ import RefiningPage from "./pages/melting/RefiningPage";
 
 // Appraisal Pages
 import AppraisalListPage from "./pages/appraisal/AppraisalListPage";
+import AppraisalDetailPage from "./pages/appraisal/AppraisalDetailPage";
 import NewAppraisalPage from "./pages/appraisal/NewAppraisalPage";
 
 // Accounting Pages
@@ -82,6 +83,7 @@ import ChartOfAccountsPage from "./pages/accounting/ChartOfAccountsPage";
 import Ledgers from "./pages/accounting/Ledgers";
 import BankBook from "./pages/accounting/BankBook";
 import AccountingReports from "./pages/accounting/Reports";
+import TallyExportPage from "./pages/accounting/TallyExportPage";
 
 // Reports Pages
 import ReportsPage from "./pages/reports/ReportsPage";
@@ -187,6 +189,7 @@ const App = () => (
                   {/* Appraisal Routes */}
                   <Route path="/appraisals" element={<AppraisalListPage />} />
                   <Route path="/appraisals/new" element={<NewAppraisalPage />} />
+                  <Route path="/appraisals/:id" element={<AppraisalDetailPage />} />
                   
                   {/* Accounting Routes */}
                   <Route path="/accounting/daybook" element={<DayBook />} />
@@ -194,6 +197,7 @@ const App = () => (
                   <Route path="/accounting/ledgers" element={<Ledgers />} />
                   <Route path="/accounting/bank" element={<BankBook />} />
                   <Route path="/accounting/reports" element={<AccountingReports />} />
+                  <Route path="/accounting/tally" element={<TallyExportPage />} />
                   
                   {/* Settings Routes */}
                   <Route path="/settings" element={<SettingsPage />} />
