@@ -149,6 +149,7 @@ const navigationItems = [
       { title: "Ledgers", url: "/accounting/ledgers" },
       { title: "Bank Book", url: "/accounting/bank" },
       { title: "Reports", url: "/accounting/reports" },
+      { title: "Tally Export", url: "/accounting/tally" },
     ],
   },
   {

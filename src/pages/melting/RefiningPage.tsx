@@ -67,10 +67,10 @@ export default function RefiningPage() {
             <div className="grid gap-4 py-4 max-h-[60vh] overflow-y-auto">
               <div className="grid gap-2">
                 <Label>Linked Melting Batch (optional)</Label>
-                <Select value={form.melting_batch_id} onValueChange={(v) => setForm({ ...form, melting_batch_id: v })}>
+                <Select value={form.melting_batch_id || "none"} onValueChange={(v) => setForm({ ...form, melting_batch_id: v === "none" ? "" : v })}>
                   <SelectTrigger><SelectValue placeholder="Select batch" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="none">None</SelectItem>
                     {batches.map((b) => (
                       <SelectItem key={b.id} value={b.id}>{b.batch_number} ({b.metal_type})</SelectItem>
                     ))}
