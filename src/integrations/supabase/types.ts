@@ -375,6 +375,78 @@ export type Database = {
           },
         ]
       }
+      catalog_inquiries: {
+        Row: {
+          branch_id: string
+          created_at: string
+          customer_email: string | null
+          customer_id: string | null
+          customer_name: string
+          customer_phone: string | null
+          id: string
+          inquiry_number: string
+          items: Json
+          message: string | null
+          notes: string | null
+          responded_at: string | null
+          responded_by: string | null
+          status: string
+          total_estimated_value: number | null
+          updated_at: string
+        }
+        Insert: {
+          branch_id: string
+          created_at?: string
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_name: string
+          customer_phone?: string | null
+          id?: string
+          inquiry_number: string
+          items?: Json
+          message?: string | null
+          notes?: string | null
+          responded_at?: string | null
+          responded_by?: string | null
+          status?: string
+          total_estimated_value?: number | null
+          updated_at?: string
+        }
+        Update: {
+          branch_id?: string
+          created_at?: string
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_name?: string
+          customer_phone?: string | null
+          id?: string
+          inquiry_number?: string
+          items?: Json
+          message?: string | null
+          notes?: string | null
+          responded_at?: string | null
+          responded_by?: string | null
+          status?: string
+          total_estimated_value?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "catalog_inquiries_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "catalog_inquiries_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categories: {
         Row: {
           code: string
@@ -580,6 +652,118 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_otp_tokens: {
+        Row: {
+          created_at: string
+          customer_id: string | null
+          email: string | null
+          expires_at: string
+          id: string
+          otp_code: string
+          phone: string | null
+          verified: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          customer_id?: string | null
+          email?: string | null
+          expires_at: string
+          id?: string
+          otp_code: string
+          phone?: string | null
+          verified?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string | null
+          email?: string | null
+          expires_at?: string
+          id?: string
+          otp_code?: string
+          phone?: string | null
+          verified?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_otp_tokens_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_sessions: {
+        Row: {
+          created_at: string
+          customer_id: string
+          expires_at: string
+          id: string
+          session_token: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          expires_at: string
+          id?: string
+          session_token: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          expires_at?: string
+          id?: string
+          session_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_sessions_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customer_wishlists: {
+        Row: {
+          added_at: string
+          customer_id: string | null
+          id: string
+          product_id: string
+          session_id: string | null
+        }
+        Insert: {
+          added_at?: string
+          customer_id?: string | null
+          id?: string
+          product_id: string
+          session_id?: string | null
+        }
+        Update: {
+          added_at?: string
+          customer_id?: string | null
+          id?: string
+          product_id?: string
+          session_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_wishlists_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_wishlists_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]

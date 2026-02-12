@@ -20,6 +20,7 @@ import {
   Flame,
   FileCheck,
   Diamond,
+  Globe,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -62,6 +63,7 @@ const iconMap = {
   Flame,
   FileCheck,
   Diamond,
+  Globe,
 };
 
 const navigationItems = [
@@ -200,6 +202,11 @@ const navigationItems = [
     title: "Reports",
     url: "/reports",
     icon: "BarChart3",
+  },
+  {
+    title: "Online Catalog",
+    url: "/catalog",
+    icon: "Globe",
   },
   {
     title: "Settings",
