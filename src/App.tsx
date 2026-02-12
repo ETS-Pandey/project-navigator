@@ -97,6 +97,16 @@ import StaffList from "./pages/staff/StaffList";
 // Karigar Pages
 import KarigarList from "./pages/karigar/KarigarList";
 
+// Catalog Pages (Public)
+import CatalogLayout from "./pages/catalog/CatalogLayout";
+import CatalogPage from "./pages/catalog/CatalogPage";
+import CatalogProductDetail from "./pages/catalog/CatalogProductDetail";
+import CatalogCart from "./pages/catalog/CatalogCart";
+
+// Portal Pages (Customer)
+import PortalLogin from "./pages/portal/PortalLogin";
+import PortalDashboard from "./pages/portal/PortalDashboard";
+
 // Layout
 import { AppLayout } from "./components/layout/AppLayout";
 
@@ -205,6 +215,17 @@ const App = () => (
                   {/* Reports Routes */}
                   <Route path="/reports" element={<ReportsPage />} />
                 </Route>
+
+                {/* Public Catalog Routes */}
+                <Route element={<CatalogLayout />}>
+                  <Route path="/catalog" element={<CatalogPage />} />
+                  <Route path="/catalog/:id" element={<CatalogProductDetail />} />
+                  <Route path="/catalog/cart" element={<CatalogCart />} />
+                </Route>
+
+                {/* Customer Portal Routes */}
+                <Route path="/portal" element={<PortalLogin />} />
+                <Route path="/portal/dashboard" element={<PortalDashboard />} />
 
                 {/* Redirects */}
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
