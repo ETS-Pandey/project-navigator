@@ -40,16 +40,16 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-xl font-bold sm:text-2xl">Dashboard</h1>
+          <p className="text-sm text-muted-foreground">
             Welcome back! Here's what's happening at {currentBranch?.name || "your shop"} today.
           </p>
         </div>
-        <Button asChild>
+        <Button asChild size="sm">
           <Link to="/rates">
             <TrendingUp className="mr-2 h-4 w-4" />
             Update Rates
@@ -58,23 +58,22 @@ export default function Dashboard() {
       </div>
 
       {/* Rate Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 sm:gap-4">
         <Card className="border-l-4 border-l-primary">
-          <CardHeader className="pb-2">
-            <CardDescription>Gold 24K (per gram)</CardDescription>
+          <CardHeader className="pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardDescription className="text-xs sm:text-sm">Gold 24K (/g)</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {ratesLoading ? (
-              <p className="text-lg text-muted-foreground">Loading...</p>
+              <p className="text-sm text-muted-foreground">Loading...</p>
             ) : ratesError || !rates ? (
-              <p className="text-sm text-destructive">No rates set today</p>
+              <p className="text-xs text-destructive">No rates set</p>
             ) : (
-              <div className="space-y-1">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold">{formatCurrency(rates.gold_24k_sell)}</span>
-                  <span className="text-sm text-muted-foreground">sell</span>
+              <div className="space-y-0.5">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-lg font-bold sm:text-2xl">{formatCurrency(rates.gold_24k_sell)}</span>
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-xs text-muted-foreground">
                   Buy: {formatCurrency(rates.gold_24k_buy)}
                 </div>
               </div>
@@ -83,21 +82,20 @@ export default function Dashboard() {
         </Card>
 
         <Card className="border-l-4 border-l-primary/70">
-          <CardHeader className="pb-2">
-            <CardDescription>Gold 22K (per gram)</CardDescription>
+          <CardHeader className="pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardDescription className="text-xs sm:text-sm">Gold 22K (/g)</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {ratesLoading ? (
-              <p className="text-lg text-muted-foreground">Loading...</p>
+              <p className="text-sm text-muted-foreground">Loading...</p>
             ) : ratesError || !rates?.gold_22k_sell ? (
-              <p className="text-sm text-muted-foreground">Not set</p>
+              <p className="text-xs text-muted-foreground">Not set</p>
             ) : (
-              <div className="space-y-1">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold">{formatCurrency(rates.gold_22k_sell)}</span>
-                  <span className="text-sm text-muted-foreground">sell</span>
+              <div className="space-y-0.5">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-lg font-bold sm:text-2xl">{formatCurrency(rates.gold_22k_sell)}</span>
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-xs text-muted-foreground">
                   Buy: {formatCurrency(rates.gold_22k_buy || 0)}
                 </div>
               </div>
@@ -106,21 +104,20 @@ export default function Dashboard() {
         </Card>
 
         <Card className="border-l-4 border-l-muted-foreground">
-          <CardHeader className="pb-2">
-            <CardDescription>Silver 999 (per gram)</CardDescription>
+          <CardHeader className="pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardDescription className="text-xs sm:text-sm">Silver 999 (/g)</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {ratesLoading ? (
-              <p className="text-lg text-muted-foreground">Loading...</p>
+              <p className="text-sm text-muted-foreground">Loading...</p>
             ) : ratesError || !rates?.silver_999_sell ? (
-              <p className="text-sm text-muted-foreground">Not set</p>
+              <p className="text-xs text-muted-foreground">Not set</p>
             ) : (
-              <div className="space-y-1">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold">{formatCurrency(rates.silver_999_sell)}</span>
-                  <span className="text-sm text-muted-foreground">sell</span>
+              <div className="space-y-0.5">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-lg font-bold sm:text-2xl">{formatCurrency(rates.silver_999_sell)}</span>
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-xs text-muted-foreground">
                   Buy: {formatCurrency(rates.silver_999_buy || 0)}
                 </div>
               </div>
@@ -129,17 +126,17 @@ export default function Dashboard() {
         </Card>
 
         <Card className="border-l-4 border-l-info">
-          <CardHeader className="pb-2">
-            <CardDescription>Rate Updated</CardDescription>
+          <CardHeader className="pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardDescription className="text-xs sm:text-sm">Rate Updated</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {rates ? (
-              <div className="text-lg font-semibold">
+              <div className="text-base font-semibold sm:text-lg">
                 {formatRelativeTime(rates.updated_at)}
               </div>
             ) : (
               <Button size="sm" asChild>
-                <Link to="/rates">Set Today's Rates</Link>
+                <Link to="/rates">Set Rates</Link>
               </Button>
             )}
           </CardContent>
@@ -147,19 +144,19 @@ export default function Dashboard() {
       </div>
 
       {/* Sales Summary */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-6">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Today's Sales</CardTitle>
-            <IndianRupee className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row items-center justify-between pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardTitle className="text-xs font-medium sm:text-sm">Today's Sales</CardTitle>
+            <IndianRupee className="h-3.5 w-3.5 text-muted-foreground sm:h-4 sm:w-4" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {statsLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             ) : (
               <>
-                <div className="text-2xl font-bold">{formatCurrency(sales?.today || 0)}</div>
-                <p className="text-xs text-muted-foreground">
+                <div className="text-lg font-bold sm:text-2xl">{formatCurrency(sales?.today || 0)}</div>
+                <p className="text-[10px] text-muted-foreground sm:text-xs">
                   {sales?.todayCount || 0} invoice(s)
                 </p>
               </>
@@ -168,17 +165,17 @@ export default function Dashboard() {
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Today's Collections</CardTitle>
-            <CreditCard className="h-4 w-4 text-success" />
+          <CardHeader className="flex flex-row items-center justify-between pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardTitle className="text-xs font-medium sm:text-sm">Collections</CardTitle>
+            <CreditCard className="h-3.5 w-3.5 text-success sm:h-4 sm:w-4" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {statsLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             ) : (
               <>
-                <div className="text-2xl font-bold text-success">{formatCurrency(financial?.todayPayments || 0)}</div>
-                <p className="text-xs text-muted-foreground">
+                <div className="text-lg font-bold text-success sm:text-2xl">{formatCurrency(financial?.todayPayments || 0)}</div>
+                <p className="text-[10px] text-muted-foreground sm:text-xs">
                   {financial?.todayPaymentCount || 0} payment(s)
                 </p>
               </>
@@ -187,17 +184,17 @@ export default function Dashboard() {
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Today's Expenses</CardTitle>
-            <Wallet className="h-4 w-4 text-destructive" />
+          <CardHeader className="flex flex-row items-center justify-between pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardTitle className="text-xs font-medium sm:text-sm">Expenses</CardTitle>
+            <Wallet className="h-3.5 w-3.5 text-destructive sm:h-4 sm:w-4" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {statsLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             ) : (
               <>
-                <div className="text-2xl font-bold text-destructive">{formatCurrency(financial?.todayExpenses || 0)}</div>
-                <p className="text-xs text-muted-foreground">
+                <div className="text-lg font-bold text-destructive sm:text-2xl">{formatCurrency(financial?.todayExpenses || 0)}</div>
+                <p className="text-[10px] text-muted-foreground sm:text-xs">
                   {financial?.todayExpenseCount || 0} expense(s)
                 </p>
               </>
@@ -206,38 +203,38 @@ export default function Dashboard() {
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">This Week</CardTitle>
-            <TrendingUp className="h-4 w-4 text-success" />
+          <CardHeader className="flex flex-row items-center justify-between pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardTitle className="text-xs font-medium sm:text-sm">This Week</CardTitle>
+            <TrendingUp className="h-3.5 w-3.5 text-success sm:h-4 sm:w-4" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {statsLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             ) : (
               <>
-                <div className="text-2xl font-bold">{formatCurrency(sales?.week || 0)}</div>
-                <p className="text-xs text-muted-foreground">7 day total</p>
+                <div className="text-lg font-bold sm:text-2xl">{formatCurrency(sales?.week || 0)}</div>
+                <p className="text-[10px] text-muted-foreground sm:text-xs">7 day total</p>
               </>
             )}
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">This Month</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardTitle className="text-xs font-medium sm:text-sm">This Month</CardTitle>
             {(sales?.monthComparison || 0) >= 0 ? (
-              <TrendingUp className="h-4 w-4 text-success" />
+              <TrendingUp className="h-3.5 w-3.5 text-success sm:h-4 sm:w-4" />
             ) : (
-              <TrendingDown className="h-4 w-4 text-destructive" />
+              <TrendingDown className="h-3.5 w-3.5 text-destructive sm:h-4 sm:w-4" />
             )}
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {statsLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             ) : (
               <>
-                <div className="text-2xl font-bold">{formatCurrency(sales?.month || 0)}</div>
-                <p className="text-xs text-muted-foreground">
+                <div className="text-lg font-bold sm:text-2xl">{formatCurrency(sales?.month || 0)}</div>
+                <p className="text-[10px] text-muted-foreground sm:text-xs">
                   <span className={(sales?.monthComparison || 0) >= 0 ? "text-success" : "text-destructive"}>
                     {(sales?.monthComparison || 0) >= 0 ? "+" : ""}
                     {sales?.monthComparison || 0}%
@@ -250,38 +247,38 @@ export default function Dashboard() {
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Month Collections</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row items-center justify-between pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardTitle className="text-xs font-medium sm:text-sm">Month Collections</CardTitle>
+            <CreditCard className="h-3.5 w-3.5 text-muted-foreground sm:h-4 sm:w-4" />
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {statsLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             ) : (
               <>
-                <div className="text-2xl font-bold">{formatCurrency(financial?.monthPayments || 0)}</div>
-                <p className="text-xs text-muted-foreground">{financial?.monthPaymentCount || 0} payments</p>
+                <div className="text-lg font-bold sm:text-2xl">{formatCurrency(financial?.monthPayments || 0)}</div>
+                <p className="text-[10px] text-muted-foreground sm:text-xs">{financial?.monthPaymentCount || 0} payments</p>
               </>
             )}
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         {/* Alerts Panel */}
         <Card className="lg:col-span-1">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-warning" />
-              Alerts & Notifications
+          <CardHeader className="px-3 pt-3 sm:px-6 sm:pt-6">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <AlertTriangle className="h-4 w-4 text-warning" />
+              Alerts
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6 space-y-2">
             {alerts.map((alert, index) => (
               <Link
                 key={index}
                 to={alert.link}
-                className="flex items-start gap-3 rounded-lg p-2 hover:bg-muted/50 transition-colors"
+                className="flex items-start gap-2 rounded-lg p-2 hover:bg-muted/50 transition-colors"
               >
                 <Badge
                   variant={
@@ -291,11 +288,11 @@ export default function Dashboard() {
                       ? "default"
                       : "secondary"
                   }
-                  className="mt-0.5"
+                  className="mt-0.5 text-[10px]"
                 >
                   {alert.type}
                 </Badge>
-                <span className="text-sm">{alert.message}</span>
+                <span className="text-xs sm:text-sm">{alert.message}</span>
               </Link>
             ))}
           </CardContent>
@@ -303,22 +300,21 @@ export default function Dashboard() {
 
         {/* Quick Actions */}
         <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Common tasks at your fingertips</CardDescription>
+          <CardHeader className="px-3 pt-3 sm:px-6 sm:pt-6">
+            <CardTitle className="text-base">Quick Actions</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
+            <div className="grid grid-cols-4 gap-2 sm:gap-3">
               {quickActions.map((action) => (
                 <Button
                   key={action.label}
                   variant="outline"
-                  className="h-auto flex-col gap-2 py-4"
+                  className="h-auto flex-col gap-1.5 py-3 px-1 sm:py-4 sm:gap-2"
                   asChild
                 >
                   <Link to={action.href}>
-                    <action.icon className="h-5 w-5" />
-                    <span className="text-xs">{action.label}</span>
+                    <action.icon className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <span className="text-[10px] sm:text-xs text-center leading-tight">{action.label}</span>
                   </Link>
                 </Button>
               ))}
@@ -328,52 +324,52 @@ export default function Dashboard() {
       </div>
 
       {/* Financial Overview */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Cash in Hand</CardDescription>
+          <CardHeader className="pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardDescription className="text-xs sm:text-sm">Cash in Hand</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {statsLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             ) : (
-              <div className="text-xl font-bold">{formatCurrency(financial?.cashBalance || 0)}</div>
+              <div className="text-base font-bold sm:text-xl">{formatCurrency(financial?.cashBalance || 0)}</div>
             )}
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Bank Balance</CardDescription>
+          <CardHeader className="pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardDescription className="text-xs sm:text-sm">Bank Balance</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {statsLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             ) : (
-              <div className="text-xl font-bold">{formatCurrency(financial?.bankBalance || 0)}</div>
+              <div className="text-base font-bold sm:text-xl">{formatCurrency(financial?.bankBalance || 0)}</div>
             )}
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Receivables</CardDescription>
+          <CardHeader className="pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardDescription className="text-xs sm:text-sm">Receivables</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {statsLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             ) : (
-              <div className="text-xl font-bold text-success">{formatCurrency(financial?.receivables || 0)}</div>
+              <div className="text-base font-bold text-success sm:text-xl">{formatCurrency(financial?.receivables || 0)}</div>
             )}
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>Payables</CardDescription>
+          <CardHeader className="pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardDescription className="text-xs sm:text-sm">Payables</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
             {statsLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             ) : (
-              <div className="text-xl font-bold text-destructive">{formatCurrency(financial?.payables || 0)}</div>
+              <div className="text-base font-bold text-destructive sm:text-xl">{formatCurrency(financial?.payables || 0)}</div>
             )}
           </CardContent>
         </Card>

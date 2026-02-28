@@ -9,29 +9,14 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { formatCurrency, formatWeight } from "@/lib/formatters";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -75,98 +60,98 @@ export default function Products() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Products</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-xl font-bold sm:text-2xl">Products</h1>
+          <p className="text-xs text-muted-foreground sm:text-sm">
             Manage inventory for {currentBranch?.name}
           </p>
         </div>
-        <Button asChild>
+        <Button asChild size="sm">
           <Link to="/inventory/products/new">
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="mr-1 h-4 w-4" />
             Add Product
           </Link>
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Products</CardTitle>
+          <CardHeader className="pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardTitle className="text-xs font-medium text-muted-foreground sm:text-sm">Total Products</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
+            <div className="text-lg font-bold sm:text-2xl">{stats.total}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">In Stock</CardTitle>
+          <CardHeader className="pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardTitle className="text-xs font-medium text-muted-foreground sm:text-sm">In Stock</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-success">{stats.inStock}</div>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
+            <div className="text-lg font-bold text-success sm:text-2xl">{stats.inStock}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Value</CardTitle>
+          <CardHeader className="pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardTitle className="text-xs font-medium text-muted-foreground sm:text-sm">Total Value</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(stats.totalValue)}</div>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
+            <div className="text-lg font-bold sm:text-2xl">{formatCurrency(stats.totalValue)}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Weight</CardTitle>
+          <CardHeader className="pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardTitle className="text-xs font-medium text-muted-foreground sm:text-sm">Total Weight</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatWeight(stats.totalWeight)}</div>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
+            <div className="text-lg font-bold sm:text-2xl">{formatWeight(stats.totalWeight)}</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Filters */}
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center">
+        <CardContent className="p-3 sm:pt-6 sm:px-6 sm:pb-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Search by name, code, or barcode..."
+                placeholder="Search by name, code..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-10"
               />
             </div>
-            <Select value={categoryFilter || "all"} onValueChange={(v) => setCategoryFilter(v === "all" ? "" : v)}>
-              <SelectTrigger className="w-full md:w-[180px]">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                {categories?.map((cat) => (
-                  <SelectItem key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={statusFilter || "all"} onValueChange={(v) => setStatusFilter(v === "all" ? "" : v)}>
-              <SelectTrigger className="w-full md:w-[150px]">
-                <SelectValue placeholder="All Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="in_stock">In Stock</SelectItem>
-                <SelectItem value="sold">Sold</SelectItem>
-                <SelectItem value="on_approval">On Approval</SelectItem>
-                <SelectItem value="with_karigar">With Karigar</SelectItem>
-                <SelectItem value="in_repair">In Repair</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex gap-2">
+              <Select value={categoryFilter || "all"} onValueChange={(v) => setCategoryFilter(v === "all" ? "" : v)}>
+                <SelectTrigger className="w-full sm:w-[160px]">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {categories?.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={statusFilter || "all"} onValueChange={(v) => setStatusFilter(v === "all" ? "" : v)}>
+                <SelectTrigger className="w-full sm:w-[130px]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="in_stock">In Stock</SelectItem>
+                  <SelectItem value="sold">Sold</SelectItem>
+                  <SelectItem value="on_approval">On Approval</SelectItem>
+                  <SelectItem value="with_karigar">With Karigar</SelectItem>
+                  <SelectItem value="in_repair">In Repair</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -174,101 +159,99 @@ export default function Products() {
       {/* Products Table */}
       <Card>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Item Code</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Metal</TableHead>
-                <TableHead className="text-right">Weight</TableHead>
-                <TableHead className="text-center">Qty</TableHead>
-                <TableHead className="text-right">Value</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                  </TableRow>
-                ))
-              ) : products?.length === 0 ? (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={9} className="h-32 text-center">
-                    <div className="flex flex-col items-center gap-2">
-                      <Package className="h-8 w-8 text-muted-foreground" />
-                      <p className="text-muted-foreground">No products found</p>
-                      <Button asChild variant="outline" size="sm">
-                        <Link to="/inventory/products/new">Add your first product</Link>
-                      </Button>
-                    </div>
-                  </TableCell>
+                  <TableHead className="text-xs">Code</TableHead>
+                  <TableHead className="text-xs">Name</TableHead>
+                  <TableHead className="text-xs hidden sm:table-cell">Category</TableHead>
+                  <TableHead className="text-xs hidden md:table-cell">Metal</TableHead>
+                  <TableHead className="text-right text-xs">Wt</TableHead>
+                  <TableHead className="text-right text-xs hidden lg:table-cell">Value</TableHead>
+                  <TableHead className="text-xs">Status</TableHead>
+                  <TableHead className="text-right text-xs w-20">Actions</TableHead>
                 </TableRow>
-              ) : (
-                products?.map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell className="font-mono text-sm">{product.item_code}</TableCell>
-                    <TableCell>
-                      <div>
-                        <p className="font-medium">{product.name}</p>
-                        {product.huid && (
-                          <p className="text-xs text-muted-foreground">HUID: {product.huid}</p>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>{product.category?.name}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="capitalize">
-                        {product.metal_type} {product.purity}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">{formatWeight(product.net_weight)}</TableCell>
-                    <TableCell className="text-center">
-                      <Badge variant="outline">{(product as any).stock_quantity || 1}</Badge>
-                    </TableCell>
-                    <TableCell className="text-right">{formatCurrency(product.total_cost)}</TableCell>
-                    <TableCell>
-                      <Badge className={STATUS_COLORS[product.status] || ""}>
-                        {product.status.replace("_", " ")}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-1">
-                        <Button variant="ghost" size="icon" asChild>
-                          <Link to={`/inventory/products/${product.id}`}>
-                            <Eye className="h-4 w-4" />
-                          </Link>
-                        </Button>
-                        <Button variant="ghost" size="icon" asChild>
-                          <Link to={`/inventory/products/${product.id}/edit`}>
-                            <Edit className="h-4 w-4" />
-                          </Link>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="text-destructive"
-                          onClick={() => setDeleteId(product.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                      <TableCell className="hidden sm:table-cell"><Skeleton className="h-4 w-16" /></TableCell>
+                      <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-16" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+                      <TableCell className="hidden lg:table-cell"><Skeleton className="h-4 w-16" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                    </TableRow>
+                  ))
+                ) : products?.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={8} className="h-32 text-center">
+                      <div className="flex flex-col items-center gap-2">
+                        <Package className="h-8 w-8 text-muted-foreground" />
+                        <p className="text-sm text-muted-foreground">No products found</p>
+                        <Button asChild variant="outline" size="sm">
+                          <Link to="/inventory/products/new">Add your first product</Link>
                         </Button>
                       </div>
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+                ) : (
+                  products?.map((product) => (
+                    <TableRow key={product.id}>
+                      <TableCell className="font-mono text-xs">{product.item_code}</TableCell>
+                      <TableCell>
+                        <div>
+                          <p className="font-medium text-xs sm:text-sm">{product.name}</p>
+                          {product.huid && (
+                            <p className="text-[10px] text-muted-foreground">HUID: {product.huid}</p>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-xs hidden sm:table-cell">{product.category?.name}</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        <Badge variant="outline" className="capitalize text-[10px]">
+                          {product.metal_type} {product.purity}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right text-xs">{formatWeight(product.net_weight)}</TableCell>
+                      <TableCell className="text-right text-xs hidden lg:table-cell">{formatCurrency(product.total_cost)}</TableCell>
+                      <TableCell>
+                        <Badge className={`${STATUS_COLORS[product.status] || ""} text-[10px]`}>
+                          {product.status.replace("_", " ")}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-0.5">
+                          <Button variant="ghost" size="icon" className="h-7 w-7" asChild>
+                            <Link to={`/inventory/products/${product.id}`}>
+                              <Eye className="h-3.5 w-3.5" />
+                            </Link>
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" asChild>
+                            <Link to={`/inventory/products/${product.id}/edit`}>
+                              <Edit className="h-3.5 w-3.5" />
+                            </Link>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-destructive"
+                            onClick={() => setDeleteId(product.id)}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 

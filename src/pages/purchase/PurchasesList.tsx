@@ -51,62 +51,62 @@ export default function PurchasesList() {
   
   const getTypeBadge = (type: string) => {
     const label = purchaseTypes.find((t) => t.value === type)?.label || type;
-    return <Badge variant="outline" className="capitalize">{label}</Badge>;
+    return <Badge variant="outline" className="capitalize text-[10px] sm:text-xs">{label}</Badge>;
   };
   
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Purchases</h1>
-          <p className="text-muted-foreground">Manage purchase entries and vendor invoices</p>
+          <h1 className="text-xl font-bold sm:text-3xl">Purchases</h1>
+          <p className="text-xs text-muted-foreground sm:text-sm">Manage purchase entries and vendor invoices</p>
         </div>
         <Link to="/purchase/new">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
+          <Button size="sm">
+            <Plus className="mr-1 h-4 w-4" />
             New Purchase
           </Button>
         </Link>
       </div>
       
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Purchases</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardTitle className="text-xs font-medium sm:text-sm">Total</CardTitle>
+            <ShoppingCart className="h-3.5 w-3.5 text-muted-foreground sm:h-4 sm:w-4" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(stats?.totalPurchases || 0)}</div>
-            <p className="text-xs text-muted-foreground">{stats?.count || 0} orders</p>
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
+            <div className="text-lg font-bold sm:text-2xl">{formatCurrency(stats?.totalPurchases || 0)}</div>
+            <p className="text-[10px] text-muted-foreground sm:text-xs">{stats?.count || 0} orders</p>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Outstanding</CardTitle>
-            <Wallet className="h-4 w-4 text-red-600" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+            <CardTitle className="text-xs font-medium sm:text-sm">Outstanding</CardTitle>
+            <Wallet className="h-3.5 w-3.5 text-red-600 sm:h-4 sm:w-4" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-600">
+          <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
+            <div className="text-lg font-bold text-red-600 sm:text-2xl">
               {formatCurrency(stats?.totalOutstanding || 0)}
             </div>
           </CardContent>
         </Card>
         {Object.entries(stats?.byType || {}).slice(0, 2).map(([type, amount]) => (
           <Card key={type}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium capitalize">{type}</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 px-3 pt-3 sm:px-6 sm:pt-6 sm:pb-2">
+              <CardTitle className="text-xs font-medium capitalize sm:text-sm">{type}</CardTitle>
+              <TrendingUp className="h-3.5 w-3.5 text-muted-foreground sm:h-4 sm:w-4" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(amount as number)}</div>
+            <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
+              <div className="text-lg font-bold sm:text-2xl">{formatCurrency(amount as number)}</div>
             </CardContent>
           </Card>
         ))}
       </div>
       
       {/* Filters */}
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -117,8 +117,8 @@ export default function PurchasesList() {
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by status" />
+          <SelectTrigger className="w-full sm:w-[160px]">
+            <SelectValue placeholder="Filter status" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Status</SelectItem>
@@ -133,68 +133,69 @@ export default function PurchasesList() {
       {/* Table */}
       <Card>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Purchase #</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Vendor</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Invoice #</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-                <TableHead className="text-right">Balance</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center py-8">Loading...</TableCell>
+                  <TableHead className="text-xs">Purchase #</TableHead>
+                  <TableHead className="text-xs hidden sm:table-cell">Date</TableHead>
+                  <TableHead className="text-xs">Vendor</TableHead>
+                  <TableHead className="text-xs hidden md:table-cell">Type</TableHead>
+                  <TableHead className="text-right text-xs">Amount</TableHead>
+                  <TableHead className="text-right text-xs hidden sm:table-cell">Balance</TableHead>
+                  <TableHead className="text-xs">Status</TableHead>
+                  <TableHead className="text-xs hidden md:table-cell">Actions</TableHead>
                 </TableRow>
-              ) : filteredPurchases.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
-                    No purchases found
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredPurchases.map((purchase) => (
-                  <TableRow key={purchase.id}>
-                    <TableCell className="font-mono font-medium">{purchase.purchase_number}</TableCell>
-                    <TableCell>{format(new Date(purchase.purchase_date), "dd MMM yyyy")}</TableCell>
-                    <TableCell>{purchase.vendor?.name || "-"}</TableCell>
-                    <TableCell>{getTypeBadge(purchase.purchase_type)}</TableCell>
-                    <TableCell className="font-mono text-sm">{purchase.invoice_number || "-"}</TableCell>
-                    <TableCell className="text-right font-medium">
-                      {formatCurrency(purchase.grand_total)}
-                    </TableCell>
-                    <TableCell className={`text-right font-medium ${purchase.balance_due > 0 ? "text-red-600" : "text-green-600"}`}>
-                      {formatCurrency(purchase.balance_due)}
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getStatusBadge(purchase.status)}>
-                        {purchase.status.replace("_", " ")}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {purchase.status === "draft" && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => confirmPurchase.mutate(purchase.id)}
-                          disabled={confirmPurchase.isPending}
-                        >
-                          <CheckCircle className="mr-1 h-3 w-3" />
-                          Confirm
-                        </Button>
-                      )}
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={8} className="text-center py-8 text-sm">Loading...</TableCell>
+                  </TableRow>
+                ) : filteredPurchases.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={8} className="text-center py-8 text-sm text-muted-foreground">
+                      No purchases found
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+                ) : (
+                  filteredPurchases.map((purchase) => (
+                    <TableRow key={purchase.id}>
+                      <TableCell className="font-mono font-medium text-xs">{purchase.purchase_number}</TableCell>
+                      <TableCell className="text-xs hidden sm:table-cell">{format(new Date(purchase.purchase_date), "dd MMM yy")}</TableCell>
+                      <TableCell className="text-xs">{purchase.vendor?.name || "-"}</TableCell>
+                      <TableCell className="hidden md:table-cell">{getTypeBadge(purchase.purchase_type)}</TableCell>
+                      <TableCell className="text-right text-xs font-medium">
+                        {formatCurrency(purchase.grand_total)}
+                      </TableCell>
+                      <TableCell className={`text-right text-xs font-medium hidden sm:table-cell ${purchase.balance_due > 0 ? "text-red-600" : "text-green-600"}`}>
+                        {formatCurrency(purchase.balance_due)}
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={`${getStatusBadge(purchase.status)} text-[10px]`}>
+                          {purchase.status.replace("_", " ")}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {purchase.status === "draft" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-7 text-xs"
+                            onClick={() => confirmPurchase.mutate(purchase.id)}
+                            disabled={confirmPurchase.isPending}
+                          >
+                            <CheckCircle className="mr-1 h-3 w-3" />
+                            Confirm
+                          </Button>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>
