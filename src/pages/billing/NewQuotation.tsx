@@ -109,70 +109,63 @@ export default function NewQuotation() {
   };
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-            <ArrowLeft className="h-5 w-5" />
+    <div className="mx-auto max-w-7xl px-3 py-3 space-y-3 sm:px-4 sm:py-4 sm:space-y-4 lg:py-6 lg:space-y-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate(-1)}>
+            <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="text-2xl font-bold">New Quotation</h1>
+          <h1 className="text-lg font-bold sm:text-2xl">New Quotation</h1>
         </div>
-        <Button onClick={handleSave} disabled={createQuotation.isPending || items.length === 0}>
-          <Save className="h-4 w-4 mr-2" />
+        <Button size="sm" onClick={handleSave} disabled={createQuotation.isPending || items.length === 0}>
+          <Save className="h-4 w-4 mr-1" />
           Save Quotation
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      {/* Mobile/Tablet: Summary at top */}
+      <div className="block lg:hidden">
+        <InvoiceSummary items={items} discountPercent={0} oldGoldAmount={0} isInterstate={false} onTotalsChange={setTotals} />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+        <div className="lg:col-span-2 space-y-3 sm:space-y-4 lg:space-y-6">
           <Card>
-            <CardHeader><CardTitle>Customer</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
+            <CardHeader className="pb-2 px-3 pt-3 sm:px-6 sm:pt-6">
+              <CardTitle className="text-sm sm:text-base">Customer</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 px-3 pb-3 sm:px-6 sm:pb-6">
               <CustomerSelect value={customer?.id} onSelect={setCustomer} />
               <div>
-                <Label>Valid for (days)</Label>
-                <Input
-                  type="number"
-                  value={validDays}
-                  onChange={(e) => setValidDays(parseInt(e.target.value) || 7)}
-                  min={1}
-                  max={90}
-                  className="w-32"
-                />
+                <Label className="text-xs sm:text-sm">Valid for (days)</Label>
+                <Input type="number" value={validDays} onChange={(e) => setValidDays(parseInt(e.target.value) || 7)} min={1} max={90} className="w-32 h-9" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader><CardTitle>Items</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
+            <CardHeader className="pb-2 px-3 pt-3 sm:px-6 sm:pt-6">
+              <CardTitle className="text-sm sm:text-base">Items</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 px-3 pb-3 sm:px-6 sm:pb-6">
               <ProductSelector onSelect={handleProductSelect} />
               {items.length > 0 && (
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto -mx-3 px-3 sm:-mx-6 sm:px-6">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Item</TableHead>
-                        <TableHead className="text-right">Metal</TableHead>
-                        <TableHead className="text-right">Making</TableHead>
-                        <TableHead className="text-right">Stone</TableHead>
-                        <TableHead className="text-right">Disc %</TableHead>
-                        <TableHead className="text-right">Taxable</TableHead>
-                        <TableHead className="text-right">GST</TableHead>
-                        <TableHead className="text-right">Total</TableHead>
-                        <TableHead></TableHead>
+                        <TableHead className="text-xs">Item</TableHead>
+                        <TableHead className="text-right text-xs">Metal</TableHead>
+                        <TableHead className="text-right text-xs hidden sm:table-cell">Making</TableHead>
+                        <TableHead className="text-right text-xs hidden sm:table-cell">Stone</TableHead>
+                        <TableHead className="text-right text-xs">Total</TableHead>
+                        <TableHead className="w-8"></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {items.map((item, index) => (
-                        <InvoiceItemRow
-                          key={index}
-                          item={item}
-                          index={index}
-                          isInterstate={false}
-                          onUpdate={handleUpdateItem}
-                          onRemove={handleRemoveItem}
-                        />
+                        <InvoiceItemRow key={index} item={item} index={index} isInterstate={false}
+                          onUpdate={handleUpdateItem} onRemove={handleRemoveItem} />
                       ))}
                     </TableBody>
                   </Table>
@@ -182,26 +175,20 @@ export default function NewQuotation() {
           </Card>
 
           <Card>
-            <CardHeader><CardTitle>Notes</CardTitle></CardHeader>
-            <CardContent>
-              <Textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Add any notes or terms for the quotation..."
-                rows={3}
-              />
+            <CardHeader className="pb-2 px-3 pt-3 sm:px-6 sm:pt-6">
+              <CardTitle className="text-sm sm:text-base">Notes</CardTitle>
+            </CardHeader>
+            <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
+              <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Add any notes or terms..." rows={2} />
             </CardContent>
           </Card>
         </div>
 
-        <div>
-          <InvoiceSummary
-            items={items}
-            discountPercent={0}
-            oldGoldAmount={0}
-            isInterstate={false}
-            onTotalsChange={setTotals}
-          />
+        {/* Desktop: Summary on right */}
+        <div className="hidden lg:block">
+          <div className="sticky top-20">
+            <InvoiceSummary items={items} discountPercent={0} oldGoldAmount={0} isInterstate={false} onTotalsChange={setTotals} />
+          </div>
         </div>
       </div>
     </div>

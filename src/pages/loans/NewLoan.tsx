@@ -195,23 +195,45 @@ export default function NewLoan() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 sm:space-y-4 lg:space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate("/loans/active")}>
-          <ArrowLeft className="h-5 w-5" />
+      <div className="flex items-center gap-2 sm:gap-4">
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate("/loans/active")}>
+          <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-foreground">New Gold Loan</h1>
-          <p className="text-sm text-muted-foreground">
-            Create a new gold loan account
-          </p>
+          <h1 className="text-lg font-bold text-foreground sm:text-2xl">New Gold Loan</h1>
+          <p className="text-xs text-muted-foreground sm:text-sm">Create a new gold loan account</p>
         </div>
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-3">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4 lg:space-y-6">
+          {/* Mobile/Tablet: Summary at top */}
+          <div className="block lg:hidden">
+            <Card>
+              <CardHeader className="pb-2 px-3 pt-3">
+                <CardTitle className="flex items-center gap-2 text-sm">
+                  <IndianRupee className="h-4 w-4" />
+                  Loan Summary
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-3 pb-3 space-y-2 text-sm">
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex justify-between"><span className="text-muted-foreground">Collateral</span><span className="font-medium">{formatCurrency(totalCollateralValue)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">LTV</span><span className="font-medium">{watchLtvPercent}%</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Rate</span><span className="font-medium">{watchInterestRate}% p.a.</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Tenure</span><span className="font-medium">{watchTenureMonths}m</span></div>
+                </div>
+                <div className="border-t pt-2 flex justify-between">
+                  <span className="font-medium">Loan Amount</span>
+                  <span className="text-lg font-bold text-primary">{formatCurrency(loanAmount)}</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid gap-3 sm:gap-4 lg:gap-6 lg:grid-cols-3">
             {/* Main Form */}
             <div className="space-y-6 lg:col-span-2">
               {/* Customer Selection */}
@@ -576,8 +598,8 @@ export default function NewLoan() {
               </Card>
             </div>
 
-            {/* Summary Sidebar */}
-            <div className="space-y-4">
+            {/* Summary Sidebar - Desktop only */}
+            <div className="hidden lg:block space-y-4">
               <Card className="sticky top-4">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-lg">
