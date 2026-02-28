@@ -100,56 +100,67 @@ export default function NewInvoice() {
   };
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-            <ArrowLeft className="h-5 w-5" />
+    <div className="mx-auto max-w-7xl px-3 py-3 space-y-3 sm:px-4 sm:py-4 sm:space-y-4 lg:py-6 lg:space-y-6">
+      {/* Header - compact on mobile */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate(-1)}>
+            <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="text-2xl font-bold">New Invoice</h1>
+          <h1 className="text-lg font-bold sm:text-2xl">New Invoice</h1>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => handleSave("draft")} disabled={createInvoice.isPending}>
-            Save as Draft
+          <Button variant="outline" size="sm" onClick={() => handleSave("draft")} disabled={createInvoice.isPending}>
+            Save Draft
           </Button>
-          <Button onClick={() => handleSave("confirmed")} disabled={createInvoice.isPending || items.length === 0}>
-            <Save className="h-4 w-4 mr-2" />
-            Confirm Invoice
+          <Button size="sm" onClick={() => handleSave("confirmed")} disabled={createInvoice.isPending || items.length === 0}>
+            <Save className="h-4 w-4 mr-1" />
+            Confirm
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      {/* Mobile/Tablet: Summary at top, collapsible-style for quick glance */}
+      <div className="block lg:hidden">
+        <InvoiceSummary items={items} discountPercent={discountPercent} oldGoldAmount={oldGoldAmount}
+          isInterstate={isInterstate} onTotalsChange={setTotals} />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+        <div className="lg:col-span-2 space-y-3 sm:space-y-4 lg:space-y-6">
+          {/* Customer Card - compact */}
           <Card>
-            <CardHeader><CardTitle>Customer</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
+            <CardHeader className="pb-2 px-3 pt-3 sm:px-6 sm:pt-6">
+              <CardTitle className="text-sm sm:text-base">Customer</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 px-3 pb-3 sm:px-6 sm:pb-6">
               <CustomerSelect value={customer?.id} onSelect={setCustomer} />
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <Switch id="interstate" checked={isInterstate} onCheckedChange={setIsInterstate} />
-                <Label htmlFor="interstate">Interstate Sale (IGST)</Label>
+                <Label htmlFor="interstate" className="text-xs sm:text-sm">Interstate Sale (IGST)</Label>
               </div>
             </CardContent>
           </Card>
 
+          {/* Items Card */}
           <Card>
-            <CardHeader><CardTitle>Items</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
+            <CardHeader className="pb-2 px-3 pt-3 sm:px-6 sm:pt-6">
+              <CardTitle className="text-sm sm:text-base">Items</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 px-3 pb-3 sm:px-6 sm:pb-6">
               <ProductSelector onSelect={handleProductSelect} />
               {items.length > 0 && (
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto -mx-3 px-3 sm:-mx-6 sm:px-6">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Item</TableHead>
-                        <TableHead className="text-right">Metal</TableHead>
-                        <TableHead className="text-right">Making</TableHead>
-                        <TableHead className="text-right">Stone</TableHead>
-                        <TableHead className="text-right">Disc %</TableHead>
-                        <TableHead className="text-right">Taxable</TableHead>
-                        <TableHead className="text-right">GST</TableHead>
-                        <TableHead className="text-right">Total</TableHead>
-                        <TableHead></TableHead>
+                        <TableHead className="text-xs">Item</TableHead>
+                        <TableHead className="text-right text-xs">Metal</TableHead>
+                        <TableHead className="text-right text-xs hidden sm:table-cell">Making</TableHead>
+                        <TableHead className="text-right text-xs hidden sm:table-cell">Stone</TableHead>
+                        <TableHead className="text-right text-xs hidden md:table-cell">Disc %</TableHead>
+                        <TableHead className="text-right text-xs">Total</TableHead>
+                        <TableHead className="w-8"></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -164,28 +175,36 @@ export default function NewInvoice() {
             </CardContent>
           </Card>
 
+          {/* Additional Details - single column on mobile */}
           <Card>
-            <CardHeader><CardTitle>Additional Details</CardTitle></CardHeader>
-            <CardContent className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Overall Discount %</Label>
-                <Input type="number" value={discountPercent} onChange={(e) => setDiscountPercent(parseFloat(e.target.value) || 0)} min={0} max={100} />
-              </div>
-              <div>
-                <Label>Old Gold Adjustment (₹)</Label>
-                <Input type="number" value={oldGoldAmount} onChange={(e) => setOldGoldAmount(parseFloat(e.target.value) || 0)} min={0} />
-              </div>
-              <div className="col-span-2">
-                <Label>Notes</Label>
-                <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
+            <CardHeader className="pb-2 px-3 pt-3 sm:px-6 sm:pt-6">
+              <CardTitle className="text-sm sm:text-base">Additional Details</CardTitle>
+            </CardHeader>
+            <CardContent className="px-3 pb-3 sm:px-6 sm:pb-6">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+                <div>
+                  <Label className="text-xs sm:text-sm">Overall Discount %</Label>
+                  <Input type="number" value={discountPercent} onChange={(e) => setDiscountPercent(parseFloat(e.target.value) || 0)} min={0} max={100} className="h-9" />
+                </div>
+                <div>
+                  <Label className="text-xs sm:text-sm">Old Gold Adjustment (₹)</Label>
+                  <Input type="number" value={oldGoldAmount} onChange={(e) => setOldGoldAmount(parseFloat(e.target.value) || 0)} min={0} className="h-9" />
+                </div>
+                <div className="sm:col-span-2">
+                  <Label className="text-xs sm:text-sm">Notes</Label>
+                  <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
+                </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        <div>
-          <InvoiceSummary items={items} discountPercent={discountPercent} oldGoldAmount={oldGoldAmount}
-            isInterstate={isInterstate} onTotalsChange={setTotals} />
+        {/* Desktop: Summary on right side */}
+        <div className="hidden lg:block">
+          <div className="sticky top-20">
+            <InvoiceSummary items={items} discountPercent={discountPercent} oldGoldAmount={oldGoldAmount}
+              isInterstate={isInterstate} onTotalsChange={setTotals} />
+          </div>
         </div>
       </div>
     </div>
